@@ -1,4 +1,4 @@
-const User = require('../Modolse/User');
+const User = require('../Modelse/User');
 const jwt = require('jsonwebtoken');// npm i jsonwebtoken
 var bcrypt = require('bcryptjs');//npm i bcryptjs
 exports.register = async (req, res) => {

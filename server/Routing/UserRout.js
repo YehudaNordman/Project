@@ -1,10 +1,11 @@
 let express = require('express');
 let router = express.Router();
 let controller = require('../Controllers/UserController');
+let isAdmin = require('../Middleware/isAdmin');
 router.post('/user', controller.register);
-router.get('/' , isAdmin, controller.auth, controller.getAll);
-router.get('/:id', isAdmin, controller.getById);
-router.delete('/:id', isAdmin, controller.deleteById);
-router.put('/:id', isAdmin, controller.updateById);
+router.get('/' ,  controller.auth, controller.getAll);
+router.get('/:id',  controller.getById);
+router.delete('/:id',  controller.deleteById);
+router.put('/:id',  controller.updateById);
 router.post('/login', controller.login);
 module.exports = router;
