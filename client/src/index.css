@@ -1,0 +1,788 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url('./Logo/Gemini_Generated_Image_wg8m4lwg8m4lwg8m.png');
+  background-size: cover;
+  /* ממלא את כל המסך */
+  background-position: center top;
+  /* שומר על המרכוז והצדדים */
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100vw;
+  font-family: 'Inter', sans-serif;
+  background-attachment: fixed;
+}
+
+@keyframes button-flicker {
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+    box-shadow: 0 8px 20px rgba(134, 189, 191, 0.3);
+  }
+
+  50% {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+    /* אפקט זוהר רך ורב-שכבתי */
+    box-shadow:
+      0 0 12px rgba(134, 189, 191, 0.5),
+      0 0 25px rgba(134, 189, 191, 0.2),
+      0 10px 25px rgba(134, 189, 191, 0.3);
+  }
+}
+
+
+
+
+
+
+.top-bar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 1.5rem 2rem;
+  z-index: 100;
+}
+
+.login-button {
+  background: #86BDBF;
+  /* טורקיז בולט של הלוגו */
+  color: white;
+  border: none;
+  padding: 0.8rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(134, 189, 191, 0.4);
+}
+
+.login-button:hover {
+  background: #75abad;
+  /* גוון מעט כהה יותר ב-hover */
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(134, 189, 191, 0.6);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  /* גורם לכך שהכרטיסים יהיו מעל ההסברים */
+  align-items: center;
+  justify-content: flex-end;
+  /* דוחף את כל התוכן לתחתית העמוד */
+  min-height: 100vh;
+  padding: 2rem 2rem 0.5rem 2rem;
+  /* צמצום הפדינג התחתון כדי להוריד את הפוטר */
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.registration-section {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  /* צמצום המרווח בין השכבות */
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem 1.2rem;
+  flex: 1;
+  min-width: 220px;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.icon-circle {
+  background: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  box-shadow: 0 4px 8px rgba(134, 189, 191, 0.1);
+}
+
+.icon-circle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.feature-card h2 {
+  color: #1a237e;
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
+  font-weight: 800;
+}
+
+.subtitle {
+  color: #546e7a;
+  font-size: 0.85rem;
+  margin-bottom: 1.2rem;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.2rem 0;
+  width: 100%;
+  text-align: right;
+}
+
+.features-list li {
+  color: #455a64;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.check {
+  color: #86BDBF;
+  font-weight: bold;
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.card-cta {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+
+.card-cta.primary {
+  background: #86BDBF;
+  color: white;
+  box-shadow: 0 8px 20px rgba(134, 189, 191, 0.3);
+  /* אנימציית הבהוב למשיכת תשומת לב */
+  animation: button-flicker 2s infinite ease-in-out;
+}
+
+.card-cta.primary:hover {
+  background: #75abad;
+  box-shadow: 0 10px 25px rgba(134, 189, 191, 0.4);
+}
+
+.card-cta.secondary {
+  background: #86BDBF;
+  color: white;
+  border: none;
+  box-shadow: 0 8px 20px rgba(134, 189, 191, 0.3);
+}
+
+.card-cta.secondary:hover {
+  background: #75abad;
+  box-shadow: 0 10px 25px rgba(134, 189, 191, 0.4);
+}
+
+
+@media (max-width: 768px) {
+  .cards-container {
+    gap: 1.5rem;
+  }
+}
+
+.info-section {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1000px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-bottom: 2rem;
+}
+
+.info-card-3d {
+  background: #86BDBF;
+  /* הצבע הטורקיז מהתמונה */
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+  flex: 1;
+  min-width: 200px;
+  max-width: 280px;
+  display: flex;
+  /* תצוגה אופקית בתוך הכרטיס */
+  align-items: center;
+  gap: 1rem;
+  text-align: right;
+  box-shadow: 0 4px 15px rgba(134, 189, 191, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.info-card-3d:hover {
+  transform: translateY(-5px);
+  background: #75abad;
+}
+
+.info-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.info-card-3d h3 {
+  color: white;
+  /* כיתוב לבן ובולט */
+  font-size: 1rem;
+  margin: 0 0 0.2rem 0;
+  font-weight: 900;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.info-card-3d p {
+  color: rgba(255, 255, 255, 0.9);
+  /* כיתוב בהיר ובולט */
+  font-size: 0.8rem;
+  line-height: 1.2;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* התאמה לנייד */
+@media (max-width: 768px) {
+  .info-section {
+    margin-top: 3rem;
+    gap: 1rem;
+  }
+
+  .info-card-3d {
+    min-width: 100%;
+  }
+}
+
+
+
+.header {
+  display: none;
+}
+
+
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* ממקם את הלוגו בדיוק באמצע המסך כרגע */
+  width: 100%;
+}
+
+.logo-wrapper {
+  /* mix-blend-mode multiply 'מוחק' את הרקע הלבן של התמונה וגורם לה להיראות מוטמעת */
+  mix-blend-mode: multiply;
+  /* פילטרים נוספים לשיפור השילוב אם צריך */
+  filter: contrast(1.1);
+}
+
+.logo {
+  height: auto;
+  max-width: 500px;
+  display: block;
+}
+
+.app-container {
+  min-height: 100vh;
+  width: 100%;
+  transition: background 0.5s ease;
+}
+
+.app-container.guest-mode {
+  background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('./components/background/Gemini_Generated_Image_4zccw14zccw14zcc.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+
+.footer {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 0.2rem;
+  margin-top: 0.5rem;
+}
+
+
+.footer p {
+  color: #546e7a;
+  font-size: 0.7rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* עיצוב Tooltip (פירוט בריחוף עכבר) */
+.info-card-3d {
+  position: relative;
+  /* הכרחי עבור המיקום של ה-tooltip */
+  cursor: help;
+  /* מסמן למשתמש שיש מידע נוסף */
+}
+
+.tooltip-content {
+  position: absolute;
+  bottom: 120%;
+  /* ממוקם מעל הכרטיס */
+  right: 50%;
+  transform: translateX(50%) translateY(10px);
+  background: white;
+  color: #1a237e;
+  padding: 1rem;
+  border-radius: 12px;
+  width: 250px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid #86BDBF;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  pointer-events: none;
+  z-index: 200;
+  text-align: right;
+}
+
+/* משולש קטן בתחתית ה-tooltip */
+.tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 50%;
+  transform: translateX(50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+.info-card-3d:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(50%) translateY(0);
+}
+
+/* Guest Planner Styles */
+.guest-planner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* הצמדה למעלה במקום למרכז */
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem 2rem 2rem 2rem;
+  /* צמצום משמעותי של המרווח העליון */
+  flex: 1;
+}
+
+.back-button {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: #86BDBF;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 0.7rem 1.4rem;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(134, 189, 191, 0.4);
+  z-index: 1001;
+}
+
+.back-button:hover {
+  background: #75abad;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(134, 189, 191, 0.5);
+}
+
+.back-button span {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.planner-card.glass {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.04) 100%);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 40px;
+  padding: 3rem 5rem;
+  text-align: center;
+  width: auto;
+  max-width: 95%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 0;
+  /* הצמדה ללמעלה */
+}
+
+.planner-card h1 {
+  color: #1a237e;
+  /* כחול כהה עז לכותרת */
+  font-size: 3.5rem;
+  margin-bottom: 0.8rem;
+  font-weight: 950;
+  /* צל חזק יותר להבלטה מקסימלית */
+  text-shadow:
+    0 2px 4px rgba(255, 255, 255, 0.5),
+    0 4px 10px rgba(0, 0, 0, 0.1);
+  /* הילה בהירה מאחורי הטקסט הכהה */
+  letter-spacing: -1px;
+}
+
+.planner-card p {
+  color: #ffffff;
+  /* חזרה ללבן בולט */
+  /* אפור כהה וברור */
+  font-size: 1.4rem;
+  margin-bottom: 0;
+  font-weight: 800;
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.4;
+  /* צל כהה מסביב לטקסט הלבן כדי שיבלוט על כל רקע */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.coming-soon-badge {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #86BDBF;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.guest-actions {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+@keyframes slideFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: slideFadeUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+
+.tooltip-content h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #86BDBF;
+  font-weight: 800;
+}
+
+.tooltip-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #455a64;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* Loading Screen Styles */
+.loading-screen.full-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+/* שכבת הצללה עדינה כדי שהטקסט והמטוס יבלטו על הרקע */
+.loading-screen.full-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.loading-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 80%;
+  max-width: 500px;
+}
+
+.loading-logo {
+  max-width: 250px;
+  height: auto;
+  margin-bottom: 2rem;
+  animation: logo-pulse 2s infinite ease-in-out;
+  mix-blend-mode: multiply;
+}
+
+@keyframes logo-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+}
+
+.airplane-loader-premium {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin: 1rem auto 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.orbit-ring.outer {
+  width: 220px;
+  height: 220px;
+  border: 1px dashed rgba(134, 189, 191, 0.3);
+  animation: rotate-orbit 10s linear infinite;
+}
+
+.orbit-ring.inner {
+  width: 160px;
+  height: 160px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  animation: rotate-orbit 15s linear infinite reverse;
+}
+
+.plane-container-rotating {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  animation: rotate-orbit 3s linear infinite;
+}
+
+.premium-jet {
+  position: absolute;
+  top: -25px;
+  left: calc(50% - 25px);
+  width: 50px;
+  height: 50px;
+  filter: drop-shadow(0 0 15px rgba(134, 189, 191, 0.6));
+  /* חרטום פונה לכיוון הטיסה (לצד שמאל) */
+  transform: rotate(-90deg);
+  animation: jet-bob-tangent 1s ease-in-out infinite alternate;
+}
+
+@keyframes jet-bob-tangent {
+  from {
+    transform: rotate(-90deg) translateY(0) scale(1.05);
+  }
+
+  to {
+    transform: rotate(-90deg) translateY(-5px) scale(1);
+  }
+}
+
+.exhaust-trail {
+  position: absolute;
+  /* השובל יוצא מהזנב לכיוון ימין */
+  top: 50%;
+  right: -5px;
+  transform: translateY(-50%);
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(1px);
+}
+
+.p1 {
+  animation: particle-fade-back 1s infinite 0.2s;
+}
+
+.p2 {
+  animation: particle-fade-back 1s infinite 0.4s;
+}
+
+.p3 {
+  animation: particle-fade-back 1s infinite 0.6s;
+}
+
+@keyframes particle-fade-back {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.8;
+  }
+
+  /* החלקיקים עפים הצידה ולמעלה (לכיוון ההפוך מהחרטום) */
+  100% {
+    transform: translate(40px, 0) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes rotate-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.loading-content p {
+  color: #1a237e;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Planner Form Styles */
+.planner-form {
+  width: 100%;
+  max-width: 650px;
+  /* מעט רחב יותר כדי להכיל את התאריכים בנוחות */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  text-align: right;
+  padding-bottom: 3rem;
+}
+
+.form-section-title {
+  color: #86BDBF;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-top: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid rgba(134, 189, 191, 0.2);
+  display: inline-block;
+  width: fit-content;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: #1a237e;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.planner-input {
+  width: 100%;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  color: #1a237e;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.planner-input:focus {
+  border-color: #86BDBF;
+  box-shadow: 0 0 0 4px rgba(134, 189, 191, 0.15);
+  background: white;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  /* כל שדה בשורה נפרדת */
+  gap: 1.2rem;
+}
+
+.calculate-btn {
+  background: #86BDBF;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-top: 1rem;
+  box-shadow: 0 4px 15px rgba(134, 189, 191, 0.3);
+}
+
+.calculate-btn:hover {
+  background: #75abad;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(134, 189, 191, 0.5);
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
