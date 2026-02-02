@@ -1,0 +1,10 @@
+let express = require('express');
+let router = express.Router();
+let controller = require('../Controllers/UserController');
+router.post('/user', controller.register);
+router.get('/' , isAdmin, controller.auth, controller.getAll);
+router.get('/:id', isAdmin, controller.getById);
+router.delete('/:id', isAdmin, controller.deleteById);
+router.put('/:id', isAdmin, controller.updateById);
+router.post('/login', controller.login);
+module.exports = router;
