@@ -58,7 +58,7 @@ exports.updateById = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res) => { //התחברות שניה דורש מייל וקוד
   try {
     //1. Validate input email passsword
     const { email, password } = req.body; // destructuring the request body

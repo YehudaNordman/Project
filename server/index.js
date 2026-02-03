@@ -6,6 +6,7 @@ app.use('/airports', AirportRoute);
 const userRoute = require('./Routing/UserRout');
 app.use('/user', userRoute);
 const mongoose = require('mongoose');
+
 const uri = "mongodb+srv://davia:Aa123456@cluster0.yldsfaj.mongodb.net/?appName=Cluster0";
 
 const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
