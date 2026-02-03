@@ -5,7 +5,7 @@ let controller = require('../Controllers/AirportController');
 // GET /airports/top10
 router.get('/top10', controller.getTop10);
 router.get('/getNameCityCountry', controller.getNameCityCountry);
-router.get('/:country', controller.getAirportsByCountry);
-//router.get('/:name', controller.getLocationByName);
+router.get('/country/:country', controller.getAirportsByCountry);
+router.get('/:name', controller.getLocationByName);
 router.get('/locationById/:id', controller.getLocationById);
 module.exports = router;
