@@ -1,29 +1,31 @@
 import { useState } from 'react'
-import TopBar from '../components/TopBar'
-import RegistrationCards from '../components/RegistrationCards'
-import InfoCards from '../components/InfoCards'
+import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import GuestPlanner from '../components/GuestPlanner'
-import waitingLogo from '../waiting/Gemini_Generated_Image_p8t408p8t408p8t4 (1).png'
 
+/**
+ * רכיב LandingPage - עמוד הבית והמעטפת הראשית של האפליקציה.
+ * מנהל את הצגת ה-Navbar, התוכן המרכזי (מתכנן הטיולים) והפוטר.
+ */
 const LandingPage = () => {
-    const [view, setView] = useState('landing');
-    const handleGuestClick = () => {
-        setView('guest');
-    };
+    // State למעקב האם מוצגות תוצאות חישוב כרגע.
+    // אם מוצגות תוצאות - נסתיר את ה-Navbar כדי לתת מקום לתצוגה המלאה.
+    const [isShowingResults, setIsShowingResults] = useState(false);
 
     return (
-        <div className={`app-container ${view === 'guest' ? 'guest-mode' : ''}`} dir="rtl">
+        /* app-container: המיכל הראשי שמגדיר את מבנה הדף והרקע */
+        <div className="app-container" dir="rtl">
+
+            {/* Navbar (תפריט עליון): יוצג רק אם אנחנו בטופס ההזנה (לא בתוצאות) */}
+            {!isShowingResults && <Navbar />}
+
+            {/* main content: האזור המרכזי של האפליקציה */}
             <main className="content">
-                {view === 'landing' ? (
-                    <>
-                        <TopBar />
-                        <RegistrationCards onGuestClick={handleGuestClick} />
-                        <InfoCards />
-                    </>
-                ) : (
-                    <GuestPlanner onBack={() => setView('landing')} />
-                )}
+                {/* GuestPlanner: רכיב הליבה שמנהל את הטופס, הטעינה והתוצאות.
+                    הוא מעדכן את האב (הדף הנוכחי) האם התוצאות מוצגות כרגע. */}
+                <GuestPlanner onResultsShown={setIsShowingResults} />
+
+                {/* Footer: שורת המידע התחתונה שקבועה בכל האתר */}
                 <Footer />
             </main>
         </div>
@@ -31,3 +33,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+

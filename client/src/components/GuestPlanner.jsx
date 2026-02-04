@@ -1,24 +1,87 @@
-import React, { useState } from 'react';
-import waitingLogo from '../waiting/Gemini_Generated_Image_p8t408p8t408p8t4 (1).png';
+import React, { useState, useEffect } from 'react';
+/* ייבוא רכיבי המשנה של העמוד */
 import PlannerResults from './PlannerResults';
+import InfoCards from './InfoCards';
+import Hero from './Hero';
+import Testimonials from './Testimonials';
+import LoadingScreen from './LoadingScreen';
+import PlannerForm from './PlannerForm';
+import { decodeWeather } from '../utils/weatherUtils';
 
-const GuestPlanner = ({ onBack }) => {
+/**
+ * רכיב GuestPlanner - הלב של מתכנן הטיולים לאורחים.
+ * מנהל את שלבי התכנון: טופס הזנת נתונים, מסך המתנה, והצגת תוצאות.
+ */
+const GuestPlanner = ({ onBack, onResultsShown }) => {
+  // --- ניהול State (מצבי הרכיב) ---
+
+  // נתוני הטופס שהמשתמש מזין
   const [formData, setFormData] = useState({
-    destination: '',
-    landingDate: '',
-    landingTime: '',
-    takeoffDate: '',
-    takeoffTime: ''
+    destination: '',     // יעד הנסיעה
+    landingDate: '',     // תאריך נחיתה
+    landingTime: '',     // שעת נחיתה
+    takeoffDate: '',     // תאריך המראה
+    takeoffTime: ''      // שעת המראה
   });
 
+  // תוצאות החישוב הסופיות (מוצגות ב-PlannerResults)
   const [result, setResult] = useState(null);
+  // נתוני מזג האוויר המושכים מה-API
+  const [weatherData, setWeatherData] = useState(null);
+  // מצב טעינה עבור מסך ההמתנה (2 שניות)
   const [isLoading, setIsLoading] = useState(false);
 
+  // הודעה לרכיב האב (LandingPage) האם אנחנו מציגים תוצאות כרגע
+  useEffect(() => {
+    if (onResultsShown) {
+      onResultsShown(!!result);
+    }
+  }, [result, onResultsShown]);
+
+  // עדכון השדות בטופס בכל לחיצה של המשתמש
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  /**
+   * משיכת נתוני מזג אוויר מה-API
+   */
+  const fetchWeather = async (city) => {
+    if (!city || city.trim().length < 2) return;
+
+    try {
+      const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city.trim())}&count=1&language=he&format=json`;
+      const geoRes = await fetch(geoUrl);
+      const geoData = await geoRes.json();
+
+      if (!geoData.results || geoData.results.length === 0) {
+        const geoResRetry = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city.trim())}&count=1&format=json`);
+        const geoDataRetry = await geoResRetry.json();
+        if (!geoDataRetry.results || geoDataRetry.results.length === 0) return;
+        geoData.results = geoDataRetry.results;
+      }
+
+      const { latitude, longitude } = geoData.results[0];
+      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`);
+      const weatherData = await weatherRes.json();
+
+      if (weatherData && weatherData.current) {
+        const decoded = decodeWeather(weatherData.current.weather_code);
+        setWeatherData({
+          temp: Math.round(weatherData.current.temperature_2m),
+          desc: decoded.desc,
+          icon: decoded.icon
+        });
+      }
+    } catch (err) {
+      console.error("שגיאה במשיכת מזג האוויר:", err);
+    }
+  };
+
+  /**
+   * פונקציה ראשית לחישוב זמני הנטו
+   */
   const calculateTime = (e) => {
     e.preventDefault();
 
@@ -27,18 +90,25 @@ const GuestPlanner = ({ onBack }) => {
       return;
     }
 
+    setIsLoading(true);
+    setResult(null);
+
+    if (!weatherData && formData.destination) {
+      fetchWeather(formData.destination);
+    }
+
     const landing = new Date(`${formData.landingDate}T${formData.landingTime}`);
     const takeoff = new Date(`${formData.takeoffDate}T${formData.takeoffTime}`);
 
     if (takeoff <= landing) {
       alert('שעת ההמראה חייבת להיות אחרי שעת הנחיתה');
+      setIsLoading(false);
       return;
     }
 
     const diffInMs = takeoff - landing;
     const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
 
-    // קיזוזים
     const landingOffset = 45;
     const travelOffset = 60;
     const securityOffset = 120;
@@ -51,9 +121,6 @@ const GuestPlanner = ({ onBack }) => {
       const m = totalMins % 60;
       return h > 0 ? `${h} שעות ו-${m} דקות` : `${m} דקות`;
     };
-
-    setIsLoading(true);
-    setResult(null); // Clear previous results
 
     setTimeout(() => {
       setIsLoading(false);
@@ -69,125 +136,46 @@ const GuestPlanner = ({ onBack }) => {
         netMinutes,
         isValid: netMinutes >= 120
       });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 2000);
   };
 
+
+  // --- רינדור (Render) ---
+
+  // שלב א': מסך המתנה (Loading)
   if (isLoading) {
-    return (
-      <div className="loading-screen full-bg" style={{ backgroundImage: `url(${waitingLogo})` }} dir="rtl">
-        <div className="loading-content white-text">
-          <div className="airplane-loader-premium">
-            <div className="orbit-ring outer"></div>
-            <div className="orbit-ring inner"></div>
-            <div className="plane-container-rotating">
-              <div className="exhaust-trail">
-                <span className="particle p1"></span>
-                <span className="particle p2"></span>
-                <span className="particle p3"></span>
-              </div>
-              <svg className="premium-jet" viewBox="0 0 100 100">
-                <defs>
-                  <linearGradient id="jetGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: '#86BDBF', stopOpacity: 1 }} />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M50 10 L55 35 L85 50 L55 55 L55 80 L65 90 L50 85 L35 90 L45 80 L45 55 L15 50 L45 35 Z"
-                  fill="url(#jetGrad)"
-                />
-                <path d="M50 10 L52 30 L48 30 Z" fill="#ffffff" />
-              </svg>
-            </div>
-          </div>
-          <p className="pulse-text">מחשבים לכם את המסלול המושלם...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
+  // שלב ב': הצגת התוצאות (Results)
   if (result) {
-    return <PlannerResults result={result} onBack={() => setResult(null)} />;
+    return <PlannerResults
+      result={result}
+      destination={formData.destination}
+      prefetchedWeather={weatherData}
+      onBack={() => setResult(null)}
+    />;
   }
 
+  // שלב ג': טופס הזנת הנתונים (הדף הראשי)
   return (
-    <div className="guest-planner-container animate-in">
-      <button className="back-button" onClick={onBack}>
-        <span>→</span> חזרה למסך הראשי
-      </button>
+    <div className="guest-planner-container home-planner-view animate-in">
+      <Hero />
+      <InfoCards />
 
-      <div className="planner-card glass">
-        <h1>פרטי ההמתנה שלך</h1>
-        <p>הזן את פרטי הטיסות שלך כדי שנוכל לתכנן לך את ההפסקה המושלמת</p>
+      {/* רכיב הטופס המודולרי */}
+      <PlannerForm
+        formData={formData}
+        handleChange={handleChange}
+        onSubmit={calculateTime}
+      />
 
-        <form className="planner-form" onSubmit={calculateTime}>
-          <div className="form-group">
-            <label>יעד עצירת הביניים</label>
-            <input
-              type="text"
-              name="destination"
-              value={formData.destination}
-              onChange={handleChange}
-              placeholder="לדוגמה: לונדון, פריז..."
-              className="planner-input"
-            />
-          </div>
-
-          <div className="form-section-title">נחיתה ביעד</div>
-          <div className="form-row">
-            <div className="form-group">
-              <label>תאריך נחיתה</label>
-              <input
-                type="date"
-                name="landingDate"
-                value={formData.landingDate}
-                onChange={handleChange}
-                className="planner-input"
-              />
-            </div>
-            <div className="form-group">
-              <label>שעת נחיתה</label>
-              <input
-                type="time"
-                name="landingTime"
-                value={formData.landingTime}
-                onChange={handleChange}
-                className="planner-input"
-              />
-            </div>
-          </div>
-
-          <div className="form-section-title">המראה לטיסת המשך</div>
-          <div className="form-row">
-            <div className="form-group">
-              <label>תאריך המראה</label>
-              <input
-                type="date"
-                name="takeoffDate"
-                value={formData.takeoffDate}
-                onChange={handleChange}
-                className="planner-input"
-              />
-            </div>
-            <div className="form-group">
-              <label>שעת המראה</label>
-              <input
-                type="time"
-                name="takeoffTime"
-                value={formData.takeoffTime}
-                onChange={handleChange}
-                className="planner-input"
-              />
-            </div>
-          </div>
-
-          <button type="submit" className="calculate-btn">
-            חשב לי את הזמן
-          </button>
-        </form>
-      </div>
+      <Testimonials />
     </div>
   );
 };
 
 export default GuestPlanner;
+
+

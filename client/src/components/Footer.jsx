@@ -1,4 +1,7 @@
-
+/**
+ * רכיב Footer - שולי האתר התחתונים.
+ * מציג זכויות יוצרים ושנה דינמית.
+ */
 const Footer = () => {
     return (
         <footer className="footer">
@@ -8,3 +11,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

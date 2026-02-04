@@ -33,17 +33,23 @@
 body {
   margin: 0;
   padding: 0;
-  background-image: url('./Logo/Gemini_Generated_Image_wg8m4lwg8m4lwg8m.png');
+  background-image: url('/src/Logo/Gemini_Generated_Image_wg8m4lwg8m4lwg8m.png');
   background-size: cover;
-  /* ממלא את כל המסך */
   background-position: center top;
-  /* שומר על המרכוז והצדדים */
   background-repeat: no-repeat;
   min-height: 100vh;
   width: 100vw;
   font-family: 'Inter', sans-serif;
   background-attachment: fixed;
+  caret-color: transparent;
 }
+
+input,
+textarea {
+  caret-color: auto;
+  /* מחזיר את הסמן לשדות קלט כדי שהמשתמש יראה איפה הוא כותב */
+}
+
 
 @keyframes fadeIn {
   from {
@@ -136,234 +142,7 @@ body {
   width: 100%;
 }
 
-.registration-section {
-  display: flex;
-  gap: 1.2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 100%;
-  margin-bottom: 1.5rem;
-  /* צמצום המרווח בין השכבות */
-}
 
-.feature-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
-  padding: 1.5rem 1.2rem;
-  flex: 1;
-  min-width: 280px;
-  max-width: 350px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-sizing: border-box;
-}
-
-@media (max-width: 600px) {
-  .feature-card {
-    min-width: 100%;
-    padding: 1.2rem;
-  }
-}
-
-.icon-circle {
-  background: white;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 0.8rem;
-  box-shadow: 0 4px 8px rgba(134, 189, 191, 0.1);
-}
-
-.icon-circle svg {
-  width: 20px;
-  height: 20px;
-}
-
-.feature-card h2 {
-  color: #1a237e;
-  font-size: 1.2rem;
-  margin-bottom: 0.2rem;
-  font-weight: 800;
-}
-
-.subtitle {
-  color: #546e7a;
-  font-size: 0.85rem;
-  margin-bottom: 1.2rem;
-}
-
-.features-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.2rem 0;
-  width: 100%;
-  text-align: right;
-}
-
-.features-list li {
-  color: #455a64;
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  font-size: 0.85rem;
-}
-
-.check {
-  color: #86BDBF;
-  font-weight: bold;
-  margin-left: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.card-cta {
-  width: 100%;
-  padding: 0.7rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-
-
-.card-cta.primary {
-  background: #86BDBF;
-  color: white;
-  box-shadow: 0 8px 20px rgba(134, 189, 191, 0.3);
-  /* אנימציית הבהוב למשיכת תשומת לב */
-  animation: button-flicker 2s infinite ease-in-out;
-}
-
-.card-cta.primary:hover {
-  background: #75abad;
-  box-shadow: 0 10px 25px rgba(134, 189, 191, 0.4);
-}
-
-.card-cta.secondary {
-  background: #86BDBF;
-  color: white;
-  border: none;
-  box-shadow: 0 8px 20px rgba(134, 189, 191, 0.3);
-}
-
-.card-cta.secondary:hover {
-  background: #75abad;
-  box-shadow: 0 10px 25px rgba(134, 189, 191, 0.4);
-}
-
-
-@media (max-width: 768px) {
-  .cards-container {
-    gap: 1.5rem;
-  }
-}
-
-.info-section {
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-  max-width: 1000px;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding-bottom: 2rem;
-}
-
-.info-card-3d {
-  background: #86BDBF;
-  /* הצבע הטורקיז מהתמונה */
-  border-radius: 12px;
-  padding: 0.8rem 1rem;
-  flex: 1;
-  min-width: 200px;
-  max-width: 280px;
-  display: flex;
-  /* תצוגה אופקית בתוך הכרטיס */
-  align-items: center;
-  gap: 1rem;
-  text-align: right;
-  box-shadow: 0 4px 15px rgba(134, 189, 191, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
-}
-
-.info-card-3d:hover {
-  transform: translateY(-5px);
-  background: #75abad;
-}
-
-.info-icon {
-  font-size: 1.8rem;
-  flex-shrink: 0;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.info-card-3d h3 {
-  color: white;
-  /* כיתוב לבן ובולט */
-  font-size: 1rem;
-  margin: 0 0 0.2rem 0;
-  font-weight: 900;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.info-card-3d p {
-  color: rgba(255, 255, 255, 0.9);
-  /* כיתוב בהיר ובולט */
-  font-size: 0.8rem;
-  line-height: 1.2;
-  margin: 0;
-  font-weight: 600;
-}
-
-/* התאמה לנייד */
-@media (max-width: 768px) {
-  .info-section {
-    margin-top: 1rem;
-    gap: 0.8rem;
-    padding: 0 1rem;
-  }
-
-  .info-card-3d {
-    min-width: 100%;
-    padding: 0.7rem;
-  }
-}
-
-.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  width: 100%;
-  padding: 0 1rem;
-  box-sizing: border-box;
-}
-
-.logo-wrapper {
-  mix-blend-mode: multiply;
-  filter: contrast(1.1);
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.logo {
-  height: auto;
-  width: 100%;
-  max-width: 500px;
-  display: block;
-}
 
 .app-container {
   min-height: 100vh;
@@ -372,7 +151,7 @@ body {
   overflow-x: hidden;
 }
 
-/* שכבת רקע קבועה למניעת קפיצות */
+/* שכבת רקע קבועה למניעת קפיצות - רקע ממוקד למתכנן */
 .app-container::before {
   content: '';
   position: fixed;
@@ -380,19 +159,67 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url('./Logo/Gemini_Generated_Image_wg8m4lwg8m4lwg8m.png');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background: transparent;
+  /* הסרת הרקע האטום כדי לראות את ה-body background */
   z-index: -1;
-  transition: opacity 0.8s ease-in-out;
+  overflow: hidden;
 }
 
-.app-container.guest-mode::before {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('./components/background/Gemini_Generated_Image_4zccw14zccw14zcc.png');
-  animation: fadeIn 0.8s ease-in-out;
+/* Airplane Animation Effects - Darker for light background */
+.airplane-bg-element {
+  position: fixed;
+  color: rgba(26, 35, 126, 0.08);
+  /* Dark blue with very low opacity */
+  pointer-events: none;
+  z-index: -1;
 }
+
+
+.planeify-1 {
+  top: 15%;
+  left: -10%;
+  font-size: 5rem;
+  animation: fly-across 25s linear infinite;
+}
+
+.planeify-2 {
+  top: 45%;
+  right: -10%;
+  font-size: 3rem;
+  animation: fly-across-reverse 35s linear infinite;
+  opacity: 0.3;
+}
+
+.planeify-3 {
+  bottom: 10%;
+  left: 30%;
+  font-size: 4rem;
+  animation: fly-across 45s linear infinite;
+  opacity: 0.2;
+}
+
+@keyframes fly-across {
+  from {
+    transform: translateX(-10vw) translateY(0) rotate(15deg);
+  }
+
+  to {
+    transform: translateX(110vw) translateY(-10vh) rotate(15deg);
+  }
+}
+
+@keyframes fly-across-reverse {
+  from {
+    transform: translateX(110vw) translateY(0) rotate(-165deg);
+  }
+
+  to {
+    transform: translateX(-10vw) translateY(10vh) rotate(-165deg);
+  }
+}
+
+
+
 
 .content {
   display: flex;
@@ -421,95 +248,65 @@ body {
   margin: 0;
 }
 
-/* עיצוב Tooltip (פירוט בריחוף עכבר) */
-.info-card-3d {
-  position: relative;
-  /* הכרחי עבור המיקום של ה-tooltip */
-  cursor: help;
-  /* מסמן למשתמש שיש מידע נוסף */
-}
 
-.tooltip-content {
-  position: absolute;
-  bottom: 120%;
-  /* ממוקם מעל הכרטיס */
-  right: 50%;
-  transform: translateX(50%) translateY(10px);
-  background: white;
-  color: #1a237e;
-  padding: 1rem;
-  border-radius: 12px;
-  width: 250px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  border: 1px solid #86BDBF;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  pointer-events: none;
-  z-index: 200;
-  text-align: right;
-}
-
-/* משולש קטן בתחתית ה-tooltip */
-.tooltip-content::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  right: 50%;
-  transform: translateX(50%);
-  border-width: 8px;
-  border-style: solid;
-  border-color: white transparent transparent transparent;
-}
-
-.info-card-3d:hover .tooltip-content {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(50%) translateY(0);
-}
 
 /* Guest Planner Styles */
+
+
 .guest-planner-container,
 .planner-results-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  /* הצמדה למעלה במקום למרכז */
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   padding: 1rem 2rem 2rem 2rem;
-  /* צמצום משמעותי של המרווח העליון */
   flex: 1;
+}
+
+.planner-results-container {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 100vh;
+  min-width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 50;
 }
 
 .back-button {
   position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: 0.5rem;
+  right: 0.3rem;
+  /* הכי ימינה שאפשר */
   background: #86BDBF;
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: white;
-  padding: 0.7rem 1.4rem;
-  border-radius: 50px;
-  font-size: 0.95rem;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  /* כפתור עגול */
+  font-size: 1.5rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 0.6rem;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 4px 15px rgba(134, 189, 191, 0.4);
   z-index: 1001;
+  padding: 0;
 }
 
 @media (max-width: 600px) {
   .back-button {
-    top: 1rem;
-    right: 1rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
+    top: 0.3rem;
+    right: 0.2rem;
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
   }
 }
 
@@ -525,20 +322,28 @@ body {
 }
 
 .planner-card.glass {
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.04) 100%);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border-radius: 40px;
-  padding: 3rem 5rem;
+  padding: 1.2rem 4rem;
   text-align: center;
-  width: 100%;
-  max-width: 800px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 95%;
+  max-width: 950px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   margin-top: 0;
   box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background image specifically for the planner form */
+.guest-planner-container .planner-card.glass {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)),
+    url('/src/components/background/Gemini_Generated_Image_3jpmup3jpmup3jpm.png') !important;
+  background-size: cover !important;
+  background-position: center top !important;
 }
 
 @media (max-width: 768px) {
@@ -557,26 +362,30 @@ body {
 }
 
 .planner-card h1 {
-  color: #1a237e;
-  font-size: clamp(2rem, 8vw, 3.5rem);
-  margin-bottom: 0.8rem;
+  color: #ffffff;
+  font-size: clamp(2.2rem, 8vw, 3.5rem);
+  /* Slightly smaller */
+  margin-bottom: 0.5rem;
+  /* Reduced from 1rem */
   font-weight: 950;
   text-shadow:
-    0 2px 4px rgba(255, 255, 255, 0.5),
-    0 4px 10px rgba(0, 0, 0, 0.1);
-  letter-spacing: -1px;
+    0 2px 4px rgba(255, 255, 255, 0.8),
+    0 4px 15px rgba(0, 0, 0, 0.15);
+  letter-spacing: -1.5px;
 }
 
 .planner-card p {
   color: #ffffff;
-  font-size: clamp(1rem, 4vw, 1.4rem);
+  font-size: clamp(1.1rem, 4.5vw, 1.5rem);
   margin-bottom: 0;
-  font-weight: 800;
+  font-weight: 900;
   max-width: 750px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.4;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  line-height: 1.5;
+  text-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .coming-soon-badge {
@@ -808,24 +617,28 @@ body {
 .planner-form {
   width: 100%;
   max-width: 650px;
-  /* מעט רחב יותר כדי להכיל את התאריכים בנוחות */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 0.8rem;
+  /* Reduced from 1.2rem */
   text-align: right;
-  padding-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  /* Reduced from 3rem */
 }
 
 .form-section-title {
-  color: #86BDBF;
-  font-size: 1.1rem;
-  font-weight: 800;
-  margin-top: 0.5rem;
-  padding-bottom: 0.3rem;
-  border-bottom: 2px solid rgba(134, 189, 191, 0.2);
+  color: #ffffff;
+  background: rgba(134, 189, 191, 0.3);
+  padding: 0.4rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1.25rem;
+  font-weight: 900;
+  margin-top: 1rem;
+  border: 1px solid rgba(134, 189, 191, 0.4);
   display: inline-block;
   width: fit-content;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .form-group {
@@ -835,21 +648,29 @@ body {
 }
 
 .form-group label {
-  color: #1a237e;
-  font-weight: 700;
-  font-size: 1rem;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 1.05rem;
+  /* Slightly smaller */
+  letter-spacing: -0.3px;
 }
 
 .planner-input {
   width: 100%;
-  padding: 0.8rem 1.2rem;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
+  padding: 0.8rem 1.4rem;
+  /* Reduced from 1.1rem */
+  border-radius: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  font-size: 1.12rem;
+  /* Reduced from 1.2rem */
   color: #1a237e;
-  transition: all 0.3s ease;
+  font-weight: 800;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .planner-input:focus {
@@ -866,17 +687,19 @@ body {
 }
 
 .calculate-btn {
-  background: #86BDBF;
+  background: #1a237e;
   color: white;
   border: none;
-  padding: 1rem;
-  border-radius: 12px;
-  font-size: 1.2rem;
-  font-weight: 800;
+  padding: 1.2rem;
+  border-radius: 18px;
+  font-size: 1.5rem;
+  font-weight: 950;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  margin-top: 1rem;
-  box-shadow: 0 4px 15px rgba(134, 189, 191, 0.3);
+  margin-top: 1.5rem;
+  box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .calculate-btn:hover {
@@ -1072,4 +895,592 @@ body {
   text-shadow: none;
   font-weight: 500;
   margin: 0;
+}
+
+
+
+/* Weather Widget - Premium Side Card (Right) */
+/* Weather Widget - Integrated Premium Style (Vertical) */
+.weather-widget-inline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.8rem;
+  background: rgba(255, 255, 255, 0.95);
+  /* Solid white background for clear visibility */
+  border-radius: 30px;
+  border: 3px solid #86BDBF;
+  /* Prominent brand color border */
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 280px;
+  /* Slightly larger */
+  transition: all 0.3s ease;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  /* Stronger shadow */
+  z-index: 10;
+}
+
+.weather-widget-inline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(134, 189, 191, 0.5);
+  transform: translateY(-5px);
+}
+
+.weather-icon-featured {
+  font-size: 4.5rem;
+  margin-bottom: 0.2rem;
+  filter: drop-shadow(0 10px 20px rgba(134, 189, 191, 0.4));
+  animation: sun-glow 3s infinite alternate ease-in-out;
+}
+
+@keyframes sun-glow {
+  from {
+    filter: drop-shadow(0 10px 20px rgba(134, 189, 191, 0.4));
+    transform: scale(1);
+  }
+
+  to {
+    filter: drop-shadow(0 15px 30px rgba(134, 189, 191, 0.7));
+    transform: scale(1.08);
+  }
+}
+
+.weather-details-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.weather-label {
+  font-size: 0.9rem;
+  color: #546e7a;
+  font-weight: 700;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.weather-temp-large {
+  font-size: 3.5rem;
+  color: #1a237e;
+  font-weight: 950;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.weather-desc-premium {
+  font-size: 1.2rem;
+  color: #86BDBF;
+  font-weight: 900;
+  margin: 0;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+}
+
+/* InfoCards Styles */
+.info-cards-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.2rem;
+  width: 100%;
+  max-width: 1200px;
+  /* Increased width */
+  margin-bottom: 1.2rem;
+  flex-wrap: nowrap;
+}
+
+.info-item-card {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding: 0.6rem 1.2rem;
+  /* Reduced height (padding), increased side padding */
+  border-radius: 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 80px;
+  /* Force a shorter height */
+}
+
+.info-item-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  /* מתרומם וגדל מעט */
+  background: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  /* צל עמוק יותר */
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  filter: brightness(1.1);
+  /* הופך לבהיר יותר */
+  z-index: 10;
+}
+
+.info-card-icon {
+  font-size: 1.8rem;
+  /* Smaller icon */
+  margin-bottom: 0.4rem;
+}
+
+.info-item-card.planning-card {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('./Logo/kat7214-hourglass-2846641_1920 (2).jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.info-item-card.weather-card {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('./Logo/kanenori-landscape-6887936_1920 (1).jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.info-item-card.recommendations-card {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('./Logo/mariya_m-bicycle-6580288_1920.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.info-item-card.weather-card .info-card-title,
+.info-item-card.weather-card .info-card-text,
+.info-item-card.recommendations-card .info-card-title,
+.info-item-card.recommendations-card .info-card-text,
+.info-item-card.planning-card .info-card-title,
+.info-item-card.planning-card .info-card-text,
+.info-item-card .expanded-text-content {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Expanded Info Styles */
+.info-card-expanded {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 0;
+}
+
+.info-item-card:hover .info-card-expanded {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 1rem;
+}
+
+.info-card-divider {
+  width: 40px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.4);
+  margin: 0.5rem auto;
+  border-radius: 2px;
+}
+
+.expanded-text-content {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-weight: 500;
+  padding: 0 0.5rem;
+}
+
+
+.info-card-title {
+  color: #1a237e;
+  font-size: 1.1rem;
+  /* Smaller title */
+  font-weight: 850;
+  margin-bottom: 0.3rem;
+  text-shadow: none;
+}
+
+.info-card-text {
+  color: #546e7a;
+  font-size: 0.85rem;
+  /* Smaller text */
+  line-height: 1.3;
+  margin: 0;
+  text-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .info-cards-container {
+    flex-wrap: wrap;
+    /* Only wrap on small screens */
+  }
+
+  .info-item-card {
+    min-width: 180px;
+  }
+}
+
+/* Hero Section Styles */
+.hero-section {
+  text-align: center;
+  margin: 1.5rem auto 3rem;
+  /* Reduced from 4rem */
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-badge {
+  background: rgba(134, 189, 191, 0.15);
+  border: 1px solid rgba(134, 189, 191, 0.3);
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  color: #1a237e;
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(5px);
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  background: #86BDBF;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #86BDBF;
+  animation: pulse 2s infinite;
+}
+
+.hero-title {
+  color: #1a237e;
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-weight: 950;
+  margin-bottom: 1rem;
+  letter-spacing: -3px;
+  line-height: 1;
+  text-transform: capitalize;
+}
+
+.text-gradient-animate {
+  background: linear-gradient(to right,
+      #1a237e,
+      #3949ab,
+      #86BDBF,
+      #1a237e);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientText 6s linear infinite;
+  display: inline-block;
+}
+
+.hero-subtitle {
+  color: #455a64;
+  font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+  font-weight: 700;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  line-height: 1.4;
+}
+
+.hero-scroll-indicator {
+  margin-top: 1rem;
+  opacity: 0.6;
+}
+
+.mouse {
+  width: 26px;
+  height: 42px;
+  border: 2px solid #1a237e;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.wheel {
+  width: 4px;
+  height: 8px;
+  background: #1a237e;
+  border-radius: 2px;
+  animation: scrollWheel 1.5s infinite;
+}
+
+@keyframes gradientText {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+@keyframes scrollWheel {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* Navbar Premium Styles */
+.navbar-premium {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(134, 189, 191, 0.2);
+  z-index: 1000;
+  padding: 0.8rem 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Left side: Logo & Slogan */
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.logo-text {
+  font-size: 1.8rem;
+  font-weight: 950;
+  color: #1a237e;
+  letter-spacing: -1px;
+}
+
+.logo-accent {
+  color: #86BDBF;
+}
+
+.slogan-text {
+  font-size: 0.75rem;
+  color: #546e7a;
+  font-weight: 600;
+  margin: 0;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+/* Right side: Login button */
+.navbar-login-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #1a237e;
+  color: white;
+  padding: 0.6rem 1.4rem;
+  border-radius: 50px;
+  border: none;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2);
+}
+
+.navbar-login-btn:hover {
+  background: #283593;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(26, 35, 126, 0.3);
+}
+
+/* Adjust app layout to accommodate fixed navbar */
+.app-container {
+  padding-top: 60px;
+  /* Reduced from 80px */
+}
+
+/* Testimonials Styles */
+/* Testimonials Styles - Spectacular Sliding Carousel */
+.testimonials-section.static-view {
+  width: 100%;
+  max-width: 1200px;
+  margin: 6rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.testimonials-grid-static {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+  width: 100%;
+}
+
+.testimonial-card-static {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  border: 1px solid rgba(134, 189, 191, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  text-align: right;
+  min-height: 250px;
+}
+
+.testimonial-card-static:hover {
+  transform: translateY(-10px);
+  background: #ffffff;
+  border-color: #86BDBF;
+  box-shadow: 0 20px 40px rgba(134, 189, 191, 0.2);
+}
+
+@media (max-width: 1200px) {
+  .testimonials-grid-static {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonials-grid-static {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+.section-title-premium {
+  color: #1a237e;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.section-title-premium::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: #86BDBF;
+  border-radius: 2px;
+}
+
+.quote-icon {
+  font-size: 4rem;
+  color: rgba(134, 189, 191, 0.2);
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  font-family: serif;
+}
+
+.testimonial-text {
+  color: #455a64;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(134, 189, 191, 0.1);
+  padding-top: 1rem;
+}
+
+.stars {
+  color: #ffc107;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+}
+
+.testimonial-name {
+  color: #1a237e;
+  font-weight: 850;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.testimonial-role {
+  color: #86BDBF;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: block;
+}
+
+.no-caret {
+  user-select: none;
+  /* מונע בחירת טקסט */
+  caret-color: transparent;
+  /* הופך את הסמן לשקוף למקרה שהוא עדיין מופיע */
 }
