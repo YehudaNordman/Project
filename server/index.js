@@ -1,8 +1,6 @@
 const express = require('express')
-let cors = require('cors');
 const app = express()
 app.use(express.json())
-app.use(cors());
 const AirportRoute = require('./Routing/AirportRout');
 app.use('/airports', AirportRoute);
 const userRoute = require('./Routing/UserRout');

@@ -12,6 +12,10 @@ exports.register = async (req, res) => {
       let salt = bcrypt.genSaltSync(12);
       user.password = bcrypt.hashSync(req.body.password, salt);
     }//end of if password
+
+    if (req.body.password.length < 8 || !/^(?=.*[a-z])(?=.*[A-Z])/.test(req.body.password)) {
+      return res.status(400).json({ message: "Password must be at least 8 characters long and contain at least one uppercase letter and one lowercase letter" });
+    }
     console.log(user);
 
     await user.save();
@@ -92,7 +96,7 @@ exports.auth = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, "secret password");
     console.log(decoded);
-    req.user = decoded;
+    req.user = await User.findById(decoded.userId);
     next();
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
