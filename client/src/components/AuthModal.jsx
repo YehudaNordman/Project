@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * רכיב AuthModal - חלון מודאלי להתחברות והרשמה.
  * כולל מעבר חלק בין מוד התחברות למוד הרשמה.
  */
 const AuthModal = ({ isOpen, onClose }) => {
+    const { login, register } = useAuth();
     const [isLogin, setIsLogin] = useState(true);
+    const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
         confirmPassword: '',
-        name: ''
+        fullName: ''
     });
 
     // מניעת גלילה של הדף כשחלון המודאל פתוח
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
+            setError('');
+            setMessage('');
         } else {
             document.body.style.overflow = 'unset';
         }
@@ -24,10 +31,43 @@ const AuthModal = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
-        // כאן תבוא הלוגיקה מול ה-Backend
+        setError('');
+        setMessage('');
+        setIsLoading(true);
+
+        try {
+            if (isLogin) {
+                const result = await login(formData.email, formData.password);
+                if (result.success) {
+                    onClose();
+                } else {
+                    setError(result.message);
+                }
+            } else {
+                if (formData.password !== formData.confirmPassword) {
+                    setError('הסיסמאות אינן תואמות');
+                    setIsLoading(false);
+                    return;
+                }
+                const result = await register({
+                    email: formData.email,
+                    password: formData.password,
+                    fullName: formData.fullName
+                });
+                if (result.success) {
+                    setMessage('נרשמת בהצלחה! כעת ניתן להתחבר');
+                    setIsLogin(true);
+                } else {
+                    setError(result.message);
+                }
+            }
+        } catch (err) {
+            setError('אירעה שגיאה בחיבור לשרת');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleChange = (e) => {
@@ -64,6 +104,9 @@ const AuthModal = ({ isOpen, onClose }) => {
                         <p>{isLogin ? 'התחבר כדי לשמור את היעדים שלך' : 'כל הכלים לתכנון עצירה מושלמת מחכים לך'}</p>
                     </div>
 
+                    {error && <div className="auth-error-message">{error}</div>}
+                    {message && <div className="auth-success-message">{message}</div>}
+
                     <form className="auth-form" onSubmit={handleSubmit}>
                         {!isLogin && (
                             <div className="form-group">
@@ -75,9 +118,9 @@ const AuthModal = ({ isOpen, onClose }) => {
                                     </svg>
                                     <input
                                         type="text"
-                                        name="name"
+                                        name="fullName"
                                         placeholder="ישראל ישראלי"
-                                        value={formData.name}
+                                        value={formData.fullName}
                                         onChange={handleChange}
                                         required
                                     />
@@ -147,12 +190,16 @@ const AuthModal = ({ isOpen, onClose }) => {
                             </div>
                         )}
 
-                        <button type="submit" className="auth-submit-btn modern">
-                            <span>{isLogin ? 'התחברות מעוררת השראה' : 'צאו לדרך חדשה'}</span>
-                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                <polyline points="12 5 19 12 12 19"></polyline>
-                            </svg>
+                        <button type="submit" className="auth-submit-btn modern" disabled={isLoading}>
+                            <span>
+                                {isLoading ? (isLogin ? 'מתחבר...' : 'נרשם...') : (isLogin ? 'התחברות מעוררת השראה' : 'צאו לדרך חדשה')}
+                            </span>
+                            {!isLoading && (
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            )}
                         </button>
                     </form>
 
