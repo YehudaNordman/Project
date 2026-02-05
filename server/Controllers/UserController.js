@@ -1,4 +1,4 @@
-const User = require('../Modolse/User');
+const User = require('../Modelse/User');
 const jwt = require('jsonwebtoken');// npm i jsonwebtoken
 var bcrypt = require('bcryptjs');//npm i bcryptjs
 exports.register = async (req, res) => {
@@ -58,7 +58,7 @@ exports.updateById = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res) => { //התחברות שניה דורש מייל וקוד
   try {
     //1. Validate input email passsword
     const { email, password } = req.body; // destructuring the request body
