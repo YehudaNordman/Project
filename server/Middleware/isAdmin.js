@@ -1,4 +1,4 @@
-const isAdmin = (req, res, next) => {
+const isAdmin = (req, res, next) => {   
   if ( req.user.admin) {
     console.log(req.user.admin);
     next();
