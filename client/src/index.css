@@ -276,49 +276,48 @@ textarea {
   z-index: 50;
 }
 
-.back-button {
-  position: fixed;
-  top: 0.5rem;
-  right: 0.3rem;
-  /* הכי ימינה שאפשר */
-  background: #86BDBF;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: white;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  /* כפתור עגול */
-  font-size: 1.5rem;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 15px rgba(134, 189, 191, 0.4);
-  z-index: 1001;
-  padding: 0;
+.back-button.fixed-top-right {
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  background: white !important;
+  border: 3px solid #1a237e !important;
+  color: #1a237e !important;
+  width: 65px !important;
+  height: 65px !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  z-index: 99999 !important;
+  padding: 0 !important;
+}
+
+.back-button:hover {
+  background: #1a237e !important;
+  color: white !important;
+  transform: scale(1.1);
+  box-shadow: 0 15px 40px rgba(26, 35, 126, 0.4) !important;
+}
+
+.back-button svg {
+  transition: transform 0.3s ease;
+}
+
+.back-button:hover svg {
+  transform: translateX(3px);
 }
 
 @media (max-width: 600px) {
   .back-button {
-    top: 0.3rem;
-    right: 0.2rem;
-    width: 38px;
-    height: 38px;
-    font-size: 1.2rem;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
   }
-}
-
-.back-button:hover {
-  background: #75abad;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(134, 189, 191, 0.5);
-}
-
-.back-button span {
-  font-size: 1.2rem;
-  line-height: 1;
 }
 
 .planner-card.glass {
@@ -1483,4 +1482,396 @@ textarea {
   /* מונע בחירת טקסט */
   caret-color: transparent;
   /* הופך את הסמן לשקוף למקרה שהוא עדיין מופיע */
+}
+
+/* Results Page Actions - Premium Home Button */
+.results-actions {
+  margin-top: 3.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+  animation: slideFadeUp 0.8s ease-out 0.4s both;
+}
+
+.home-button {
+  background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+  color: white;
+  border: none;
+  padding: 1.1rem 3rem;
+  border-radius: 50px;
+  font-size: 1.3rem;
+  font-weight: 950;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 12px 35px rgba(26, 35, 126, 0.4);
+  min-width: 280px;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.home-button .icon {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.home-button:hover {
+  background: linear-gradient(135deg, #86BDBF 0%, #75abad 100%);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 45px rgba(134, 189, 191, 0.6);
+  color: white;
+}
+
+.home-button:hover .icon {
+  transform: scale(1.2) rotate(-10deg);
+}
+
+.home-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.home-button:hover::after {
+  opacity: 1;
+}
+
+.home-button.secondary {
+  background: white !important;
+  color: #1a237e !important;
+  border: 3px solid #1a237e !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+  text-shadow: none !important;
+}
+
+.home-button.secondary:hover {
+  background: #1a237e !important;
+  color: white !important;
+  box-shadow: 0 15px 35px rgba(26, 35, 126, 0.3) !important;
+}
+
+@media (max-width: 600px) {
+  .home-button {
+    width: 100%;
+    min-width: unset;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+
+}
+
+/* Auth Modal Styles */
+/* --- Auth Modal CSS - Cleaned & Optimized --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(20px) saturate(180%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: modalFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-container {
+  background: rgba(255, 255, 255, 0.82);
+  width: 95%;
+  max-width: 440px;
+  max-height: 92vh;
+  overflow-y: auto;
+  border-radius: 40px;
+  position: relative;
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  animation: modalSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalSlideUp {
+  from {
+    transform: translateY(40px) scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-content-wrapper {
+  padding: 1.2rem 1.5rem;
+}
+
+.modal-close {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  color: #1e293b;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.modal-close:hover {
+  background: #ff4d4d;
+  color: white;
+  transform: rotate(90deg);
+}
+
+.auth-tabs {
+  display: flex;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 4px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+  direction: rtl;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 16px;
+  transition: color 0.4s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.tab-btn.active {
+  color: #1a237e;
+}
+
+.tab-slider {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  z-index: 1;
+}
+
+/* ב-RTL, הזזה שמאלה היא בערך שלילי של translateX */
+.tab-slider.at-register {
+  transform: translateX(-100%);
+}
+
+.tab-slider.at-login {
+  transform: translateX(0);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.auth-header h2 {
+  color: #1a237e;
+  font-size: 1.6rem;
+  font-weight: 950;
+  margin-bottom: 0.3rem;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-header p {
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  max-width: 280px;
+  margin: 0 auto;
+  line-height: 1.2;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 800;
+  color: #1e293b;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  padding-right: 4px;
+  text-align: right;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  right: 12px;
+  color: #94a3b8;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.7rem 2.8rem 0.7rem 1rem;
+  border-radius: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.03);
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  text-align: right;
+  color: #1e293b;
+}
+
+.auth-form input:focus {
+  border-color: #86BDBF;
+  background: white;
+  outline: none;
+  box-shadow: 0 12px 24px -8px rgba(134, 189, 191, 0.2);
+  transform: translateY(-2px);
+}
+
+.auth-form input:focus+.input-icon {
+  color: #86BDBF;
+}
+
+.forgot-password {
+  text-align: left;
+  margin-top: -0.2rem;
+}
+
+.forgot-password a {
+  color: #86BDBF;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-submit-btn.modern {
+  background: linear-gradient(135deg, #1a237e 0%, #1e3a8a 100%);
+  color: white;
+  padding: 0.8rem;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 900;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  margin-top: 0.8rem;
+  box-shadow: 0 10px 20px -5px rgba(26, 35, 126, 0.3);
+}
+
+.auth-submit-btn.modern:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px -8px rgba(26, 35, 126, 0.4);
+}
+
+.auth-submit-btn.modern:active {
+  transform: translateY(-2px);
+}
+
+.auth-footer {
+  margin-top: 0.8rem;
+  text-align: center;
+}
+
+.auth-footer p {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  position: relative;
+}
+
+.auth-footer p::before,
+.auth-footer p::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.auth-footer p::before {
+  right: 0;
+}
+
+.auth-footer p::after {
+  left: 0;
+}
+
+.social-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0.7rem;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 700;
+  color: #1a237e;
+}
+
+.social-btn:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
 }

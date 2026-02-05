@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import GuestPlanner from '../components/GuestPlanner'
+import AuthModal from '../components/AuthModal'
 
 /**
  * רכיב LandingPage - עמוד הבית והמעטפת הראשית של האפליקציה.
@@ -11,13 +12,18 @@ const LandingPage = () => {
     // State למעקב האם מוצגות תוצאות חישוב כרגע.
     // אם מוצגות תוצאות - נסתיר את ה-Navbar כדי לתת מקום לתצוגה המלאה.
     const [isShowingResults, setIsShowingResults] = useState(false);
+    // State לניהול חלון ההתחברות (Modal)
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
     return (
         /* app-container: המיכל הראשי שמגדיר את מבנה הדף והרקע */
         <div className="app-container" dir="rtl">
 
             {/* Navbar (תפריט עליון): יוצג רק אם אנחנו בטופס ההזנה (לא בתוצאות) */}
-            {!isShowingResults && <Navbar />}
+            {!isShowingResults && <Navbar onLoginClick={() => setIsAuthModalOpen(true)} />}
+
+            {/* חלון מודאלי להתחברות והרשמה */}
+            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
             {/* main content: האזור המרכזי של האפליקציה */}
             <main className="content">

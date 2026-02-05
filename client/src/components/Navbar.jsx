@@ -5,13 +5,13 @@ import React from 'react';
  * כולל לוגו בצד אחד וכפתור גישה לאזור האישי בצד השני.
  * מעוצב בסגנון פרימיום דביק (Sticky).
  */
-const Navbar = () => {
+const Navbar = ({ onLoginClick }) => {
     return (
         <nav className="navbar-premium sticky-top">
             <div className="navbar-content">
                 {/* צד ימין: כפתור התחברות / אזור אישי עם אייקון משתמש */}
                 <div className="navbar-right">
-                    <button className="navbar-login-btn">
+                    <button className="navbar-login-btn" onClick={onLoginClick}>
                         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>

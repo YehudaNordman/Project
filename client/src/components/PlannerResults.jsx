@@ -59,55 +59,63 @@ const PlannerResults = ({ result, onBack, destination, prefetchedWeather }) => {
     }, [destination, prefetchedWeather]);
 
     return (
-        <div className="planner-results-container animate-in">
-            {/* כפתור חזרה לעריכה */}
-            <button className="back-button icon-only" onClick={onBack} title="חזרה לעריכה">
-                <span>→</span>
+        <>
+            {/* כפתור חזרה מעוצב בפינה העליונה - מחוץ לאנימציה כדי שלא יושפע */}
+            <button className="back-button fixed-top-right" onClick={onBack} title="חזרה לעריכה">
+                <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
             </button>
 
-            <div className="planner-card glass">
-                {/* הצגת תוצאות אם הזמן תקין (מעל שעתיים נטו) */}
-                {result.isValid ? (
-                    <div className="success-result animate-in">
+            <div className="planner-results-container animate-in">
+                <div className="planner-card glass">
+                    {/* הצגת תוצאות אם הזמן תקין (מעל שעתיים נטו) */}
+                    {result.isValid ? (
+                        <div className="success-result animate-in">
 
-                        {/* שימוש ברכיב מזג האוויר המודולרי */}
-                        <WeatherWidget weather={weather} destination={destination} />
+                            {/* שימוש ברכיב מזג האוויר המודולרי */}
+                            <WeatherWidget weather={weather} destination={destination} />
 
-                        {/* שימוש ברכיב מד הלחץ המודולרי */}
-                        <PressureGauge netMinutes={result.netMinutes} />
+                            {/* שימוש ברכיב מד הלחץ המודולרי */}
+                            <PressureGauge netMinutes={result.netMinutes} />
 
-                        {/* שימוש ברכיב פירוט החישוב המודולרי */}
-                        <CalculationBreakdown result={result} />
+                            {/* שימוש ברכיב פירוט החישוב המודולרי */}
+                            <CalculationBreakdown result={result} />
 
-                        {/* תצוגה מודגשת של הזמן הסופי */}
-                        <div className="time-display-wrapper">
-                            <p>הזמן הנטו שלך לסיור והנאה הוא:</p>
-                            <div className="time-display">{result.netTime}</div>
-                        </div>
-
-                        {/* כרטיסי המלצות ראשוניים (Placeholders) */}
-                        <div className="placeholders-grid">
-                            <div className="placeholder-wrapper">
-                                <h3 className="external-card-title">🍽️ מסעדות באזור</h3>
-                                <div className="placeholder-card restaurants-card"></div>
+                            {/* תצוגה מודגשת של הזמן הסופי */}
+                            <div className="time-display-wrapper">
+                                <p>הזמן הנטו שלך לסיור והנאה הוא:</p>
+                                <div className="time-display">{result.netTime}</div>
                             </div>
-                            <div className="placeholder-wrapper">
-                                <h3 className="external-card-title">🏛️ אטרקציות באזור</h3>
-                                <div className="placeholder-card attractions-card"></div>
+
+                            {/* כרטיסי המלצות ראשוניים (Placeholders) */}
+                            <div className="placeholders-grid">
+                                <div className="placeholder-wrapper">
+                                    <h3 className="external-card-title">🍽️ מסעדות באזור</h3>
+                                    <div className="placeholder-card restaurants-card"></div>
+                                </div>
+                                <div className="placeholder-wrapper">
+                                    <h3 className="external-card-title">🏛️ אטרקציות באזור</h3>
+                                    <div className="placeholder-card attractions-card"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ) : (
-                    // הצגת הודעת שגיאה אם הזמן קצר מדי
-                    <div className="error-result animate-in">
-                        <div className="result-icon">⚠️</div>
-                        <p className="error-message">
-                            זמן ההמתנה קצר מדי ליציאה מהשדה. מומלץ להישאר בטרמינל וליהנות מהדיוטי פרי.
-                        </p>
-                    </div>
-                )}
+                    ) : (
+                        // הצגת הודעת שגיאה אם הזמן קצר מדי
+                        <div className="error-result animate-in">
+                            <div className="result-icon">⚠️</div>
+                            <p className="error-message">
+                                זמן ההמתנה קצר מדי ליציאה מהשדה. מומלץ להישאר בטרמינל וליהנות מהדיוטי פרי.
+                            </p>
+                            <button className="home-button secondary" onClick={onBack}>
+                                חזרה לעריכת פרטים
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
