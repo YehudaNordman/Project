@@ -95,3 +95,5 @@ exports.getLocationById = async (req, res) => { //מבין את המיקום ל�
     return res.status(500).json({ message: error.message });
   }
 };
+
+//הפונקציה מקבלת נתונים של מיקום ומהאי פי אי נחזיר נתונים 

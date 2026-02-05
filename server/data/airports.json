@@ -1,0 +1,982 @@
+[
+  {
+    "id": 1,
+    "city_english": "London",
+    "city_hebrew": "לונדון",
+    "state_english": "United Kingdom",
+    "state_hebrew": "בריטניה",
+    "longitude": -0.4543,
+    "latitude": 51.47,
+    "airport_name": "Heathrow Airport"
+  },
+  {
+    "id": 2,
+    "city_english": "Istanbul",
+    "city_hebrew": "איסטנבול",
+    "state_english": "Turkey",
+    "state_hebrew": "טורקיה",
+    "longitude": 28.7444,
+    "latitude": 41.2753,
+    "airport_name": "Istanbul Airport"
+  },
+  {
+    "id": 3,
+    "city_english": "Kuala Lumpur",
+    "city_hebrew": "קואלה לומפור",
+    "state_english": "Malaysia",
+    "state_hebrew": "מלזיה",
+    "longitude": 101.7099,
+    "latitude": 2.7456,
+    "airport_name": "Kuala Lumpur International Airport"
+  },
+  {
+    "id": 4,
+    "city_english": "Amsterdam",
+    "city_hebrew": "אמסטרדם",
+    "state_english": "Netherlands",
+    "state_hebrew": "הולנד",
+    "longitude": 4.7639,
+    "latitude": 52.3086,
+    "airport_name": "Schiphol Airport"
+  },
+  {
+    "id": 5,
+    "city_english": "Seoul",
+    "city_hebrew": "סיאול",
+    "state_english": "South Korea",
+    "state_hebrew": "דרום קוריאה",
+    "longitude": 126.4407,
+    "latitude": 37.4602,
+    "airport_name": "Incheon International Airport"
+  },
+  {
+    "id": 6,
+    "city_english": "Frankfurt",
+    "city_hebrew": "פרנקפורט",
+    "state_english": "Germany",
+    "state_hebrew": "גרמניה",
+    "longitude": 8.5705,
+    "latitude": 50.0333,
+    "airport_name": "Frankfurt Airport"
+  },
+  {
+    "id": 7,
+    "city_english": "Atlanta",
+    "city_hebrew": "אטלנטה",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -84.4277,
+    "latitude": 33.6407,
+    "airport_name": "Hartsfield–Jackson Atlanta International Airport"
+  },
+  {
+    "id": 8,
+    "city_english": "Chicago",
+    "city_hebrew": "שיקגו",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -87.9073,
+    "latitude": 41.9742,
+    "airport_name": "O'Hare International Airport"
+  },
+  {
+    "id": 9,
+    "city_english": "Paris",
+    "city_hebrew": "פריז",
+    "state_english": "France",
+    "state_hebrew": "צרפת",
+    "longitude": 2.55,
+    "latitude": 49.0097,
+    "airport_name": "Charles de Gaulle Airport"
+  },
+  {
+    "id": 10,
+    "city_english": "Dubai",
+    "city_hebrew": "דובאי",
+    "state_english": "UAE",
+    "state_hebrew": "איחוד האמירויות",
+    "longitude": 55.3644,
+    "latitude": 25.2532,
+    "airport_name": "Dubai International Airport"
+  },
+  {
+    "id": 11,
+    "city_english": "Tokyo",
+    "city_hebrew": "טוקיו",
+    "state_english": "Japan",
+    "state_hebrew": "יפן",
+    "longitude": 139.7797,
+    "latitude": 35.5494,
+    "airport_name": "Haneda Airport"
+  },
+  {
+    "id": 12,
+    "city_english": "Singapore",
+    "city_hebrew": "סינגפור",
+    "state_english": "Singapore",
+    "state_hebrew": "סינגפור",
+    "longitude": 103.9915,
+    "latitude": 1.3644,
+    "airport_name": "Singapore Changi Airport"
+  },
+  {
+    "id": 13,
+    "city_english": "Bangkok",
+    "city_hebrew": "בנגקוק",
+    "state_english": "Thailand",
+    "state_hebrew": "תאילנד",
+    "longitude": 100.7501,
+    "latitude": 13.6895,
+    "airport_name": "Suvarnabhumi Airport"
+  },
+  {
+    "id": 14,
+    "city_english": "Dallas",
+    "city_hebrew": "דאלאס",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -97.0403,
+    "latitude": 32.8998,
+    "airport_name": "Dallas/Fort Worth International Airport"
+  },
+  {
+    "id": 15,
+    "city_english": "Doha",
+    "city_hebrew": "דוחה",
+    "state_english": "Qatar",
+    "state_hebrew": "קטאר",
+    "longitude": 51.6081,
+    "latitude": 25.2731,
+    "airport_name": "Hamad International Airport"
+  },
+  {
+    "id": 16,
+    "city_english": "Hong Kong",
+    "city_hebrew": "הונג קונג",
+    "state_english": "Hong Kong",
+    "state_hebrew": "הונג קונג",
+    "longitude": 113.9145,
+    "latitude": 22.308,
+    "airport_name": "Hong Kong International Airport"
+  },
+  {
+    "id": 17,
+    "city_english": "Madrid",
+    "city_hebrew": "מדריד",
+    "state_english": "Spain",
+    "state_hebrew": "ספרד",
+    "longitude": -3.5672,
+    "latitude": 40.4839,
+    "airport_name": "Adolfo Suárez Madrid–Barajas Airport"
+  },
+  {
+    "id": 18,
+    "city_english": "Munich",
+    "city_hebrew": "מינכן",
+    "state_english": "Germany",
+    "state_hebrew": "גרמניה",
+    "longitude": 11.7861,
+    "latitude": 48.3537,
+    "airport_name": "Munich Airport"
+  },
+  {
+    "id": 19,
+    "city_english": "Zurich",
+    "city_hebrew": "ציריך",
+    "state_english": "Switzerland",
+    "state_hebrew": "שוויץ",
+    "longitude": 8.5492,
+    "latitude": 47.4582,
+    "airport_name": "Zurich Airport"
+  },
+  {
+    "id": 20,
+    "city_english": "Bogota",
+    "city_hebrew": "בוגוטה",
+    "state_english": "Colombia",
+    "state_hebrew": "קולומביה",
+    "longitude": -74.1469,
+    "latitude": 4.7016,
+    "airport_name": "El Dorado International Airport"
+  },
+  {
+    "id": 21,
+    "city_english": "Miami",
+    "city_hebrew": "מיאמי",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -80.287,
+    "latitude": 25.7959,
+    "airport_name": "Miami International Airport"
+  },
+  {
+    "id": 22,
+    "city_english": "Toronto",
+    "city_hebrew": "טורונטו",
+    "state_english": "Canada",
+    "state_hebrew": "קנדה",
+    "longitude": -79.6248,
+    "latitude": 43.6777,
+    "airport_name": "Toronto Pearson International Airport"
+  },
+  {
+    "id": 23,
+    "city_english": "Delhi",
+    "city_hebrew": "דלהי",
+    "state_english": "India",
+    "state_hebrew": "הודו",
+    "longitude": 77.1,
+    "latitude": 28.5562,
+    "airport_name": "Indira Gandhi International Airport"
+  },
+  {
+    "id": 24,
+    "city_english": "Jakarta",
+    "city_hebrew": "ג'קרטה",
+    "state_english": "Indonesia",
+    "state_hebrew": "אינדונזיה",
+    "longitude": 106.6559,
+    "latitude": -6.1256,
+    "airport_name": "Soekarno–Hatta International Airport"
+  },
+  {
+    "id": 25,
+    "city_english": "Manila",
+    "city_hebrew": "מנילה",
+    "state_english": "Philippines",
+    "state_hebrew": "פיליפינים",
+    "longitude": 121.0197,
+    "latitude": 14.5086,
+    "airport_name": "Ninoy Aquino International Airport"
+  },
+  {
+    "id": 26,
+    "city_english": "Barcelona",
+    "city_hebrew": "ברצלונה",
+    "state_english": "Spain",
+    "state_hebrew": "ספרד",
+    "longitude": 2.0833,
+    "latitude": 41.2969,
+    "airport_name": "Josep Tarradellas Barcelona–El Prat Airport"
+  },
+  {
+    "id": 27,
+    "city_english": "Rome",
+    "city_hebrew": "רומא",
+    "state_english": "Italy",
+    "state_hebrew": "איטליה",
+    "longitude": 12.2389,
+    "latitude": 41.7999,
+    "airport_name": "Leonardo da Vinci–Fiumicino Airport"
+  },
+  {
+    "id": 28,
+    "city_english": "Mexico City",
+    "city_hebrew": "מקסיקו סיטי",
+    "state_english": "Mexico",
+    "state_hebrew": "מקסיקו",
+    "longitude": -99.0721,
+    "latitude": 19.4361,
+    "airport_name": "Mexico City International Airport"
+  },
+  {
+    "id": 29,
+    "city_english": "Vienna",
+    "city_hebrew": "וינה",
+    "state_english": "Austria",
+    "state_hebrew": "אוסטריה",
+    "longitude": 16.5636,
+    "latitude": 48.1103,
+    "airport_name": "Vienna International Airport"
+  },
+  {
+    "id": 30,
+    "city_english": "Lisbon",
+    "city_hebrew": "ליסבון",
+    "state_english": "Portugal",
+    "state_hebrew": "פורטוגל",
+    "longitude": -9.1354,
+    "latitude": 38.7742,
+    "airport_name": "Humberto Delgado Airport"
+  },
+  {
+    "id": 31,
+    "city_english": "Copenhagen",
+    "city_hebrew": "קופנהגן",
+    "state_english": "Denmark",
+    "state_hebrew": "דנמרק",
+    "longitude": 12.6508,
+    "latitude": 55.618,
+    "airport_name": "Copenhagen Airport"
+  },
+  {
+    "id": 32,
+    "city_english": "Brussels",
+    "city_hebrew": "בריסל",
+    "state_english": "Belgium",
+    "state_hebrew": "בלגיה",
+    "longitude": 4.4844,
+    "latitude": 50.9009,
+    "airport_name": "Brussels Airport"
+  },
+  {
+    "id": 33,
+    "city_english": "Athens",
+    "city_hebrew": "אתונה",
+    "state_english": "Greece",
+    "state_hebrew": "יוון",
+    "longitude": 23.9484,
+    "latitude": 37.9364,
+    "airport_name": "Athens International Airport"
+  },
+  {
+    "id": 34,
+    "city_english": "Warsaw",
+    "city_hebrew": "ורשה",
+    "state_english": "Poland",
+    "state_hebrew": "פולין",
+    "longitude": 20.9671,
+    "latitude": 52.1657,
+    "airport_name": "Warsaw Chopin Airport"
+  },
+  {
+    "id": 35,
+    "city_english": "Prague",
+    "city_hebrew": "פראג",
+    "state_english": "Czech Republic",
+    "state_hebrew": "צ'כיה",
+    "longitude": 14.2632,
+    "latitude": 50.1008,
+    "airport_name": "Václav Havel Airport Prague"
+  },
+  {
+    "id": 36,
+    "city_english": "Sydney",
+    "city_hebrew": "סידני",
+    "state_english": "Australia",
+    "state_hebrew": "אוסטרליה",
+    "longitude": 151.1772,
+    "latitude": -33.9399,
+    "airport_name": "Sydney Kingsford Smith Airport"
+  },
+  {
+    "id": 37,
+    "city_english": "Los Angeles",
+    "city_hebrew": "לוס אנג'לס",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -118.4085,
+    "latitude": 33.9416,
+    "airport_name": "Los Angeles International Airport"
+  },
+  {
+    "id": 38,
+    "city_english": "San Francisco",
+    "city_hebrew": "סן פרנסיסקו",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -122.3748,
+    "latitude": 37.6191,
+    "airport_name": "San Francisco International Airport"
+  },
+  {
+    "id": 39,
+    "city_english": "New York",
+    "city_hebrew": "ניו יורק",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -73.7781,
+    "latitude": 40.6413,
+    "airport_name": "John F. Kennedy International Airport"
+  },
+  {
+    "id": 40,
+    "city_english": "Shanghai",
+    "city_hebrew": "שנגחאי",
+    "state_english": "China",
+    "state_hebrew": "סין",
+    "longitude": 121.8083,
+    "latitude": 31.1443,
+    "airport_name": "Shanghai Pudong International Airport"
+  },
+  {
+    "id": 41,
+    "city_english": "Beijing",
+    "city_hebrew": "בייג'ינג",
+    "state_english": "China",
+    "state_hebrew": "סין",
+    "longitude": 116.5871,
+    "latitude": 40.0799,
+    "airport_name": "Beijing Capital International Airport"
+  },
+  {
+    "id": 42,
+    "city_english": "Guangzhou",
+    "city_hebrew": "גואנגג'ואו",
+    "state_english": "China",
+    "state_hebrew": "סין",
+    "longitude": 113.2988,
+    "latitude": 23.3924,
+    "airport_name": "Guangzhou Baiyun International Airport"
+  },
+  {
+    "id": 43,
+    "city_english": "Mumbai",
+    "city_hebrew": "מומבאי",
+    "state_english": "India",
+    "state_hebrew": "הודו",
+    "longitude": 72.865,
+    "latitude": 19.0896,
+    "airport_name": "Chhatrapati Shivaji Maharaj International Airport"
+  },
+  {
+    "id": 44,
+    "city_english": "Cairo",
+    "city_hebrew": "קהיר",
+    "state_english": "Egypt",
+    "state_hebrew": "מצרים",
+    "longitude": 31.4056,
+    "latitude": 30.1219,
+    "airport_name": "Cairo International Airport"
+  },
+  {
+    "id": 45,
+    "city_english": "Tel Aviv",
+    "city_hebrew": "תל אביב",
+    "state_english": "Israel",
+    "state_hebrew": "ישראל",
+    "longitude": 34.8867,
+    "latitude": 32.0114,
+    "airport_name": "Ben Gurion Airport"
+  },
+  {
+    "id": 46,
+    "city_english": "Moscow",
+    "city_hebrew": "מוסקבה",
+    "state_english": "Russia",
+    "state_hebrew": "רוסיה",
+    "longitude": 37.4146,
+    "latitude": 55.9726,
+    "airport_name": "Sheremetyevo International Airport"
+  },
+  {
+    "id": 47,
+    "city_english": "Johannesburg",
+    "city_hebrew": "יוהנסבורג",
+    "state_english": "South Africa",
+    "state_hebrew": "דרום אפריקה",
+    "longitude": 28.246,
+    "latitude": -26.1367,
+    "airport_name": "O. R. Tambo International Airport"
+  },
+  {
+    "id": 48,
+    "city_english": "Addis Ababa",
+    "city_hebrew": "אדיס אבבה",
+    "state_english": "Ethiopia",
+    "state_hebrew": "אתיופיה",
+    "longitude": 38.7993,
+    "latitude": 8.9778,
+    "airport_name": "Bole International Airport"
+  },
+  {
+    "id": 49,
+    "city_english": "Casablanca",
+    "city_hebrew": "קזבלנקה",
+    "state_english": "Morocco",
+    "state_hebrew": "מרוקו",
+    "longitude": -7.5898,
+    "latitude": 33.3675,
+    "airport_name": "Mohammed V International Airport"
+  },
+  {
+    "id": 50,
+    "city_english": "Sao Paulo",
+    "city_hebrew": "סאו פאולו",
+    "state_english": "Brazil",
+    "state_hebrew": "ברזיל",
+    "longitude": -46.4731,
+    "latitude": -23.4356,
+    "airport_name": "Guarulhos International Airport"
+  },
+  {
+    "id": 51,
+    "city_english": "Santiago",
+    "city_hebrew": "סנטיאגו",
+    "state_english": "Chile",
+    "state_hebrew": "צ'ילה",
+    "longitude": -70.7853,
+    "latitude": -33.393,
+    "airport_name": "Arturo Merino Benítez International Airport"
+  },
+  {
+    "id": 52,
+    "city_english": "Lima",
+    "city_hebrew": "לימה",
+    "state_english": "Peru",
+    "state_hebrew": "פרו",
+    "longitude": -77.1147,
+    "latitude": -12.0219,
+    "airport_name": "Jorge Chávez International Airport"
+  },
+  {
+    "id": 53,
+    "city_english": "Panama City",
+    "city_hebrew": "פנמה סיטי",
+    "state_english": "Panama",
+    "state_hebrew": "פנמה",
+    "longitude": -79.3835,
+    "latitude": 9.0714,
+    "airport_name": "Tocumen International Airport"
+  },
+  {
+    "id": 54,
+    "city_english": "Riyadh",
+    "city_hebrew": "ריאד",
+    "state_english": "Saudi Arabia",
+    "state_hebrew": "ערב הסעודית",
+    "longitude": 46.6988,
+    "latitude": 24.9576,
+    "airport_name": "King Khalid International Airport"
+  },
+  {
+    "id": 55,
+    "city_english": "Jeddah",
+    "city_hebrew": "ג'דה",
+    "state_english": "Saudi Arabia",
+    "state_hebrew": "ערב הסעודית",
+    "longitude": 39.1565,
+    "latitude": 21.6796,
+    "airport_name": "King Abdulaziz International Airport"
+  },
+  {
+    "id": 56,
+    "city_english": "Abu Dhabi",
+    "city_hebrew": "אבו דאבי",
+    "state_english": "UAE",
+    "state_hebrew": "איחוד האמירויות",
+    "longitude": 54.6511,
+    "latitude": 24.433,
+    "airport_name": "Zayed International Airport"
+  },
+  {
+    "id": 57,
+    "city_english": "Muscat",
+    "city_hebrew": "מוסקט",
+    "state_english": "Oman",
+    "state_hebrew": "עומאן",
+    "longitude": 58.2844,
+    "latitude": 23.5933,
+    "airport_name": "Muscat International Airport"
+  },
+  {
+    "id": 60,
+    "city_english": "Vancouver",
+    "city_hebrew": "ונקובר",
+    "state_english": "Canada",
+    "state_hebrew": "קנדה",
+    "longitude": -123.1815,
+    "latitude": 49.1967,
+    "airport_name": "Vancouver International Airport"
+  },
+  {
+    "id": 61,
+    "city_english": "Seattle",
+    "city_hebrew": "סיאטל",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -122.3088,
+    "latitude": 47.4489,
+    "airport_name": "Seattle–Tacoma International Airport"
+  },
+  {
+    "id": 62,
+    "city_english": "Boston",
+    "city_hebrew": "בוסטון",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -71.0052,
+    "latitude": 42.3656,
+    "airport_name": "Logan International Airport"
+  },
+  {
+    "id": 63,
+    "city_english": "Houston",
+    "city_hebrew": "יוסטון",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -95.3397,
+    "latitude": 29.9902,
+    "airport_name": "George Bush Intercontinental Airport"
+  },
+  {
+    "id": 64,
+    "city_english": "Denver",
+    "city_hebrew": "דנבר",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -104.6737,
+    "latitude": 39.8561,
+    "airport_name": "Denver International Airport"
+  },
+  {
+    "id": 65,
+    "city_english": "Salt Lake City",
+    "city_hebrew": "סולט לייק סיטי",
+    "state_english": "USA",
+    "state_hebrew": "ארצות הברית",
+    "longitude": -111.9777,
+    "latitude": 40.7899,
+    "airport_name": "Salt Lake City International Airport"
+  },
+  {
+    "id": 66,
+    "city_english": "Ho Chi Minh City",
+    "city_hebrew": "הו צ'י מין סיטי",
+    "state_english": "Vietnam",
+    "state_hebrew": "וייטנאם",
+    "longitude": 106.6588,
+    "latitude": 10.8188,
+    "airport_name": "Tan Son Nhat International Airport"
+  },
+  {
+    "id": 67,
+    "city_english": "Taipei",
+    "city_hebrew": "טאיפיי",
+    "state_english": "Taiwan",
+    "state_hebrew": "טאיוואן",
+    "longitude": 121.2317,
+    "latitude": 25.0797,
+    "airport_name": "Taiwan Taoyuan International Airport"
+  },
+  {
+    "id": 68,
+    "city_english": "Oslo",
+    "city_hebrew": "אוסלו",
+    "state_english": "Norway",
+    "state_hebrew": "נורווגיה",
+    "longitude": 11.1004,
+    "latitude": 60.1975,
+    "airport_name": "Oslo Airport, Gardermoen"
+  },
+  {
+    "id": 69,
+    "city_english": "Stockholm",
+    "city_hebrew": "שטוקהולם",
+    "state_english": "Sweden",
+    "state_hebrew": "שוודיה",
+    "longitude": 17.9186,
+    "latitude": 59.6519,
+    "airport_name": "Stockholm Arlanda Airport"
+  },
+  {
+    "id": 70,
+    "city_english": "Helsinki",
+    "city_hebrew": "הלסינקי",
+    "state_english": "Finland",
+    "state_hebrew": "פינלנד",
+    "longitude": 24.9633,
+    "latitude": 60.3172,
+    "airport_name": "Helsinki Airport"
+  },
+  {
+    "id": 71,
+    "city_english": "Dublin",
+    "city_hebrew": "דבלין",
+    "state_english": "Ireland",
+    "state_hebrew": "אירלנד",
+    "longitude": -6.2499,
+    "latitude": 53.4264,
+    "airport_name": "Dublin Airport"
+  },
+  {
+    "id": 72,
+    "city_english": "Manchester",
+    "city_hebrew": "מנצ'סטר",
+    "state_english": "United Kingdom",
+    "state_hebrew": "בריטניה",
+    "longitude": -2.2749,
+    "latitude": 53.3588,
+    "airport_name": "Manchester Airport"
+  },
+  {
+    "id": 73,
+    "city_english": "Nice",
+    "city_hebrew": "ניס",
+    "state_english": "France",
+    "state_hebrew": "צרפת",
+    "longitude": 7.215,
+    "latitude": 43.6653,
+    "airport_name": "Nice Côte d'Azur Airport"
+  },
+  {
+    "id": 74,
+    "city_english": "Geneva",
+    "city_hebrew": "ז'נבה",
+    "state_english": "Switzerland",
+    "state_hebrew": "שוויץ",
+    "longitude": 6.1092,
+    "latitude": 46.237,
+    "airport_name": "Geneva Airport"
+  },
+  {
+    "id": 75,
+    "city_english": "Milan",
+    "city_hebrew": "מילאנו",
+    "state_english": "Italy",
+    "state_hebrew": "איטליה",
+    "longitude": 8.7281,
+    "latitude": 45.6301,
+    "airport_name": "Milan Malpensa Airport"
+  },
+  {
+    "id": 76,
+    "city_english": "Budapest",
+    "city_hebrew": "בודפשט",
+    "state_english": "Hungary",
+    "state_hebrew": "הונגריה",
+    "longitude": 19.2611,
+    "latitude": 47.4369,
+    "airport_name": "Budapest Ferenc Liszt International Airport"
+  },
+  {
+    "id": 77,
+    "city_english": "Sofia",
+    "city_hebrew": "סופיה",
+    "state_english": "Bulgaria",
+    "state_hebrew": "בולגריה",
+    "longitude": 23.4061,
+    "latitude": 42.6967,
+    "airport_name": "Sofia Airport"
+  },
+  {
+    "id": 78,
+    "city_english": "Larnaca",
+    "city_hebrew": "לרנקה",
+    "state_english": "Cyprus",
+    "state_hebrew": "קפריסין",
+    "longitude": 33.6249,
+    "latitude": 34.8751,
+    "airport_name": "Larnaca International Airport"
+  },
+  {
+    "id": 79,
+    "city_english": "Beirut",
+    "city_hebrew": "ביירות",
+    "state_english": "Lebanon",
+    "state_hebrew": "לבנון",
+    "longitude": 35.4884,
+    "latitude": 33.8209,
+    "airport_name": "Beirut–Rafic Hariri International Airport"
+  },
+  {
+    "id": 80,
+    "city_english": "Manama",
+    "city_hebrew": "מנאמה",
+    "state_english": "Bahrain",
+    "state_hebrew": "בחריין",
+    "longitude": 50.6331,
+    "latitude": 26.2708,
+    "airport_name": "Bahrain International Airport"
+  },
+  {
+    "id": 81,
+    "city_english": "Kuwait City",
+    "city_hebrew": "כווית סיטי",
+    "state_english": "Kuwait",
+    "state_hebrew": "כווית",
+    "longitude": 47.9689,
+    "latitude": 29.2266,
+    "airport_name": "Kuwait International Airport"
+  },
+  {
+    "id": 82,
+    "city_english": "Reykjavik",
+    "city_hebrew": "רייקיאוויק",
+    "state_english": "Iceland",
+    "state_hebrew": "איסלנד",
+    "longitude": -22.6056,
+    "latitude": 63.985,
+    "airport_name": "Keflavík International Airport"
+  },
+  {
+    "id": 83,
+    "city_english": "Malaga",
+    "city_hebrew": "מאלגה",
+    "state_english": "Spain",
+    "state_hebrew": "ספרד",
+    "longitude": -4.4991,
+    "latitude": 36.6749,
+    "airport_name": "Málaga Airport"
+  },
+  {
+    "id": 84,
+    "city_english": "Palma de Mallorca",
+    "city_hebrew": "פלמה דה מיורקה",
+    "state_english": "Spain",
+    "state_hebrew": "ספרד",
+    "longitude": 2.7388,
+    "latitude": 39.5517,
+    "airport_name": "Palma de Mallorca Airport"
+  },
+  {
+    "id": 85,
+    "city_english": "Venice",
+    "city_hebrew": "ונציה",
+    "state_english": "Italy",
+    "state_hebrew": "איטליה",
+    "longitude": 12.3519,
+    "latitude": 45.5053,
+    "airport_name": "Venice Marco Polo Airport"
+  },
+  {
+    "id": 86,
+    "city_english": "Lyon",
+    "city_hebrew": "ליון",
+    "state_english": "France",
+    "state_hebrew": "צרפת",
+    "longitude": 5.0811,
+    "latitude": 45.7255,
+    "airport_name": "Lyon–Saint-Exupéry Airport"
+  },
+  {
+    "id": 87,
+    "city_english": "Edinburgh",
+    "city_hebrew": "אדינבורו",
+    "state_english": "United Kingdom",
+    "state_hebrew": "בריטניה",
+    "longitude": -3.3615,
+    "latitude": 55.9508,
+    "airport_name": "Edinburgh Airport"
+  },
+  {
+    "id": 88,
+    "city_english": "Berlin",
+    "city_hebrew": "ברלין",
+    "state_english": "Germany",
+    "state_hebrew": "גרמניה",
+    "longitude": 13.5033,
+    "latitude": 52.3667,
+    "airport_name": "Berlin Brandenburg Airport"
+  },
+  {
+    "id": 89,
+    "city_english": "Cebu",
+    "city_hebrew": "סבו",
+    "state_english": "Philippines",
+    "state_hebrew": "פיליפינים",
+    "longitude": 123.9794,
+    "latitude": 10.3075,
+    "airport_name": "Mactan–Cebu International Airport"
+  },
+  {
+    "id": 90,
+    "city_english": "Bengaluru",
+    "city_hebrew": "בנגלור",
+    "state_english": "India",
+    "state_hebrew": "הודו",
+    "longitude": 77.7066,
+    "latitude": 13.1986,
+    "airport_name": "Kempegowda International Airport"
+  },
+  {
+    "id": 91,
+    "city_english": "Chengdu",
+    "city_hebrew": "צ'נגדו",
+    "state_english": "China",
+    "state_hebrew": "סין",
+    "longitude": 104.4447,
+    "latitude": 30.3122,
+    "airport_name": "Chengdu Tianfu International Airport"
+  },
+  {
+    "id": 92,
+    "city_english": "Shenzhen",
+    "city_hebrew": "שנג'ן",
+    "state_english": "China",
+    "state_hebrew": "סין",
+    "longitude": 113.8107,
+    "latitude": 22.6393,
+    "airport_name": "Shenzhen Bao'an International Airport"
+  },
+  {
+    "id": 93,
+    "city_english": "Osaka",
+    "city_hebrew": "אוסקה",
+    "state_english": "Japan",
+    "state_hebrew": "יפן",
+    "longitude": 135.2441,
+    "latitude": 34.432,
+    "airport_name": "Kansai International Airport"
+  },
+  {
+    "id": 94,
+    "city_english": "Phuket",
+    "city_hebrew": "פוקט",
+    "state_english": "Thailand",
+    "state_hebrew": "תאילנד",
+    "longitude": 98.3064,
+    "latitude": 8.1132,
+    "airport_name": "Phuket International Airport"
+  },
+  {
+    "id": 95,
+    "city_english": "Denpasar",
+    "city_hebrew": "דנפסאר",
+    "state_english": "Indonesia",
+    "state_hebrew": "אינדונזיה",
+    "longitude": 115.1668,
+    "latitude": -8.7482,
+    "airport_name": "Ngurah Rai International Airport"
+  },
+  {
+    "id": 96,
+    "city_english": "Nairobi",
+    "city_hebrew": "ניירובי",
+    "state_english": "Kenya",
+    "state_hebrew": "קניה",
+    "longitude": 36.9275,
+    "latitude": -1.3192,
+    "airport_name": "Jomo Kenyatta International Airport"
+  },
+  {
+    "id": 97,
+    "city_english": "Amman",
+    "city_hebrew": "עמאן",
+    "state_english": "Jordan",
+    "state_hebrew": "ירדן",
+    "longitude": 35.9932,
+    "latitude": 31.7225,
+    "airport_name": "Queen Alia International Airport"
+  },
+  {
+    "id": 98,
+    "city_english": "Antalya",
+    "city_hebrew": "אנטליה",
+    "state_english": "Turkey",
+    "state_hebrew": "טורקיה",
+    "longitude": 30.8005,
+    "latitude": 36.8987,
+    "airport_name": "Antalya Airport"
+  },
+  {
+    "id": 99,
+    "city_english": "Abuja",
+    "city_hebrew": "אבוג'ה",
+    "state_english": "Nigeria",
+    "state_hebrew": "ניגריה",
+    "longitude": 7.2632,
+    "latitude": 9.0068,
+    "airport_name": "Nnamdi Azikiwe International Airport"
+  },
+  {
+    "id": 100,
+    "city_english": "Montreal",
+    "city_hebrew": "מונטריאול",
+    "state_english": "Canada",
+    "state_hebrew": "קנדה",
+    "longitude": -73.7408,
+    "latitude": 45.4706,
+    "airport_name": "Montréal–Trudeau International Airport"
+  }
+]
