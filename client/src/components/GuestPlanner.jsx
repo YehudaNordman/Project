@@ -6,176 +6,125 @@ import Hero from './Hero';
 import Testimonials from './Testimonials';
 import LoadingScreen from './LoadingScreen';
 import PlannerForm from './PlannerForm';
-import { decodeWeather } from '../utils/weatherUtils';
+/* ייבוא פונקציות עזר וחישוב */
+import { calculateTripTime, fetchWeatherData, getMockRecommendations } from '../utils/plannerUtils';
 
 /**
  * רכיב GuestPlanner - הלב של מתכנן הטיולים לאורחים.
  * מנהל את שלבי התכנון: טופס הזנת נתונים, מסך המתנה, והצגת תוצאות.
+ * הארכיטקטורה מבוססת על הפרדת לוגיקה (Utils) מתצוגה (Components).
  */
-const GuestPlanner = ({ onBack, onResultsShown }) => {
-  // --- ניהול State (מצבי הרכיב) ---
+const GuestPlanner = ({ onResultsShown }) => {
+  // --- מצבים (States) ---
 
-  // נתוני הטופס שהמשתמש מזין
+  // נתוני הטופס
   const [formData, setFormData] = useState({
-    destination: '',     // יעד הנסיעה
-    landingDate: '',     // תאריך נחיתה
-    landingTime: '',     // שעת נחיתה
-    takeoffDate: '',     // תאריך המראה
-    takeoffTime: ''      // שעת המראה
+    destination: '',
+    landingDate: '',
+    landingTime: '',
+    takeoffDate: '',
+    takeoffTime: ''
   });
 
-  // תוצאות החישוב הסופיות (מוצגות ב-PlannerResults)
   const [result, setResult] = useState(null);
-  // נתוני מזג האוויר המושכים מה-API
   const [weatherData, setWeatherData] = useState(null);
-  // מצב טעינה עבור מסך ההמתנה (2 שניות)
   const [isLoading, setIsLoading] = useState(false);
 
-  // הודעה לרכיב האב (LandingPage) האם אנחנו מציגים תוצאות כרגע
+  // עדכון האב (LandingPage) בשינוי מצב התוצאות
   useEffect(() => {
     if (onResultsShown) {
       onResultsShown(!!result);
     }
   }, [result, onResultsShown]);
 
-  // עדכון השדות בטופס בכל לחיצה של המשתמש
+  /**
+   * עדכון שדות הטופס
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   /**
-   * משיכת נתוני מזג אוויר מה-API
+   * פונקציית הגשת הטופס והרצת החישוב
    */
-  const fetchWeather = async (city) => {
-    if (!city || city.trim().length < 2) return;
-
-    try {
-      const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city.trim())}&count=1&language=he&format=json`;
-      const geoRes = await fetch(geoUrl);
-      const geoData = await geoRes.json();
-
-      if (!geoData.results || geoData.results.length === 0) {
-        const geoResRetry = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city.trim())}&count=1&format=json`);
-        const geoDataRetry = await geoResRetry.json();
-        if (!geoDataRetry.results || geoDataRetry.results.length === 0) return;
-        geoData.results = geoDataRetry.results;
-      }
-
-      const { latitude, longitude } = geoData.results[0];
-      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`);
-      const weatherData = await weatherRes.json();
-
-      if (weatherData && weatherData.current) {
-        const decoded = decodeWeather(weatherData.current.weather_code);
-        setWeatherData({
-          temp: Math.round(weatherData.current.temperature_2m),
-          desc: decoded.desc,
-          icon: decoded.icon
-        });
-      }
-    } catch (err) {
-      console.error("שגיאה במשיכת מזג האוויר:", err);
-    }
-  };
-
-  /**
-   * פונקציה ראשית לחישוב זמני הנטו
-   */
-  const calculateTime = (e) => {
+  const handleCalculate = async (e) => {
     e.preventDefault();
 
-    if (!formData.landingDate || !formData.landingTime || !formData.takeoffDate || !formData.takeoffTime) {
+    // בדיקת תקינות בסיסית של שדות
+    const { destination, landingDate, landingTime, takeoffDate, takeoffTime } = formData;
+    if (!landingDate || !landingTime || !takeoffDate || !takeoffTime) {
       alert('אנא מלא את כל פרטי הזמנים');
       return;
     }
 
     setIsLoading(true);
     setResult(null);
+    setWeatherData(null);
 
-    if (!weatherData && formData.destination) {
-      fetchWeather(formData.destination);
-    }
+    try {
+      // 1. קריאה למזג אוויר (במקביל לחישוב)
+      if (destination) {
+        fetchWeatherData(destination).then(setWeatherData);
+      }
 
-    const landing = new Date(`${formData.landingDate}T${formData.landingTime}`);
-    const takeoff = new Date(`${formData.takeoffDate}T${formData.takeoffTime}`);
+      // 2. חישוב זמנים באמצעות פונקציית ה-Utils
+      const tripMetrics = calculateTripTime(landingDate, landingTime, takeoffDate, takeoffTime);
 
-    if (takeoff <= landing) {
-      alert('שעת ההמראה חייבת להיות אחרי שעת הנחיתה');
+      // 3. הוספת המלצות נתונים מדומים
+      const recommendations = getMockRecommendations();
+
+      // סימולציית טעינה לחוויית משתמש (2 שניות)
+      setTimeout(() => {
+        setIsLoading(false);
+        setResult({
+          ...tripMetrics,
+          ...recommendations
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 2000);
+
+    } catch (err) {
+      alert(err.message);
       setIsLoading(false);
-      return;
     }
-
-    const diffInMs = takeoff - landing;
-    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-
-    const landingOffset = 45;
-    const travelOffset = 60;
-    const securityOffset = 120;
-    const totalOffsets = landingOffset + travelOffset + securityOffset;
-
-    const netMinutes = diffInMinutes - totalOffsets;
-
-    const formatDuration = (totalMins) => {
-      const h = Math.floor(totalMins / 60);
-      const m = totalMins % 60;
-      return h > 0 ? `${h} שעות ו-${m} דקות` : `${m} דקות`;
-    };
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setResult({
-        grossTime: formatDuration(diffInMinutes),
-        offsets: {
-          landing: landingOffset,
-          travel: travelOffset,
-          security: securityOffset,
-          total: totalOffsets
-        },
-        netTime: formatDuration(netMinutes),
-        netMinutes,
-        isValid: netMinutes >= 120
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 2000);
   };
 
+  // --- רינדור מותנה לפי המצב ---
 
-  // --- רינדור (Render) ---
+  // 1. מסך טעינה
+  if (isLoading) return <LoadingScreen />;
 
-  // שלב א': מסך המתנה (Loading)
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-
-  // שלב ב': הצגת התוצאות (Results)
+  // 2. תצוגת תוצאות
   if (result) {
-    return <PlannerResults
-      result={result}
-      destination={formData.destination}
-      prefetchedWeather={weatherData}
-      onBack={() => setResult(null)}
-    />;
+    return (
+      <PlannerResults
+        result={result}
+        destination={formData.destination}
+        prefetchedWeather={weatherData}
+        onBack={() => setResult(null)}
+        landingDate={formData.landingDate}
+        takeoffDate={formData.takeoffDate}
+        landingTime={formData.landingTime}
+        takeoffTime={formData.takeoffTime}
+      />
+    );
   }
 
-  // שלב ג': טופס הזנת הנתונים (הדף הראשי)
+  // 3. תצוגת עמוד הבית (Hero, טופס, המלצות)
   return (
-    <div className="guest-planner-container home-planner-view animate-in">
+    <div className="guest-planner-container animate-in">
       <Hero />
       <InfoCards />
-
-      {/* רכיב הטופס המודולרי */}
       <PlannerForm
         formData={formData}
         handleChange={handleChange}
-        onSubmit={calculateTime}
+        setFormData={setFormData}
+        onSubmit={handleCalculate}
       />
-
       <Testimonials />
     </div>
   );
 };
 
 export default GuestPlanner;
-
-

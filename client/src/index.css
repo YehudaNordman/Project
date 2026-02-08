@@ -33,7 +33,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-image: url('/src/Logo/Gemini_Generated_Image_wg8m4lwg8m4lwg8m.png');
+  background-image: url('/src/components/background/Gemini_Generated_Image_z411csz411csz411 (1).png');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -41,13 +41,22 @@ body {
   width: 100vw;
   font-family: 'Inter', sans-serif;
   background-attachment: fixed;
+}
+
+* {
   caret-color: transparent;
+  /* מונע את הופעת הקו המהבהב בלחיצה על טקסט כללי */
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  caret-color: auto;
 }
 
 input,
 textarea {
-  caret-color: auto;
-  /* מחזיר את הסמן לשדות קלט כדי שהמשתמש יראה איפה הוא כותב */
+  outline: none;
 }
 
 
@@ -267,13 +276,39 @@ textarea {
 }
 
 .planner-results-container {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   min-height: 100vh;
-  min-width: 100vw;
+  width: 100%;
+  position: relative;
+  z-index: 50;
+}
+
+.results-card-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 40px;
+}
+
+.weather-top-right {
   position: absolute;
   top: 0;
-  left: 0;
-  z-index: 50;
+  right: 20px;
+  z-index: 100;
+}
+
+.results-main-card {
+  background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)),
+    url('/src/components/background/Gemini_Generated_Image_z411csz411csz411 (1).png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  backdrop-filter: blur(25px) !important;
+  width: 100% !important;
+  max-width: 950px !important;
+  padding: 3rem !important;
+  margin: 0 auto !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12) !important;
+  border-radius: 40px !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
 }
 
 .back-button.fixed-top-right {
@@ -339,10 +374,12 @@ textarea {
 
 /* Background image specifically for the planner form */
 .guest-planner-container .planner-card.glass {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)),
-    url('/src/components/background/Gemini_Generated_Image_3jpmup3jpmup3jpm.png') !important;
+  background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55)),
+    url('/src/components/background/Gemini_Generated_Image_9ea3a9ea3a9ea3a9.png') !important;
   background-size: cover !important;
   background-position: center top !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -657,25 +694,64 @@ textarea {
 .planner-input {
   width: 100%;
   padding: 0.8rem 1.4rem;
-  /* Reduced from 1.1rem */
   border-radius: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   font-size: 1.12rem;
-  /* Reduced from 1.2rem */
   color: #1a237e;
-  font-weight: 800;
+  font-weight: 850;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
   box-sizing: border-box;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.planner-input.premium {
+  padding: 1rem;
+  font-size: 1.4rem;
+  font-weight: 950;
+  color: #1a237e;
+  text-align: center;
+  border: 2px solid rgba(134, 189, 191, 0.3);
+}
+
+.premium-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon-left {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.6rem;
+  pointer-events: none;
+  z-index: 5;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.input-label-premium {
+  color: #1a237e !important;
+  font-size: 1.35rem !important;
+  font-weight: 950 !important;
+  margin-bottom: 0.8rem !important;
+  letter-spacing: -0.5px;
+  padding-right: 5px;
+  display: block;
+}
+
+.destination-group {
+  margin-bottom: 1rem;
 }
 
 .planner-input:focus {
   border-color: #86BDBF;
-  box-shadow: 0 0 0 4px rgba(134, 189, 191, 0.15);
+  box-shadow: 0 10px 30px rgba(134, 189, 191, 0.25);
   background: white;
+  transform: translateY(-2px);
 }
 
 .form-row {
@@ -683,6 +759,20 @@ textarea {
   flex-direction: column;
   /* כל שדה בשורה נפרדת */
   gap: 1.2rem;
+}
+
+.form-row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .form-row-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .calculate-btn {
@@ -733,29 +823,73 @@ textarea {
   margin-bottom: 0.5rem;
 }
 
-.success-result h2 {
+.status-title-centered {
+  font-size: 2.2rem;
+  font-weight: 950;
   color: #1a237e;
-  font-size: clamp(1.5rem, 6vw, 2.2rem);
-  font-weight: 800;
-  margin: 0;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
-.success-result p {
-  font-size: 1.2rem;
+/* Removed duplicate rule, combined below at line 923 */
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+}
+
+.item-label {
+  color: #1a237e;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.item-value {
+  font-weight: 950;
+  font-size: 1.1rem;
+}
+
+.red-text {
+  color: #d32f2f !important;
+}
+
+.teal-text {
+  color: #86BDBF !important;
+  font-size: 1.4rem !important;
+}
+
+.breakdown-divider-thin {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.05);
+  margin: 0.4rem 0;
+}
+
+.breakdown-divider-thick {
+  height: 2px;
+  background: #1a237e;
+  margin: 1rem 0;
+}
+
+.time-display-section {
+  text-align: center;
+  margin-top: 3.5rem;
+  margin-bottom: 2rem;
+}
+
+.time-intro {
   color: #546e7a;
-  text-shadow: none;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
 }
 
-.time-display {
-  background: #86BDBF;
-  color: white;
-  padding: 0.8rem 1.5rem;
-  border-radius: 20px;
-  font-size: clamp(1.2rem, 5vw, 2rem);
-  font-weight: 900;
-  box-shadow: 0 10px 25px rgba(134, 189, 191, 0.4);
-  margin: 1rem 0 2rem 0;
+.time-value {
+  color: #1a237e;
+  font-size: 4rem;
+  font-weight: 950;
+  letter-spacing: -2px;
 }
 
 .error-result {
@@ -782,13 +916,13 @@ textarea {
 
 /* Calculation Breakdown Styles */
 .calculation-breakdown {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
+  background: transparent;
+  backdrop-filter: blur(5px);
   padding: 1.2rem;
   border-radius: 20px;
   width: 100%;
-  max-width: 450px;
-  margin: 1.5rem 0;
+  max-width: 550px;
+  margin: 1.5rem auto;
   border: 1px solid rgba(134, 189, 191, 0.2);
   display: flex;
   flex-direction: column;
@@ -898,228 +1032,190 @@ textarea {
 
 
 
-/* Weather Widget - Premium Side Card (Right) */
-/* Weather Widget - Integrated Premium Style (Vertical) */
-.weather-widget-inline {
+/* Compact Weather Card - Match Screenshot */
+.weather-compact-card {
+  background: white;
+  padding: 0.8rem 1.2rem;
+  border-radius: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
-  padding: 1.8rem;
-  background: rgba(255, 255, 255, 0.95);
-  /* Solid white background for clear visibility */
-  border-radius: 30px;
-  border: 3px solid #86BDBF;
-  /* Prominent brand color border */
-  margin-bottom: 1.5rem;
-  width: 100%;
-  max-width: 280px;
-  /* Slightly larger */
-  transition: all 0.3s ease;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-  /* Stronger shadow */
-  z-index: 10;
+  gap: 2px;
+  border: 1px solid #e2e8f0;
+  min-width: 140px;
 }
 
-.weather-widget-inline:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(134, 189, 191, 0.5);
-  transform: translateY(-5px);
-}
-
-.weather-icon-featured {
-  font-size: 4.5rem;
-  margin-bottom: 0.2rem;
-  filter: drop-shadow(0 10px 20px rgba(134, 189, 191, 0.4));
-  animation: sun-glow 3s infinite alternate ease-in-out;
-}
-
-@keyframes sun-glow {
-  from {
-    filter: drop-shadow(0 10px 20px rgba(134, 189, 191, 0.4));
-    transform: scale(1);
-  }
-
-  to {
-    filter: drop-shadow(0 15px 30px rgba(134, 189, 191, 0.7));
-    transform: scale(1.08);
-  }
-}
-
-.weather-details-vertical {
+.weather-main-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.3rem;
+  gap: 8px;
 }
 
-.weather-label {
-  font-size: 0.9rem;
-  color: #546e7a;
-  font-weight: 700;
-  margin: 0;
-  opacity: 0.8;
+.weather-icon-small {
+  font-size: 1.8rem;
 }
 
-.weather-temp-large {
-  font-size: 3.5rem;
-  color: #1a237e;
-  font-weight: 950;
-  margin: 0;
-  line-height: 1;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.weather-desc-premium {
-  font-size: 1.2rem;
-  color: #86BDBF;
+.temp-value-small {
+  font-size: 1.8rem;
   font-weight: 900;
-  margin: 0;
-  text-transform: capitalize;
-  letter-spacing: 0.5px;
+  color: #1a237e;
 }
 
-/* InfoCards Styles */
+.weather-loc-desc {
+  text-align: center;
+}
+
+.weather-info-text {
+  font-size: 0.7rem;
+  color: #546e7a;
+  margin: 0;
+  font-weight: 700;
+}
+
+.weather-desc-small {
+  font-size: 0.75rem;
+  color: #546e7a;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* InfoCards Styles - Premium Uniform Look */
 .info-cards-container {
   display: flex;
   justify-content: center;
   align-items: stretch;
   gap: 1.2rem;
   width: 100%;
-  max-width: 1200px;
-  /* Increased width */
-  margin-bottom: 1.2rem;
+  max-width: 1280px;
+  margin: 0 auto 2rem auto;
   flex-wrap: nowrap;
 }
 
 .info-item-card {
   flex: 1;
-  min-width: 0;
+  min-width: 280px;
+  max-width: 400px;
   background: rgba(255, 255, 255, 0.08) !important;
   backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  padding: 0.6rem 1.2rem;
-  /* Reduced height (padding), increased side padding */
-  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 2.5rem 1.8rem;
+  border-radius: 24px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 80px;
-  /* Force a shorter height */
+  align-items: center;
+  min-height: 260px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.info-item-card:hover {
-  transform: translateY(-8px) scale(1.03);
-  /* מתרומם וגדל מעט */
-  background: rgba(255, 255, 255, 0.15) !important;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-  /* צל עמוק יותר */
-  border-color: rgba(255, 255, 255, 0.5) !important;
-  filter: brightness(1.1);
-  /* הופך לבהיר יותר */
-  z-index: 10;
-}
-
-.info-card-icon {
-  font-size: 1.8rem;
-  /* Smaller icon */
-  margin-bottom: 0.4rem;
-}
-
+/* Specific Card Backgrounds */
 .info-item-card.planning-card {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('./Logo/kat7214-hourglass-2846641_1920 (2).jpg') !important;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    url('/src/Logo/kat7214-hourglass-2846641_1920 (2).jpg') !important;
   background-size: cover !important;
   background-position: center !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 .info-item-card.weather-card {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('./Logo/kanenori-landscape-6887936_1920 (1).jpg') !important;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    url('/src/Logo/kanenori-landscape-6887936_1920 (1).jpg') !important;
   background-size: cover !important;
   background-position: center !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 .info-item-card.recommendations-card {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('./Logo/mariya_m-bicycle-6580288_1920.jpg') !important;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    url('/src/Logo/mariya_m-bicycle-6580288_1920.jpg') !important;
   background-size: cover !important;
   background-position: center !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
+.info-item-card.planning-card .info-card-title,
+.info-item-card.planning-card .info-card-text,
 .info-item-card.weather-card .info-card-title,
 .info-item-card.weather-card .info-card-text,
 .info-item-card.recommendations-card .info-card-title,
 .info-item-card.recommendations-card .info-card-text,
-.info-item-card.planning-card .info-card-title,
-.info-item-card.planning-card .info-card-text,
 .info-item-card .expanded-text-content {
   color: #ffffff !important;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Expanded Info Styles */
-.info-card-expanded {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top: 0;
+.info-item-card:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  filter: brightness(1.1);
+  z-index: 10;
 }
 
+.info-card-title {
+  color: #1a237e;
+  font-size: 1.6rem;
+  font-weight: 950;
+  margin-bottom: 0.5rem;
+  transition: transform 0.4s ease;
+}
+
+.info-item-card:hover .info-card-title {
+  transform: translateY(-5px);
+}
+
+.info-card-text,
+.info-card-expanded {
+  color: #ffffff;
+  font-size: 0.95rem;
+  margin: 0;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.info-item-card:hover .info-card-text,
 .info-item-card:hover .info-card-expanded {
-  max-height: 200px;
   opacity: 1;
+  max-height: 300px;
   margin-top: 1rem;
 }
 
 .info-card-divider {
-  width: 40px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.4);
-  margin: 0.5rem auto;
-  border-radius: 2px;
-}
-
-.expanded-text-content {
-  font-size: 0.9rem;
-  line-height: 1.4;
-  font-weight: 500;
-  padding: 0 0.5rem;
-}
-
-
-.info-card-title {
-  color: #1a237e;
-  font-size: 1.1rem;
-  /* Smaller title */
-  font-weight: 850;
-  margin-bottom: 0.3rem;
-  text-shadow: none;
-}
-
-.info-card-text {
-  color: #546e7a;
-  font-size: 0.85rem;
-  /* Smaller text */
-  line-height: 1.3;
-  margin: 0;
-  text-shadow: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 1rem 0;
 }
 
 @media (max-width: 768px) {
   .info-cards-container {
-    flex-wrap: wrap;
-    /* Only wrap on small screens */
+    flex-wrap: nowrap;
+    gap: 0.8rem;
+    padding: 0 1rem;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 1rem;
   }
 
   .info-item-card {
-    min-width: 180px;
+    min-width: 250px;
+    min-height: 220px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .info-cards-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .info-item-card {
+    width: 90%;
+    max-width: 320px;
+    min-height: 200px;
   }
 }
 
@@ -1352,8 +1448,7 @@ textarea {
 
 /* Adjust app layout to accommodate fixed navbar */
 .app-container {
-  padding-top: 60px;
-  /* Reduced from 80px */
+  padding-top: 0;
 }
 
 /* Testimonials Styles */
@@ -1874,4 +1969,806 @@ textarea {
 .social-btn:hover {
   background: #f8fafc;
   transform: translateY(-2px);
+}
+
+/* --- Added Missing Premium Styles --- */
+
+/* Suggestion Dropdown Premium Styling */
+.destination-group {
+  position: relative;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(134, 189, 191, 0.3);
+  border-radius: 18px;
+  margin-top: 8px;
+  padding: 8px;
+  list-style: none;
+  z-index: 2000;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+  max-height: 350px;
+  overflow-y: auto;
+  animation: slideInDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.suggestion-item:hover {
+  background: rgba(134, 189, 191, 0.12);
+  border-color: rgba(134, 189, 191, 0.3);
+  transform: translateX(-5px);
+}
+
+.suggestion-icon {
+  font-size: 1.4rem;
+  background: white;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.suggestion-main-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+}
+
+.city-name {
+  color: #1a237e;
+  font-weight: 850;
+  font-size: 1.05rem;
+}
+
+.airport-name {
+  color: #546e7a;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.suggestion-location-badge {
+  background: #f1f5f9;
+  color: #1a237e;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border: 1px solid rgba(134, 189, 191, 0.2);
+}
+
+/* Results Grid Styles - Premium Card Columns */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  width: 100%;
+  margin-top: 3rem;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.placeholder-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.card-overlay-content {
+  background: rgba(0, 0, 0, 0.45);
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  color: white;
+  text-align: right;
+}
+
+.card-hint {
+  font-size: 0.9rem;
+  font-weight: 700;
+  opacity: 0.9;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 0.5rem;
+}
+
+.mini-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.mini-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mini-item strong {
+  font-size: 1.15rem;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.mini-item span {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.restaurants-card,
+.attractions-card {
+  min-height: 280px;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.4s ease;
+}
+
+.restaurants-card {
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)),
+    url('/src/Logo/restaurant-5521372_1920.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.attractions-card {
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)),
+    url('/src/Logo/mariya_m-bicycle-6580288_1920.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.restaurants-card:hover,
+.attractions-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: #86BDBF !important;
+}
+
+.main-results-card {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(25px) !important;
+  width: 100% !important;
+  max-width: 1100px !important;
+  padding: 3rem !important;
+}
+
+.results-top-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.results-inner-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Accommodation Card Dark Style */
+.accommodation-section-modern {
+  width: 100%;
+  margin: 3rem 0;
+}
+
+/* --- Planner Results Refined Styles --- */
+.planner-results-container {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  padding: 40px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+}
+
+.back-circle-btn {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  z-index: 2000;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  border: 3px solid #1a237e;
+  background: white;
+  color: #1a237e;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.back-circle-btn:hover {
+  transform: scale(1.1) rotate(10deg);
+  background: #1a237e;
+  color: white;
+}
+
+/* Results Header */
+.results-header-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 1000px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.weather-summary-box {
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  direction: rtl;
+}
+
+.weather-emoji {
+  font-size: 3.5rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.temp-display {
+  font-size: 2.8rem;
+  font-weight: 950;
+  color: #1a237e;
+  line-height: 1;
+}
+
+.location-label {
+  font-size: 0.9rem;
+  color: #546e7a;
+  font-weight: 700;
+}
+
+.flight-times-summary {
+  background: linear-gradient(rgba(255, 251, 235, 0.95), rgba(255, 251, 235, 0.95)),
+    url('/src/Logo/Gemini_Generated_Image_2m6oqm2m6oqm2m6o.png');
+  background-size: cover;
+  background-position: center;
+  padding: 15px 40px;
+  border-radius: 60px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  border: 1px solid rgba(134, 189, 191, 0.3);
+  direction: rtl;
+}
+
+.time-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.time-icon {
+  font-size: 1.8rem;
+}
+
+.time-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-label {
+  font-size: 0.75rem;
+  color: #86BDBF;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.time-value {
+  font-size: 1.15rem;
+  color: #1a237e;
+  font-weight: 950;
+}
+
+.header-divider {
+  width: 2px;
+  height: 40px;
+  background: rgba(134, 189, 191, 0.2);
+}
+
+/* Results Summary Card */
+.planner-summary-card {
+  width: 100%;
+  max-width: 900px;
+  background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
+    url('/src/components/background/Gemini_Generated_Image_nin71enin71enin7.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 45px;
+  padding: 50px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  direction: rtl;
+  margin-bottom: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.summary-title {
+  color: #1a237e;
+  font-size: 3rem;
+  font-weight: 950;
+  margin-bottom: 45px;
+  letter-spacing: -1.5px;
+  text-shadow: 0 2px 10px rgba(26, 35, 126, 0.1);
+}
+
+.summary-content-wrapper {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.summary-result-divider {
+  height: 3px;
+  background: linear-gradient(to left, transparent, rgba(26, 35, 126, 0.15), transparent);
+  margin: 30px 0;
+}
+
+.recommendation-box {
+  padding: 35px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.recommendation-box.danger {
+  background: rgba(211, 47, 47, 0.05);
+  border: 1.5px solid #d32f2f;
+}
+
+.recommendation-box.warning {
+  background: rgba(255, 160, 0, 0.08);
+  border: 1.5px solid #ffa000;
+}
+
+.recommendation-box.success {
+  background: rgba(46, 125, 50, 0.08);
+  border: 1.5px solid #2e7d32;
+}
+
+.recommendation-box .label {
+  font-size: 1.3rem;
+  color: #546e7a;
+  font-weight: 750;
+}
+
+.recommendation-box .time-display {
+  font-size: 4rem;
+  font-weight: 950;
+  color: #1a237e;
+  margin: 10px 0;
+  letter-spacing: -2px;
+}
+
+.recommendation-box .message {
+  font-size: 1.15rem;
+  font-weight: 850;
+}
+
+.recommendation-box.warning .message {
+  color: #e65100;
+}
+
+.recommendation-box.success .message {
+  color: #2e7d32;
+}
+
+/* Accommodation Card */
+.accommodation-card-premium {
+  width: 100%;
+  max-width: 900px;
+  background: linear-gradient(rgba(26, 35, 126, 0.75), rgba(26, 35, 126, 0.85)),
+    url('/src/components/background/tesaphotography-towel-759980_1920 (3).jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 40px;
+  padding: 40px 50px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 40px;
+  box-shadow: 0 20px 50px rgba(26, 35, 126, 0.25);
+  direction: rtl;
+  color: white;
+  animation: fadeInUp 1s ease-out;
+}
+
+.acc-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  gap: 30px;
+}
+
+.acc-title {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 950;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.acc-subtitle {
+  margin: 10px 0 0;
+  opacity: 0.9;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.acc-booking-btn {
+  background: #86BDBF;
+  color: #1a237e;
+  padding: 16px 40px;
+  border-radius: 60px;
+  font-weight: 950;
+  text-decoration: none;
+  font-size: 1.15rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.acc-booking-btn:hover {
+  background: white;
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Recommendations Grid */
+.recommendations-container {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+  max-width: 900px;
+  justify-content: center;
+  direction: rtl;
+}
+
+.category-card {
+  flex: 1;
+  min-height: 380px;
+  border-radius: 45px;
+  border: none;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.category-card.restaurants {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)),
+    url('/src/Logo/restaurant-5521372_1920.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.category-card.attractions {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)),
+    url('/src/Logo/boat-8105949_1920.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.category-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+}
+
+.category-card:hover .discovery-badge {
+  background: white;
+  color: #1a237e;
+  transform: scale(1.1);
+}
+
+.category-title {
+  font-size: 2.2rem;
+  font-weight: 950;
+  margin: 0;
+  text-shadow: 0 3px 15px rgba(0, 0, 0, 0.6);
+}
+
+.category-subtitle {
+  font-size: 1.1rem;
+  font-weight: 750;
+  margin: 10px 0;
+  opacity: 0.95;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.discovery-badge {
+  margin-top: 30px;
+  padding: 10px 35px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  border-radius: 50px;
+  font-weight: 950;
+  font-size: 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Comprehensive Global Responsiveness --- */
+
+/* 1. Mobile & Small Tablet (up to 768px) */
+@media screen and (max-width: 768px) {
+
+  /* Navbar Adjustments */
+  .navbar-premium {
+    padding: 0.8rem 1rem;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+  }
+
+  .slogan-text {
+    display: none;
+  }
+
+  .navbar-login-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    gap: 6px;
+  }
+
+  /* Hero & Background */
+  .content {
+    padding: 1.5rem 1rem;
+  }
+
+  .planner-card.glass {
+    padding: 2.5rem 1.2rem;
+    width: 98%;
+    border-radius: 32px;
+  }
+
+  /* Form Elements */
+  .input-label-premium {
+    font-size: 1.15rem !important;
+    margin-bottom: 0.6rem !important;
+  }
+
+  .planner-input.premium {
+    font-size: 1.1rem;
+    padding: 0.9rem;
+    border-radius: 14px;
+  }
+
+  .calculate-btn {
+    font-size: 1.3rem;
+    padding: 1.1rem;
+    margin-top: 1rem;
+    border-radius: 14px;
+  }
+
+  .form-row-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  /* Results Screen */
+  .planner-results-container {
+    padding: 20px 10px 80px;
+  }
+
+  .results-header-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .weather-summary-box {
+    width: 90%;
+    justify-content: center;
+    border-radius: 20px;
+  }
+
+  .weather-emoji {
+    font-size: 2.8rem;
+  }
+
+  .temp-display {
+    font-size: 2.2rem;
+  }
+
+  .flight-times-summary {
+    width: 95%;
+    flex-direction: column;
+    border-radius: 25px;
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .header-divider {
+    width: 70%;
+    height: 1px;
+    margin: 5px 0;
+  }
+
+  .time-value {
+    font-size: 1.05rem;
+  }
+
+  .planner-summary-card {
+    padding: 30px 15px;
+    border-radius: 28px;
+    margin-bottom: 30px;
+  }
+
+  .summary-title {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    letter-spacing: -1px;
+  }
+
+  .recommendation-box {
+    padding: 25px 15px;
+  }
+
+  .recommendation-box .time-display {
+    font-size: 2.8rem;
+    letter-spacing: -1px;
+  }
+
+  .accommodation-card-premium {
+    padding: 30px 20px;
+    border-radius: 28px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .acc-card-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .acc-booking-btn {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .recommendations-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .category-card {
+    min-height: 280px;
+    border-radius: 30px;
+  }
+
+  .category-title {
+    font-size: 1.8rem;
+  }
+
+  /* Navigation Fix on Mobile */
+  .back-circle-btn {
+    top: auto;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* 2. Tablet & Smaller Laptops (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .planner-card.glass {
+    max-width: 90%;
+    padding: 3rem;
+  }
+
+  .results-header-container {
+    max-width: 95%;
+  }
+
+  .planner-summary-card {
+    max-width: 95%;
+  }
+
+  .recommendations-container {
+    gap: 20px;
+  }
+
+  .category-title {
+    font-size: 1.8rem;
+  }
+}
+
+/* 3. Global Safety Fixes */
+html,
+body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
 }

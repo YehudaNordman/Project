@@ -2,39 +2,39 @@ import React from 'react';
 
 /**
  * רכיב CalculationBreakdown - פירוט החישוב המתמטי של הזמנים.
- * מפרט כמה זמן יורד על נחיתה, נסיעות וביטחון.
+ * גרסה מעודכנת לפי העיצוב המדויק מהצהריים (צבעים וסימנים).
  */
 const CalculationBreakdown = ({ result }) => {
     return (
         <div className="calculation-breakdown">
-            {/* זמן ברוטו (מרגע הנחיתה עד ההמראה) */}
+            {/* זמן ברוטו */}
             <div className="breakdown-item">
-                <span>זמן כולל בין טיסות:</span>
-                <strong>{result.grossTime}</strong>
+                <span className="item-label">זמן כולל בין טיסות:</span>
+                <strong className="item-value">{result.grossMinutes >= 60 ? `${Math.floor(result.grossMinutes / 60)} שעות ו-${result.grossMinutes % 60} דקות` : `${result.grossMinutes} דקות`}</strong>
             </div>
 
-            <div className="breakdown-divider"></div>
+            <div className="breakdown-divider-thin"></div>
 
-            {/* קיזוזי זמנים (Offsets) */}
+            {/* קיזוזי זמנים (Offsets) - באדום לפי צילום המסך */}
             <div className="breakdown-item offset">
-                <span>נחיתה וכבודה:</span>
-                <strong>- {result.offsets.landing} דקות</strong>
-            </div>
-            <div className="breakdown-item offset">
-                <span>נסיעות הלוך-חזור:</span>
-                <strong>- {result.offsets.travel} דקות</strong>
+                <span className="item-label">נחיתה וכבודה:</span>
+                <strong className="item-value red-text">- {result.offsets.landing} דקות</strong>
             </div>
             <div className="breakdown-item offset">
-                <span>ביטחון ועלייה למטוס:</span>
-                <strong>- {result.offsets.security} דקות</strong>
+                <span className="item-label">נסיעות הלוך-חזור:</span>
+                <strong className="item-value red-text">- {result.offsets.travel} דקות</strong>
+            </div>
+            <div className="breakdown-item offset">
+                <span className="item-label">ביטוח ועלייה למטוס:</span>
+                <strong className="item-value red-text">- {result.offsets.security} דקות</strong>
             </div>
 
-            <div className="breakdown-divider-main"></div>
+            <div className="breakdown-divider-thick"></div>
 
-            {/* תוצאה סופית (נטו) */}
+            {/* תוצאה סופית (נטו) - בצבע טורקיז לוגו */}
             <div className="breakdown-item total-net">
-                <span>זמן נטו לסיור:</span>
-                <strong>{result.netTime}</strong>
+                <span className="item-label">זמן נטו לסיור:</span>
+                <strong className="item-value teal-text">{result.netTime}</strong>
             </div>
         </div>
     );

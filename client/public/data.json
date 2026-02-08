@@ -1,0 +1,148 @@
+{
+    "airports": [
+        {
+            "id": 1,
+            "city_english": "London",
+            "city_hebrew": "לונדון",
+            "state_english": "United Kingdom",
+            "state_hebrew": "בריטניה",
+            "longitude": -0.4543,
+            "latitude": 51.47,
+            "airport_name": "Heathrow Airport",
+            "lat": 51.47,
+            "lon": -0.4543
+        },
+        {
+            "id": 2,
+            "city_english": "Istanbul",
+            "city_hebrew": "איסטנבול",
+            "state_english": "Turkey",
+            "state_hebrew": "טורקיה",
+            "longitude": 28.7444,
+            "latitude": 41.2753,
+            "airport_name": "Istanbul Airport",
+            "lat": 41.2753,
+            "lon": 28.7444
+        },
+        {
+            "id": 4,
+            "city_english": "Amsterdam",
+            "city_hebrew": "אמסטרדם",
+            "state_english": "Netherlands",
+            "state_hebrew": "הולנד",
+            "longitude": 4.7639,
+            "latitude": 52.3086,
+            "airport_name": "Schiphol Airport",
+            "lat": 52.3086,
+            "lon": 4.7639
+        },
+        {
+            "id": 9,
+            "city_english": "Paris",
+            "city_hebrew": "פריז",
+            "state_english": "France",
+            "state_hebrew": "צרפת",
+            "longitude": 2.55,
+            "latitude": 49.0097,
+            "airport_name": "Charles de Gaulle Airport",
+            "lat": 49.0097,
+            "lon": 2.55
+        },
+        {
+            "id": 10,
+            "city_english": "Dubai",
+            "city_hebrew": "דובאי",
+            "state_english": "UAE",
+            "state_hebrew": "איחוד האמירויות",
+            "longitude": 55.3644,
+            "latitude": 25.2532,
+            "airport_name": "Dubai International Airport",
+            "lat": 25.2532,
+            "lon": 55.3644
+        },
+        {
+            "id": 26,
+            "city_english": "Barcelona",
+            "city_hebrew": "ברצלונה",
+            "state_english": "Spain",
+            "state_hebrew": "ספרד",
+            "longitude": 2.0833,
+            "latitude": 41.2969,
+            "airport_name": "Josep Tarradellas Barcelona–El Prat Airport",
+            "lat": 41.2969,
+            "lon": 2.0833
+        },
+        {
+            "id": 29,
+            "city_english": "Vienna",
+            "city_hebrew": "וינה",
+            "state_english": "Austria",
+            "state_hebrew": "אוסטריה",
+            "longitude": 16.5636,
+            "latitude": 48.1103,
+            "airport_name": "Vienna International Airport",
+            "lat": 48.1103,
+            "lon": 16.5636
+        },
+        {
+            "id": 35,
+            "city_english": "Prague",
+            "city_hebrew": "פראג",
+            "state_english": "Czech Republic",
+            "state_hebrew": "צ'כיה",
+            "longitude": 14.2632,
+            "latitude": 50.1008,
+            "airport_name": "Václav Havel Airport Prague",
+            "lat": 50.1008,
+            "lon": 14.2632
+        },
+        {
+            "id": 44,
+            "city_english": "Cairo",
+            "city_hebrew": "קהיר",
+            "state_english": "Egypt",
+            "state_hebrew": "מצרים",
+            "longitude": 31.4056,
+            "latitude": 30.1219,
+            "airport_name": "Cairo International Airport",
+            "lat": 30.1219,
+            "lon": 31.4056
+        },
+        {
+            "id": 45,
+            "city_english": "Tel Aviv",
+            "city_hebrew": "תל אביב",
+            "state_english": "Israel",
+            "state_hebrew": "ישראל",
+            "longitude": 34.8867,
+            "latitude": 32.0114,
+            "airport_name": "Ben Gurion Airport",
+            "lat": 32.0114,
+            "lon": 34.8867
+        },
+        {
+            "id": 78,
+            "city_english": "Larnaca",
+            "city_hebrew": "לרנקה",
+            "state_english": "Cyprus",
+            "state_hebrew": "קפריסין",
+            "longitude": 33.6249,
+            "latitude": 34.8751,
+            "airport_name": "Larnaca International Airport",
+            "lat": 34.8751,
+            "lon": 33.6249
+        },
+        {
+            "id": 76,
+            "city_english": "Budapest",
+            "city_hebrew": "בודפשט",
+            "state_english": "Hungary",
+            "state_hebrew": "הונגריה",
+            "longitude": 19.2611,
+            "latitude": 47.4369,
+            "airport_name": "Budapest Ferenc Liszt International Airport",
+            "lat": 47.4369,
+            "lon": 19.2611
+        }
+    ]
+}

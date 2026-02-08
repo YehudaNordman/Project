@@ -1,80 +1,109 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-/**
- * רכיב PlannerForm - טופס הזנת פרטי הטיסות.
- * מנהל את הקלט של המשתמש עבור יעד וזמני נחיתה/המראה.
- */
-const PlannerForm = ({ formData, handleChange, onSubmit }) => {
+const PlannerForm = ({ formData, handleChange, setFormData, onSubmit }) => {
+    const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [allAirports, setAllAirports] = useState([]);
+
+    useEffect(() => {
+        const loadAirports = async () => {
+            try {
+                const response = await fetch('/data.json');
+                const data = await response.json();
+                setAllAirports(data.airports || []);
+            } catch (err) { console.error("Error loading airports:", err); }
+        };
+        loadAirports();
+    }, []);
+
+    useEffect(() => {
+        if (formData.destination && formData.destination.length >= 2) {
+            const trimmed = formData.destination.trim().toLowerCase();
+            const filtered = allAirports.filter(airport =>
+                airport.city_hebrew.toLowerCase().includes(trimmed) ||
+                airport.airport_name.toLowerCase().includes(trimmed) ||
+                (airport.state_hebrew && airport.state_hebrew.toLowerCase().includes(trimmed))
+            ).slice(0, 5);
+            setSuggestions(filtered);
+            setShowSuggestions(filtered.length > 0);
+        } else {
+            setSuggestions([]);
+            setShowSuggestions(false);
+        }
+    }, [formData.destination, allAirports]);
+
+    const handleSelectAirport = (airport) => {
+        setFormData(prev => ({
+            ...prev,
+            destination: airport.city_hebrew,
+            lat: airport.lat,
+            lon: airport.lon
+        }));
+        setShowSuggestions(false);
+    };
+
     return (
         <div className="planner-card glass">
             <h1>פרטי ההמתנה שלך</h1>
-            <p>הזן את פרטי הטיסות שלך כדי שנוכל לתכננו לך את ההפסקה המושלמת</p>
-
             <form className="planner-form" onSubmit={onSubmit}>
-                {/* שדה יעד עצירת הביניים */}
-                <div className="form-group">
-                    <label>יעד עצירת הביניים</label>
+                <div className="form-group destination-group">
+                    <label className="input-label-premium">יעד עצירת הביניים (עיר או שדה תעופה)</label>
                     <input
                         type="text"
                         name="destination"
                         value={formData.destination}
                         onChange={handleChange}
-                        placeholder="לדוגמה: לונדון, פריז..."
+                        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                        onFocus={() => formData.destination.length >= 2 && setShowSuggestions(true)}
+                        placeholder="לדוגמה: לונדון, ברצלונה..."
                         className="planner-input"
+                        autoComplete="off"
                     />
+
+                    {showSuggestions && (
+                        <ul className="suggestions-list">
+                            {suggestions.map((airport) => (
+                                <li key={airport.id} onClick={() => handleSelectAirport(airport)} className="suggestion-item">
+                                    <div className="suggestion-icon">✈️</div>
+                                    <div className="suggestion-main-info">
+                                        <span className="city-name">{airport.city_hebrew}</span>
+                                        <span className="airport-name">{airport.airport_name}</span>
+                                    </div>
+                                    <div className="suggestion-location-badge">{airport.state_hebrew}</div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
 
-                {/* שורות זמנים - GRID */}
                 <div className="form-row-grid">
-                    {/* קבוצת נחיתה */}
                     <div className="form-group">
-                        <label>תאריך נחיתה</label>
-                        <input
-                            type="date"
-                            name="landingDate"
-                            value={formData.landingDate}
-                            onChange={handleChange}
-                            className="planner-input"
-                        />
+                        <label className="input-label-premium">תאריך נחיתה</label>
+                        <div className="premium-input-wrapper">
+                            <input type="date" name="landingDate" value={formData.landingDate} onChange={handleChange} className="planner-input premium" />
+                        </div>
                     </div>
                     <div className="form-group">
-                        <label>שעת נחיתה</label>
-                        <input
-                            type="time"
-                            name="landingTime"
-                            value={formData.landingTime}
-                            onChange={handleChange}
-                            className="planner-input"
-                        />
-                    </div>
-
-                    {/* קבוצת המראה */}
-                    <div className="form-group">
-                        <label>תאריך המראה</label>
-                        <input
-                            type="date"
-                            name="takeoffDate"
-                            value={formData.takeoffDate}
-                            onChange={handleChange}
-                            className="planner-input"
-                        />
+                        <label className="input-label-premium">שעת נחיתה</label>
+                        <div className="premium-input-wrapper">
+                            <input type="time" name="landingTime" value={formData.landingTime} onChange={handleChange} className="planner-input premium" />
+                        </div>
                     </div>
                     <div className="form-group">
-                        <label>שעת המראה</label>
-                        <input
-                            type="time"
-                            name="takeoffTime"
-                            value={formData.takeoffTime}
-                            onChange={handleChange}
-                            className="planner-input"
-                        />
+                        <label className="input-label-premium">תאריך המראה</label>
+                        <div className="premium-input-wrapper">
+                            <input type="date" name="takeoffDate" value={formData.takeoffDate} onChange={handleChange} className="planner-input premium" />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label className="input-label-premium">שעת המראה</label>
+                        <div className="premium-input-wrapper">
+                            <input type="time" name="takeoffTime" value={formData.takeoffTime} onChange={handleChange} className="planner-input premium" />
+                        </div>
                     </div>
                 </div>
 
-                {/* כפתור הגשה */}
-                <button type="submit" className="calculate-btn">
-                    חשב לי את הזמן
-                </button>
+                <button type="submit" className="calculate-btn">חשב לי את הזמן</button>
             </form>
         </div>
     );

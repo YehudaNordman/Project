@@ -1,121 +1,66 @@
 import React, { useState, useEffect } from 'react';
-import WeatherWidget from './WeatherWidget';
-import PressureGauge from './PressureGauge';
-import CalculationBreakdown from './CalculationBreakdown';
-import { decodeWeather } from '../utils/weatherUtils';
+import { fetchWeatherData } from '../utils/plannerUtils';
+import ResultsHeader from './results/ResultsHeader';
+import ResultsSummary from './results/ResultsSummary';
+import AccommodationCard from './results/AccommodationCard';
+import RecommendationCards from './results/RecommendationCards';
 
 /**
- * רכיב PlannerResults - מציג את תוצאות חישוב הנטו לסיור.
- * משמש כמתאם (Coordinator) המרכז את מזג האוויר, מד הלחץ והפירוט.
+ * רכיב PlannerResults - עמוד התוצאות הראשי.
+ * רכיב זה משמש כקונטיינר המרכזי שמרכז את כל חלקי התצוגה של התוצאות.
  */
-const PlannerResults = ({ result, onBack, destination, prefetchedWeather }) => {
-    // --- State לניהול נתוני מזג האוויר ---
+const PlannerResults = ({ result, onBack, destination, prefetchedWeather, landingDate, takeoffDate, landingTime, takeoffTime }) => {
+    // State למזג האוויר במידה ולא נטען בטופס (Fallback)
     const [weather, setWeather] = useState(prefetchedWeather || null);
 
-    /**
-     * משיכת נתוני מזג אוויר אם לא הועברו מהרכיב הקודם.
-     */
+    // טעינת מזג אוויר אם חסר
     useEffect(() => {
-        if (prefetchedWeather) {
-            setWeather(prefetchedWeather);
-            return;
-        }
-
-        if (destination) {
-            const fetchWeather = async () => {
-                try {
-                    const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(destination.trim())}&count=1&language=he&format=json`;
-                    const geoRes = await fetch(geoUrl);
-                    const geoData = await geoRes.json();
-
-                    if (!geoData.results || geoData.results.length === 0) {
-                        const geoResRetry = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(destination.trim())}&count=1&format=json`);
-                        const geoDataRetry = await geoResRetry.json();
-                        if (geoDataRetry.results && geoDataRetry.results.length > 0) {
-                            geoData.results = geoDataRetry.results;
-                        }
-                    }
-
-                    if (geoData.results && geoData.results.length > 0) {
-                        const { latitude, longitude } = geoData.results[0];
-                        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`);
-                        const weatherData = await weatherRes.json();
-
-                        if (weatherData && weatherData.current) {
-                            const decoded = decodeWeather(weatherData.current.weather_code);
-                            setWeather({
-                                temp: Math.round(weatherData.current.temperature_2m),
-                                desc: decoded.desc,
-                                icon: decoded.icon
-                            });
-                        }
-                    }
-                } catch (err) {
-                    console.error("שגיאה במשיכת מזג האוויר בתוצאות:", err);
-                }
+        if (!prefetchedWeather && destination) {
+            const loadWeather = async () => {
+                const data = await fetchWeatherData(destination);
+                if (data) setWeather(data);
             };
-            fetchWeather();
+            loadWeather();
         }
     }, [destination, prefetchedWeather]);
 
     return (
-        <>
-            {/* כפתור חזרה מעוצב בפינה העליונה - מחוץ לאנימציה כדי שלא יושפע */}
-            <button className="back-button fixed-top-right" onClick={onBack} title="חזרה לעריכה">
-                <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <div className="planner-results-container">
+            {/* כפתור חזרה מעוצב (Fixed) */}
+            <button className="back-circle-btn" onClick={onBack} title="חזור לחיפוש">
+                <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
             </button>
 
-            <div className="planner-results-container animate-in">
-                <div className="planner-card glass">
-                    {/* הצגת תוצאות אם הזמן תקין (מעל שעתיים נטו) */}
-                    {result.isValid ? (
-                        <div className="success-result animate-in">
+            {/* 1. כותרת ומזג אוויר */}
+            <ResultsHeader
+                weather={weather}
+                destination={destination}
+                landingDate={landingDate}
+                landingTime={landingTime}
+                takeoffDate={takeoffDate}
+                takeoffTime={takeoffTime}
+            />
 
-                            {/* שימוש ברכיב מזג האוויר המודולרי */}
-                            <WeatherWidget weather={weather} destination={destination} />
+            {/* 2. כרטיס סיכום זמנים (ברוטו/נטו) */}
+            <ResultsSummary result={result} />
 
-                            {/* שימוש ברכיב מד הלחץ המודולרי */}
-                            <PressureGauge netMinutes={result.netMinutes} />
+            {/* 3. כרטיס לינה (יוצג רק בשהות ארוכה) */}
+            <AccommodationCard
+                result={result}
+                destination={destination}
+                landingDate={landingDate}
+                takeoffDate={takeoffDate}
+            />
 
-                            {/* שימוש ברכיב פירוט החישוב המודולרי */}
-                            <CalculationBreakdown result={result} />
-
-                            {/* תצוגה מודגשת של הזמן הסופי */}
-                            <div className="time-display-wrapper">
-                                <p>הזמן הנטו שלך לסיור והנאה הוא:</p>
-                                <div className="time-display">{result.netTime}</div>
-                            </div>
-
-                            {/* כרטיסי המלצות ראשוניים (Placeholders) */}
-                            <div className="placeholders-grid">
-                                <div className="placeholder-wrapper">
-                                    <h3 className="external-card-title">🍽️ מסעדות באזור</h3>
-                                    <div className="placeholder-card restaurants-card"></div>
-                                </div>
-                                <div className="placeholder-wrapper">
-                                    <h3 className="external-card-title">🏛️ אטרקציות באזור</h3>
-                                    <div className="placeholder-card attractions-card"></div>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        // הצגת הודעת שגיאה אם הזמן קצר מדי
-                        <div className="error-result animate-in">
-                            <div className="result-icon">⚠️</div>
-                            <p className="error-message">
-                                זמן ההמתנה קצר מדי ליציאה מהשדה. מומלץ להישאר בטרמינל וליהנות מהדיוטי פרי.
-                            </p>
-                            <button className="home-button secondary" onClick={onBack}>
-                                חזרה לעריכת פרטים
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </>
+            {/* 4. המלצות (יוצג רק אם יש מספיק זמן נטו) */}
+            <RecommendationCards
+                isValid={result?.isValid}
+                destination={destination}
+            />
+        </div>
     );
 };
 
