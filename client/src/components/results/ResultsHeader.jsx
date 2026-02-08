@@ -29,10 +29,12 @@ const ResultsHeader = ({ weather, destination, landingDate, landingTime, takeoff
                 </div>
             </div>
 
+            <div className="header-main-divider"></div>
+
             {/* גוש זמני הטיסות */}
             <div className="flight-times-summary">
                 <div className="time-item">
-                    <span className="time-icon">📅</span>
+                    <span className="time-icon">🛬</span>
                     <div className="time-details">
                         <span className="time-label">נחיתה</span>
                         <span className="time-value">{formatDT(landingDate, landingTime)}</span>

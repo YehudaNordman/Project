@@ -102,6 +102,8 @@ const GuestPlanner = ({ onResultsShown }) => {
         result={result}
         destination={formData.destination}
         prefetchedWeather={weatherData}
+        currencyCode={formData.currency_code}
+        currencyName={formData.currency_name_hebrew}
         onBack={() => setResult(null)}
         landingDate={formData.landingDate}
         takeoffDate={formData.takeoffDate}

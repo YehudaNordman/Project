@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWeatherData } from '../utils/plannerUtils';
 import ResultsHeader from './results/ResultsHeader';
+import CurrencyConverter from './results/CurrencyConverter';
 import ResultsSummary from './results/ResultsSummary';
 import AccommodationCard from './results/AccommodationCard';
 import RecommendationCards from './results/RecommendationCards';
@@ -9,7 +10,7 @@ import RecommendationCards from './results/RecommendationCards';
  * רכיב PlannerResults - עמוד התוצאות הראשי.
  * רכיב זה משמש כקונטיינר המרכזי שמרכז את כל חלקי התצוגה של התוצאות.
  */
-const PlannerResults = ({ result, onBack, destination, prefetchedWeather, landingDate, takeoffDate, landingTime, takeoffTime }) => {
+const PlannerResults = ({ result, onBack, destination, prefetchedWeather, currencyCode, currencyName, landingDate, takeoffDate, landingTime, takeoffTime }) => {
     // State למזג האוויר במידה ולא נטען בטופס (Fallback)
     const [weather, setWeather] = useState(prefetchedWeather || null);
 
@@ -44,10 +45,13 @@ const PlannerResults = ({ result, onBack, destination, prefetchedWeather, landin
                 takeoffTime={takeoffTime}
             />
 
-            {/* 2. כרטיס סיכום זמנים (ברוטו/נטו) */}
+            {/* 2. מחשבון המרת מטבע (חדש!) */}
+            <CurrencyConverter currencyCode={currencyCode} currencyName={currencyName} />
+
+            {/* 3. כרטיס סיכום זמנים (ברוטו/נטו) */}
             <ResultsSummary result={result} />
 
-            {/* 3. כרטיס לינה (יוצג רק בשהות ארוכה) */}
+            {/* 4. כרטיס לינה (יוצג רק בשהות ארוכה) */}
             <AccommodationCard
                 result={result}
                 destination={destination}
@@ -55,7 +59,7 @@ const PlannerResults = ({ result, onBack, destination, prefetchedWeather, landin
                 takeoffDate={takeoffDate}
             />
 
-            {/* 4. המלצות (יוצג רק אם יש מספיק זמן נטו) */}
+            {/* 5. המלצות (יוצג רק אם יש מספיק זמן נטו) */}
             <RecommendationCards
                 isValid={result?.isValid}
                 destination={destination}

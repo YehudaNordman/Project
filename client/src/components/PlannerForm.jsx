@@ -37,7 +37,9 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit }) => {
             ...prev,
             destination: airport.city_hebrew,
             lat: airport.lat,
-            lon: airport.lon
+            lon: airport.lon,
+            currency_code: airport.currency_code,
+            currency_name_hebrew: airport.currency_name_hebrew
         }));
         setShowSuggestions(false);
     };

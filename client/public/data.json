@@ -10,7 +10,9 @@
             "latitude": 51.47,
             "airport_name": "Heathrow Airport",
             "lat": 51.47,
-            "lon": -0.4543
+            "lon": -0.4543,
+            "currency_code": "GBP",
+            "currency_name_hebrew": "ליש\"ט (פאונד)"
         },
         {
             "id": 2,
@@ -22,7 +24,9 @@
             "latitude": 41.2753,
             "airport_name": "Istanbul Airport",
             "lat": 41.2753,
-            "lon": 28.7444
+            "lon": 28.7444,
+            "currency_code": "TRY",
+            "currency_name_hebrew": "לירה טורקית"
         },
         {
             "id": 4,
@@ -34,7 +38,9 @@
             "latitude": 52.3086,
             "airport_name": "Schiphol Airport",
             "lat": 52.3086,
-            "lon": 4.7639
+            "lon": 4.7639,
+            "currency_code": "EUR",
+            "currency_name_hebrew": "אירו"
         },
         {
             "id": 9,
@@ -46,7 +52,9 @@
             "latitude": 49.0097,
             "airport_name": "Charles de Gaulle Airport",
             "lat": 49.0097,
-            "lon": 2.55
+            "lon": 2.55,
+            "currency_code": "EUR",
+            "currency_name_hebrew": "אירו"
         },
         {
             "id": 10,
@@ -58,7 +66,9 @@
             "latitude": 25.2532,
             "airport_name": "Dubai International Airport",
             "lat": 25.2532,
-            "lon": 55.3644
+            "lon": 55.3644,
+            "currency_code": "AED",
+            "currency_name_hebrew": "דירהם"
         },
         {
             "id": 26,
@@ -70,7 +80,9 @@
             "latitude": 41.2969,
             "airport_name": "Josep Tarradellas Barcelona–El Prat Airport",
             "lat": 41.2969,
-            "lon": 2.0833
+            "lon": 2.0833,
+            "currency_code": "EUR",
+            "currency_name_hebrew": "אירו"
         },
         {
             "id": 29,
@@ -82,7 +94,9 @@
             "latitude": 48.1103,
             "airport_name": "Vienna International Airport",
             "lat": 48.1103,
-            "lon": 16.5636
+            "lon": 16.5636,
+            "currency_code": "EUR",
+            "currency_name_hebrew": "אירו"
         },
         {
             "id": 35,
@@ -94,7 +108,9 @@
             "latitude": 50.1008,
             "airport_name": "Václav Havel Airport Prague",
             "lat": 50.1008,
-            "lon": 14.2632
+            "lon": 14.2632,
+            "currency_code": "CZK",
+            "currency_name_hebrew": "קורונה צ'כית"
         },
         {
             "id": 44,
@@ -106,7 +122,9 @@
             "latitude": 30.1219,
             "airport_name": "Cairo International Airport",
             "lat": 30.1219,
-            "lon": 31.4056
+            "lon": 31.4056,
+            "currency_code": "EGP",
+            "currency_name_hebrew": "לירה מצרית"
         },
         {
             "id": 45,
@@ -118,7 +136,9 @@
             "latitude": 32.0114,
             "airport_name": "Ben Gurion Airport",
             "lat": 32.0114,
-            "lon": 34.8867
+            "lon": 34.8867,
+            "currency_code": "ILS",
+            "currency_name_hebrew": "שקל חדש"
         },
         {
             "id": 78,
@@ -130,7 +150,9 @@
             "latitude": 34.8751,
             "airport_name": "Larnaca International Airport",
             "lat": 34.8751,
-            "lon": 33.6249
+            "lon": 33.6249,
+            "currency_code": "EUR",
+            "currency_name_hebrew": "אירו"
         },
         {
             "id": 76,
@@ -142,7 +164,9 @@
             "latitude": 47.4369,
             "airport_name": "Budapest Ferenc Liszt International Airport",
             "lat": 47.4369,
-            "lon": 19.2611
+            "lon": 19.2611,
+            "currency_code": "HUF",
+            "currency_name_hebrew": "פורינט הונגרי"
         }
     ]
 }
