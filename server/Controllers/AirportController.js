@@ -100,11 +100,6 @@ exports.fetchRestaurants = async (req, res) => {
   const lon = parseFloat(req.query.lon);
   const radius = parseInt(req.query.radius) || 5000; // ברירת מחדל של 5 ק"מ אם לא הוזן רדיוס
 
-  // הדפסת בדיקה לטרמינל כדי לוודא שהנתונים הגיעו ועובדו
-  console.log("--- New Restaurant Request ---");
-  console.log("Searching at:", lat, lon, "within radius:", radius);
-  console.log("Using API KEY:", API_KEY);
-
   // בדיקת תקינות בסיסית לפני הפנייה ל-API
   if (isNaN(lat) || isNaN(lon)) {
     return res.status(400).json({ error: "Latitude and Longitude must be valid numbers" });
@@ -133,3 +128,83 @@ exports.fetchRestaurants = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.planTrip = async (req, res) => {
+  try {
+    const { lat, lon, landingTime, takeoffTime } = req.body;
+
+    console.log("--- New Plan Trip Request ---");
+    console.log("Received Data:", { lat, lon, landingTime, takeoffTime });
+
+    // 1. חישוב זמנים
+    const landing = new Date(landingTime);
+    const takeoff = new Date(takeoffTime);
+    const diffInMinutes = Math.floor((takeoff - landing) / (1000 * 60));
+
+    const totalOffsets = 45 + 60 + 120;
+    const netMinutes = diffInMinutes - totalOffsets;
+
+    // 2. קביעת רדיוס
+    const calculatedRadius = Math.max(2000, (netMinutes / 60) * 5000);
+    
+    console.log("Calculated Net Minutes:", netMinutes);
+    console.log("Calculated Radius:", calculatedRadius);
+
+    // בדיקה אם המפתח קיים לפני השליחה
+    if (!process.env.GEOAPIFY_KEY) {
+        console.error("CRITICAL ERROR: API Key is missing in process.env!");
+    }
+
+    // 3. משיכת נתונים
+    const [attractions, restaurants] = await Promise.all([
+      fetchDataFromGeoapify(lat, lon, calculatedRadius, 'entertainment,tourism.attraction'),
+      fetchDataFromGeoapify(lat, lon, calculatedRadius, 'catering.restaurant,catering.cafe')
+    ]);
+
+    console.log(`Results found: ${attractions.length} attractions, ${restaurants.length} restaurants`);
+
+    return res.json({
+      timeSummary: {
+        grossMinutes: diffInMinutes,
+        netMinutes: netMinutes,
+        calculatedRadius: calculatedRadius,
+        isValid: netMinutes >= 120
+      },
+      results: {
+        attractions,
+        restaurants
+      }
+    });
+
+  } catch (error) {
+    console.error("planTrip internal error:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+// פונקציית עזר פנימית כדי לא לשכפל קוד
+async function fetchDataFromGeoapify(lat, lon, radius, categories) {
+  const url = `https://api.geoapify.com/v2/places`;
+  try {
+    // וידוא שהערכים הם מספרים נקיים
+    const cleanLat = parseFloat(lat);
+    const cleanLon = parseFloat(lon);
+    const cleanRadius = parseInt(radius);
+
+    const response = await axios.get(url, {
+      params: {
+        categories,
+        filter: `circle:${cleanLon},${cleanLat},${cleanRadius}`,
+        bias: `proximity:${cleanLon},${cleanLat}`,
+        limit: 15,
+        apiKey: process.env.GEOAPIFY_KEY // וודא שהשם הזה זהה למה שכתוב ב-pass.env
+      }
+    });
+    return response.data.features || [];
+  } catch (error) {
+    // הדפסה לטרמינל כדי שתדע אם ה-API של Geoapify החזיר שגיאה
+    console.error("Geoapify API Error:", error.response ? error.response.data : error.message);
+    return []; 
+  }
+}

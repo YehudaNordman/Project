@@ -5,7 +5,7 @@ let controller = require('../Controllers/AirportController');
 // פונקציות חיצוניות למשיכת אטרקציות ומסעדות
 router.get('/fetchAttractions', controller.fetchAttractions);
 router.get('/fetchRestaurants', controller.fetchRestaurants)
-
+router.post('/plan-trip', controller.planTrip);
 // GET /airports/top10
 router.get('/top10', controller.getTop10);
 router.get('/getNameCityCountry', controller.getNameCityCountry);
