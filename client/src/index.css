@@ -2835,6 +2835,43 @@ textarea {
   padding-right: 5px;
 }
 
+.input-with-select {
+  background: rgba(134, 189, 191, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 2px solid rgba(134, 189, 191, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-with-select:focus-within {
+  border-color: #86BDBF;
+  background: rgba(134, 189, 191, 0.3);
+  transform: translateY(-2px);
+}
+
+.currency-select {
+  background: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: #1a237e;
+  font-weight: 850;
+  font-size: 1rem;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.currency-select:hover {
+  background: white;
+}
+
 .input-wrapper,
 .result-display {
   background: rgba(134, 189, 191, 0.15);

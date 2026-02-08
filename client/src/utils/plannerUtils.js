@@ -107,13 +107,12 @@ export const fetchWeatherData = async (city) => {
     return null;
 };
 /**
- * פונקציה להבאת שער חליפין (שקל מול המטבע המקומי)
+ * פונקציה להבאת שער חליפין (מטבע מקור מול מטבע יעד)
  */
-export const fetchExchangeRate = async (targetCurrency) => {
-    if (!targetCurrency || targetCurrency === 'ILS') return 1;
+export const fetchExchangeRate = async (targetCurrency, baseCurrency = 'ILS') => {
+    if (!targetCurrency || targetCurrency === baseCurrency) return 1;
     try {
-        // שימוש ב-API חינמי (Frankfurter) - תומך ברוב המטבעות המרכזיים
-        const res = await fetch(`https://api.frankfurter.app/latest?from=ILS&to=${targetCurrency}`);
+        const res = await fetch(`https://api.frankfurter.app/latest?from=${baseCurrency}&to=${targetCurrency}`);
         const data = await res.json();
         if (data && data.rates && data.rates[targetCurrency]) {
             return data.rates[targetCurrency];
@@ -121,7 +120,6 @@ export const fetchExchangeRate = async (targetCurrency) => {
     } catch (err) {
         console.error("Exchange rate error:", err);
     }
-    // Fallback למקרה של שגיאה או מטבע לא נתמך (נתונים מדומים מקורבים)
-    const mockRates = { "GBP": 0.21, "EUR": 0.25, "TRY": 8.5, "CZK": 6.2, "EGP": 12.5, "AED": 1.0, "HUF": 95 };
-    return mockRates[targetCurrency] || 1;
+    // Fallback בסיסי
+    return 1;
 };

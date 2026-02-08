@@ -2,27 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { fetchExchangeRate } from '../../utils/plannerUtils';
 
 /**
- * רכיב CurrencyConverter - כלי להמרת מטבע מקומי.
- * מאפשר למשתמש להבין את ערך הכסף ביעד.
+ * רכיב CurrencyConverter - כלי להמרת מטבע רב-מטבעי.
+ * מאפשר למשתמש להמיר מכל מטבע נפוץ למטבע המקומי ביעד.
  */
 const CurrencyConverter = ({ currencyCode, currencyName }) => {
     const [rate, setRate] = useState(null);
-    const [amount, setAmount] = useState(100); // ברירת מחדל: 100 ש"ח
+    const [amount, setAmount] = useState(100);
     const [loading, setLoading] = useState(true);
+    const [baseCurrency, setBaseCurrency] = useState('ILS');
+
+    const commonCurrencies = [
+        { code: 'ILS', name: 'שקל חדש' },
+        { code: 'USD', name: 'דולר ארה"ב' },
+        { code: 'EUR', name: 'אירו' },
+        { code: 'GBP', name: 'ליש"ט' }
+    ];
 
     useEffect(() => {
         if (currencyCode) {
             const getRate = async () => {
                 setLoading(true);
-                const r = await fetchExchangeRate(currencyCode);
+                const r = await fetchExchangeRate(currencyCode, baseCurrency);
                 setRate(r);
                 setLoading(false);
             };
             getRate();
         }
-    }, [currencyCode]);
+    }, [currencyCode, baseCurrency]);
 
-    if (!currencyCode || currencyCode === 'ILS') return null;
+    if (!currencyCode || (currencyCode === baseCurrency && baseCurrency === 'ILS')) return null;
 
     const converted = (amount * (rate || 0)).toFixed(2);
 
@@ -32,28 +40,38 @@ const CurrencyConverter = ({ currencyCode, currencyName }) => {
                 <span className="converter-icon">💱</span>
                 <div className="converter-title-group">
                     <h4>מחשבון המרת מטבע</h4>
-                    <p>שקל חדש (ILS) ⟷ {currencyName} ({currencyCode})</p>
+                    <p>המרה למטבע המקומי: {currencyName} ({currencyCode})</p>
                 </div>
             </div>
 
             <div className="converter-body">
                 <div className="converter-input-group">
-                    <label>סכום בשקלים</label>
-                    <div className="input-wrapper">
+                    <label>בחר מטבע מקור וסכום</label>
+                    <div className="input-with-select">
+                        <select
+                            value={baseCurrency}
+                            onChange={(e) => setBaseCurrency(e.target.value)}
+                            className="currency-select"
+                        >
+                            {commonCurrencies.map(curr => (
+                                <option key={curr.code} value={curr.code}>
+                                    {curr.code} - {curr.name}
+                                </option>
+                            ))}
+                        </select>
                         <input
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                             className="converter-input"
                         />
-                        <span className="unit">₪</span>
                     </div>
                 </div>
 
-                <div className="converter-arrow">⇄</div>
+                <div className="converter-arrow">←</div>
 
                 <div className="converter-result-group">
-                    <label>סכום ב-{currencyCode}</label>
+                    <label>סכום ב-{currencyName}</label>
                     <div className="result-display">
                         {loading ? 'טוען...' : converted}
                         <span className="unit">{currencyCode}</span>
@@ -62,7 +80,7 @@ const CurrencyConverter = ({ currencyCode, currencyName }) => {
             </div>
 
             <div className="converter-footer">
-                * שער החליפין הנוכחי: 1 ₪ = {loading ? '...' : (rate || 0).toFixed(4)} {currencyCode}
+                * שער החליפין הנוכחי: 1 {baseCurrency} = {loading ? '...' : (rate || 0).toFixed(4)} {currencyCode}
             </div>
         </div>
     );
