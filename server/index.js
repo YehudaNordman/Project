@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const axios = require('axios');
+require('dotenv').config({ path: './Passwords/pass.env' }); //נתיב להבאת הapi
 app.use(express.json())
 app.use(cors())
 const AirportRoute = require('./Routing/AirportRout');
