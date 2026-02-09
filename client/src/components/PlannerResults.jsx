@@ -6,11 +6,15 @@ import ResultsSummary from './results/ResultsSummary';
 import AccommodationCard from './results/AccommodationCard';
 import RecommendationCards from './results/RecommendationCards';
 
+import RecommendationsExplorer from './results/RecommendationsExplorer';
+
 /**
  * רכיב PlannerResults - עמוד התוצאות הראשי.
  * רכיב זה משמש כקונטיינר המרכזי שמרכז את כל חלקי התצוגה של התוצאות.
  */
-const PlannerResults = ({ result, onBack, destination, prefetchedWeather, currencyCode, currencyName, landingDate, takeoffDate, landingTime, takeoffTime }) => {
+const PlannerResults = ({ result, onBack, destination, prefetchedWeather, currencyCode, currencyName, landingDate, takeoffDate, landingTime, takeoffTime, lat, lon }) => {
+    console.log("PlannerResults Props:", { lat, lon, landingDate, takeoffDate, landingTime, takeoffTime });
+
     // State למזג האוויר במידה ולא נטען בטופס (Fallback)
     const [weather, setWeather] = useState(prefetchedWeather || null);
 
@@ -25,13 +29,32 @@ const PlannerResults = ({ result, onBack, destination, prefetchedWeather, curren
         }
     }, [destination, prefetchedWeather]);
 
+    // State לניהול דפי "גילוי" (מסעדות/אטרקציות)
+    const [explorerView, setExplorerView] = useState(null); // 'restaurants' | 'attractions' | null
+
+    // אם אנחנו במצב "גילוי", נציג את ה-Explorer כ"דף חדש"
+    if (explorerView) {
+        return (
+            <RecommendationsExplorer
+                type={explorerView}
+                destination={destination}
+                lat={lat}
+                lon={lon}
+                landingTime={`${landingDate}T${landingTime}:00`}
+                takeoffTime={`${takeoffDate}T${takeoffTime}:00`}
+                onBack={() => setExplorerView(null)}
+            />
+        );
+    }
+
+
     return (
         <div className="planner-results-container">
             {/* כפתור חזרה מעוצב (Fixed) */}
             <button className="back-circle-btn" onClick={onBack} title="חזור לחיפוש">
                 <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
             </button>
 
@@ -63,6 +86,7 @@ const PlannerResults = ({ result, onBack, destination, prefetchedWeather, curren
             <RecommendationCards
                 isValid={result?.isValid}
                 destination={destination}
+                onDiscover={(type) => setExplorerView(type)}
             />
         </div>
     );

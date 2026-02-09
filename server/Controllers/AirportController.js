@@ -3,7 +3,21 @@ const { execFile } = require("child_process");
 const axios = require('axios');
 const fs = require('fs');
 
-const API_KEY = process.env.GEOAPIFY_KEY;
+const getApiKey = () => {
+  if (process.env.GEOAPIFY_KEY) return process.env.GEOAPIFY_KEY;
+  // Fallback direct read if env loading failed for some reason
+  try {
+    const envPath = path.join(__dirname, "..", "Passwords", "pass.env");
+    if (fs.existsSync(envPath)) {
+      const content = fs.readFileSync(envPath, 'utf8');
+      const match = content.match(/GEOAPIFY_KEY\s*=\s*(.*)/);
+      if (match) return match[1].trim();
+    }
+  } catch (e) { console.error("Error reading API key manually:", e); }
+  return null;
+};
+
+const API_KEY = getApiKey();
 
 // פונקציות עזר פנימיות
 function runSqliteJson({ dbPath, sql }) { //ריצה של קובץ SQLITE והחזרת JSON
@@ -69,63 +83,107 @@ exports.getLocationById = async (req, res) => { //מבין את המיקום ל�
 };
 
 exports.fetchAttractions = async (req, res) => {  //מחזיר אטרקציות לפי מיקום ורדיוס
-  // המרה למספרים כדי ש-Geoapify יקבל ערכים נקיים
-  const lat = parseFloat(req.query.lat);
-  const lon = parseFloat(req.query.lon);
-  const radius = parseInt(req.query.radius) || 5000;
-  const categories = 'entertainment,tourism.attraction,catering.restaurant';
-  const url = `https://api.geoapify.com/v2/places`;
-
   try {
+    const { lat, lon, landingTime, takeoffTime } = req.query;
+
+    // 1. טעינת נתוני שדות התעופה מהשרת
+    const airportsPath = path.join(__dirname, "..", "data", "airports.json");
+    const airports = JSON.parse(fs.readFileSync(airportsPath, 'utf8'));
+
+    const targetAirport = airports.find(a =>
+      Math.abs(a.latitude - parseFloat(lat)) < 0.01 &&
+      Math.abs(a.longitude - parseFloat(lon)) < 0.01
+    );
+
+    const finalLat = targetAirport ? targetAirport.latitude : parseFloat(lat);
+    const finalLon = targetAirport ? targetAirport.longitude : parseFloat(lon);
+
+    let finalRadius = 5000;
+
+    // 2. חישוב רדיוס לפי הלוגיקה של planTrip
+    if (landingTime && takeoffTime) {
+      const landing = new Date(landingTime);
+      const takeoff = new Date(takeoffTime);
+
+      if (!isNaN(landing.getTime()) && !isNaN(takeoff.getTime())) {
+        const diffInMinutes = Math.floor((takeoff - landing) / (1000 * 60));
+        const netMinutes = diffInMinutes - (45 + 60 + 120);
+        finalRadius = Math.max(2000, (netMinutes / 60) * 5000);
+      }
+    }
+
+    if (isNaN(finalRadius) || finalRadius <= 0) finalRadius = 5000;
+    if (finalRadius > 50000) finalRadius = 50000;
+
+    const categories = 'tourism.attraction,entertainment.museum,entertainment.culture,leisure.park,tourism.sights';
+    const url = `https://api.geoapify.com/v2/places`;
+
     const response = await axios.get(url, {
       params: {
-        categories: categories,
-        filter: `circle:${lon},${lat},${radius}`, // וודא ש-lon מופיע ראשון
-        bias: `proximity:${lon},${lat}`,
-        limit: 20,
+        categories,
+        filter: `circle:${finalLon},${finalLat},${finalRadius}`,
+        bias: `proximity:${finalLon},${finalLat}`,
+        limit: 15,
         apiKey: API_KEY
       }
     });
 
-    console.log("Found results count:", response.data.features.length);
-    return res.json(response.data.features);
+    return res.json(response.data.features || []);
   } catch (error) {
-    console.error("API Error:", error.message);
+    console.error("fetchAttractions detailed error:", error.response ? error.response.data : error.message);
     return res.status(500).json({ error: error.message });
   }
 };
 
 exports.fetchRestaurants = async (req, res) => {
-  // המרת הנתונים למספרים כדי להבטיח שה-API יקבל ערכים תקינים
-  const lat = parseFloat(req.query.lat);
-  const lon = parseFloat(req.query.lon);
-  const radius = parseInt(req.query.radius) || 5000; // ברירת מחדל של 5 ק"מ אם לא הוזן רדיוס
-
-  // בדיקת תקינות בסיסית לפני הפנייה ל-API
-  if (isNaN(lat) || isNaN(lon)) {
-    return res.status(400).json({ error: "Latitude and Longitude must be valid numbers" });
-  }
-
-  const categories = 'catering.restaurant,catering.cafe';
-  const url = `https://api.geoapify.com/v2/places`;
-
   try {
+    const { lat, lon, landingTime, takeoffTime } = req.query;
+
+    // 1. טעינת נתוני שדות התעופה מהשרת כדי לוודא מיקום מדויק
+    const airportsPath = path.join(__dirname, "..", "data", "airports.json");
+    const airports = JSON.parse(fs.readFileSync(airportsPath, 'utf8'));
+
+    const targetAirport = airports.find(a =>
+      Math.abs(a.latitude - parseFloat(lat)) < 0.01 &&
+      Math.abs(a.longitude - parseFloat(lon)) < 0.01
+    );
+
+    const finalLat = targetAirport ? targetAirport.latitude : parseFloat(lat);
+    const finalLon = targetAirport ? targetAirport.longitude : parseFloat(lon);
+
+    let finalRadius = 5000;
+
+    // 2. חישוב רדיוס
+    if (landingTime && takeoffTime) {
+      const landing = new Date(landingTime);
+      const takeoff = new Date(takeoffTime);
+
+      if (!isNaN(landing.getTime()) && !isNaN(takeoff.getTime())) {
+        const diffInMinutes = Math.floor((takeoff - landing) / (1000 * 60));
+        const netMinutes = diffInMinutes - (45 + 60 + 120);
+        finalRadius = Math.max(2000, (netMinutes / 60) * 5000);
+      }
+    }
+
+    if (isNaN(finalRadius) || finalRadius <= 0) finalRadius = 5000;
+    if (finalRadius > 50000) finalRadius = 50000;
+
+    const categories = 'catering.restaurant,catering.cafe';
+    const url = `https://api.geoapify.com/v2/places`;
+
     const response = await axios.get(url, {
       params: {
-        categories: categories,
-        // סדר חשוב ב-Geoapify: קודם lon ואז lat
-        filter: `circle:${lon},${lat},${radius}`,
-        bias: `proximity:${lon},${lat}`,
-        limit: 20,
+        categories,
+        filter: `circle:${finalLon},${finalLat},${finalRadius}`,
+        bias: `proximity:${finalLon},${finalLat}`,
+        limit: 15,
         apiKey: API_KEY
       }
     });
 
-    console.log("Found restaurants count:", response.data.features.length);
-    return res.json(response.data.features);
+    return res.json(response.data.features || []);
   } catch (error) {
-    // הדפסת שגיאה מפורטת בטרמינל במקרה של תקלה ב-API
-    console.error("API Error Detail:", error.response ? error.response.data : error.message);
+    console.error("fetchRestaurants detailed error:", error.response ? error.response.data : error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -221,7 +279,7 @@ async function fetchDataFromGeoapify(lat, lon, radius, categories) {
         filter: `circle:${cleanLon},${cleanLat},${cleanRadius}`,
         bias: `proximity:${cleanLon},${cleanLat}`,
         limit: 15,
-        apiKey: process.env.GEOAPIFY_KEY // וודא שהשם הזה זהה למה שכתוב ב-pass.env
+        apiKey: API_KEY
       }
     });
     return response.data.features || [];

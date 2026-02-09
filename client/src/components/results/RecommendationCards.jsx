@@ -3,14 +3,14 @@ import React from 'react';
 /**
  * רכיב RecommendationCards - מציג כפתורים גדולים ורכיבים ויזואליים להמלצות על מסעדות ואטרקציות.
  */
-const RecommendationCards = ({ isValid, destination }) => {
+const RecommendationCards = ({ isValid, destination, onDiscover }) => {
     // מציגים רק אם יש מספיק זמן נטו (isValid)
     if (!isValid) return null;
 
     return (
         <div className="recommendations-container">
             {/* כרטיס מסעדות */}
-            <button className="category-card restaurants">
+            <button className="category-card restaurants" onClick={() => onDiscover('restaurants')}>
                 <div className="card-inner-content">
                     <h3 className="category-title">מסעדות מומלצות</h3>
                     <p className="category-subtitle">מקומות לאכול ב-{destination}</p>
@@ -19,7 +19,7 @@ const RecommendationCards = ({ isValid, destination }) => {
             </button>
 
             {/* כרטיס אטרקציות */}
-            <button className="category-card attractions">
+            <button className="category-card attractions" onClick={() => onDiscover('attractions')}>
                 <div className="card-inner-content">
                     <h3 className="category-title">אטרקציות באזור</h3>
                     <p className="category-subtitle">מקומות לבקר ב-{destination}</p>
