@@ -131,7 +131,7 @@ exports.fetchRestaurants = async (req, res) => {
 };
 
 
-exports.planTrip = async (req, res) => {
+exports.planTrip = async (req, res) => {  //פונקציה ראשית לתכנון הטיול - חישוב זמנים, רדיוס ומשיכת נתונים
   try {
     const { lat, lon, landingTime, takeoffTime } = req.body;
 
