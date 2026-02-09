@@ -135,7 +135,24 @@ exports.fetchAttractions = async (req, res) => {  //מחזיר אטרקציות 
   }
 };
 
+<<<<<<< HEAD
 exports.fetchRestaurants = async (req, res) => {
+=======
+exports.fetchRestaurants = async (req, res) => {  //מחזיר מסעדות לפי מיקום ורדיוס
+  // המרת הנתונים למספרים כדי להבטיח שה-API יקבל ערכים תקינים
+  const lat = parseFloat(req.query.lat);
+  const lon = parseFloat(req.query.lon);
+  const radius = parseInt(req.query.radius) || 5000; // ברירת מחדל של 5 ק"מ אם לא הוזן רדיוס
+
+  // בדיקת תקינות בסיסית לפני הפנייה ל-API
+  if (isNaN(lat) || isNaN(lon)) {
+    return res.status(400).json({ error: "Latitude and Longitude must be valid numbers" });
+  }
+
+  const categories = 'catering.restaurant,catering.cafe';
+  const url = `https://api.geoapify.com/v2/places`;
+
+>>>>>>> 23812ace6b646802380981a99e2f08d117177041
   try {
     const { lat, lon, landingTime, takeoffTime } = req.query;
 
