@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { translateCategory } from '../../utils/translationUtils';
 
 /**
  * רכיב RecommendationsExplorer - "דף חדש" המציג תוצאות אמת מה-API.
@@ -41,8 +42,8 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
             <div className="explorer-header glass">
                 <button className="back-btn-simple" onClick={onBack}>
                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none">
-                        <line x1="19" y1="12" x2="5" y2="12"></line>
-                        <polyline points="12 19 5 12 12 5"></polyline>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 19 19 12 12 5"></polyline>
                     </svg>
                     חזור
                 </button>
@@ -73,7 +74,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                                         {props.categories && (
                                             <div className="category-badges">
                                                 {props.categories.slice(0, 2).map((cat, i) => (
-                                                    <span key={i} className="badge-mini">{cat}</span>
+                                                    <span key={i} className="badge-mini">{translateCategory(cat)}</span>
                                                 ))}
                                             </div>
                                         )}
