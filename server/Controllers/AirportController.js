@@ -95,7 +95,7 @@ exports.fetchAttractions = async (req, res) => {  //מחזיר אטרקציות 
   }
 };
 
-exports.fetchRestaurants = async (req, res) => {
+exports.fetchRestaurants = async (req, res) => {  //מחזיר מסעדות לפי מיקום ורדיוס
   // המרת הנתונים למספרים כדי להבטיח שה-API יקבל ערכים תקינים
   const lat = parseFloat(req.query.lat);
   const lon = parseFloat(req.query.lon);
