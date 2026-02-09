@@ -1,6 +1,7 @@
 const path = require("path");
 const { execFile } = require("child_process");
 const axios = require('axios');
+const fs = require('fs');
 
 const API_KEY = process.env.GEOAPIFY_KEY;
 
@@ -72,7 +73,7 @@ exports.fetchAttractions = async (req, res) => {  //מחזיר אטרקציות 
   const lat = parseFloat(req.query.lat);
   const lon = parseFloat(req.query.lon);
   const radius = parseInt(req.query.radius) || 5000;
-  const categories = 'entertainment,tourism.attraction,catering.restaurant'; 
+  const categories = 'entertainment,tourism.attraction,catering.restaurant';
   const url = `https://api.geoapify.com/v2/places`;
 
   try {
@@ -85,7 +86,7 @@ exports.fetchAttractions = async (req, res) => {  //מחזיר אטרקציות 
         apiKey: API_KEY
       }
     });
-    
+
     console.log("Found results count:", response.data.features.length);
     return res.json(response.data.features);
   } catch (error) {
@@ -147,13 +148,13 @@ exports.planTrip = async (req, res) => {
 
     // 2. קביעת רדיוס
     const calculatedRadius = Math.max(2000, (netMinutes / 60) * 5000);
-    
+
     console.log("Calculated Net Minutes:", netMinutes);
     console.log("Calculated Radius:", calculatedRadius);
 
     // בדיקה אם המפתח קיים לפני השליחה
     if (!process.env.GEOAPIFY_KEY) {
-        console.error("CRITICAL ERROR: API Key is missing in process.env!");
+      console.error("CRITICAL ERROR: API Key is missing in process.env!");
     }
 
     // 3. משיכת נתונים
@@ -183,6 +184,28 @@ exports.planTrip = async (req, res) => {
   }
 };
 
+exports.getAirports = async (req, res) => {
+  try {
+    const airportsPath = path.join(__dirname, "..", "data", "airports.json");
+    const data = JSON.parse(fs.readFileSync(airportsPath, 'utf8'));
+
+    // מיפוי השדות לפורמט שהקליינט מצפה לו (lat/lon)
+    const mappedAirports = data.map(a => ({
+      ...a,
+      lat: a.latitude,
+      lon: a.longitude,
+      // הוספת ערכי ברירת מחדל לשדות שחסרים בקובץ השרת
+      currency_code: a.currency_code || "",
+      currency_name_hebrew: a.currency_name_hebrew || ""
+    }));
+
+    return res.json({ airports: mappedAirports });
+  } catch (error) {
+    console.error("Error in getAirports:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 // פונקציית עזר פנימית כדי לא לשכפל קוד
 async function fetchDataFromGeoapify(lat, lon, radius, categories) {
   const url = `https://api.geoapify.com/v2/places`;
@@ -205,6 +228,6 @@ async function fetchDataFromGeoapify(lat, lon, radius, categories) {
   } catch (error) {
     // הדפסה לטרמינל כדי שתדע אם ה-API של Geoapify החזיר שגיאה
     console.error("Geoapify API Error:", error.response ? error.response.data : error.message);
-    return []; 
+    return [];
   }
 }

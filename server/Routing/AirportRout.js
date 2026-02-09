@@ -9,6 +9,7 @@ router.post('/plan-trip', controller.planTrip);
 // GET /airports/top10
 router.get('/top10', controller.getTop10);
 router.get('/getNameCityCountry', controller.getNameCityCountry);
+router.get('/getAirports', controller.getAirports);
 router.get('/country/:country', controller.getAirportsByCountry);
 router.get('/:name', controller.getLocationByName);
 router.get('/locationById/:id', controller.getLocationById);
