@@ -3,14 +3,13 @@ const { execFile } = require("child_process");
 const axios = require('axios');
 const fs = require('fs');
 
-// מפתח ה-API של גוגל - וודא שהוא מוגדר ב-pass.env או ב-process.env
+// מפתח ה-API של גוגל - וודא שהוא מוגדר ב-process.env
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
 // --- פונקציות עזר פנימיות ---
 
 /**
  * פונקציה לחישוב מרחק אווירי בין שתי נקודות (בקילומטרים)
- * משמשת למיון התוצאות מהקרוב לרחוק
  */
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // רדיוס כדור הארץ
@@ -40,22 +39,32 @@ function escapeSqlString(value) {
 }
 
 /**
- * פונקציית עזר לבניית אובייקט תוצאה מותאם לגוגל (שומר על מבנה properties עבור הפרונט)
+ * פונקציית עזר לבניית אובייקט תוצאה מותאם (כולל חישוב מרחק וסידור properties)
  */
-const mapGooglePlaceToAppFormat = (place, customCategory) => {
+const mapGooglePlaceToAppFormat = (place, customCategory, userLat, userLon) => {
+  // חישוב מרחק אם יש נתוני מיקום משתמש
+  let distance = 0;
+  if (userLat && userLon && place.geometry && place.geometry.location) {
+    distance = getDistance(userLat, userLon, place.geometry.location.lat, place.geometry.location.lng);
+  }
+
   return {
     name: place.name,
-    address_line2: place.vicinity || place.formatted_address,
-    rating: place.rating || "N/A",
-    user_ratings_total: place.user_ratings_total || 0,
-    // יצירת לינק לתמונה אמיתית מגוגל
     photoUrl: place.photos
       ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${place.photos[0].photo_reference}&key=${GOOGLE_API_KEY}`
       : 'https://via.placeholder.com/800x600?text=No+Image+Available',
-    // לינק ישיר לניווט בגוגל מפות
-    googleMapsUri: `https://www.google.com/maps/search/?api=1&query=${place.geometry.location.lat},${place.geometry.location.lng}`,
+    googleMapsUri: place.geometry 
+      ? `https://www.google.com/maps/search/?api=1&query=${place.geometry.location.lat},${place.geometry.location.lng}`
+      : '#',
     place_id: place.place_id,
-    categories: customCategory ? [customCategory] : (place.types || [])
+    // עטיפת הנתונים ב-properties כדי שה-sort והפרונט יעבדו
+    properties: {
+      address_line2: place.vicinity || place.formatted_address,
+      rating: place.rating || "N/A",
+      user_ratings_total: place.user_ratings_total || 0,
+      distance: parseFloat(distance.toFixed(2)), // עיגול ל-2 ספרות
+      categories: customCategory ? [customCategory] : (place.types || [])
+    }
   };
 };
 
@@ -104,9 +113,9 @@ exports.getLocationById = async (req, res) => {
   } catch (error) { return res.status(500).json({ message: error.message }); }
 };
 
-// --- פונקציות ה-API של Google Places (אטרקציות ומסעדות) ---
+// --- פונקציות ה-API של Google Places ---
 
-exports.fetchAttractions = async (req, res) => {  // הוספתי פרמטרים של זמן נחיתה וטיסה כדי לחשב רדיוס דינמי
+exports.fetchAttractions = async (req, res) => {
   try {
     const { lat, lon, landingTime, takeoffTime } = req.query;
     const uLat = parseFloat(lat);
@@ -117,13 +126,12 @@ exports.fetchAttractions = async (req, res) => {  // הוספתי פרמטרים
       const diff = (new Date(takeoffTime) - new Date(landingTime)) / (1000 * 60);
       finalRadius = Math.max(2000, ((diff - 225) / 60) * 5000);
     }
-    if (finalRadius > 100000) finalRadius = 100000; // הגבלת רדיוס מקסימלי ל-100 ק"מ
+    if (finalRadius > 100000) finalRadius = 100000;
 
     const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
       params: { location: `${uLat},${uLon}`, radius: finalRadius, type: 'tourist_attraction', key: GOOGLE_API_KEY, language: 'he' }
     });
 
-    // מיפוי ומיון מהקרוב לרחוק
     const results = (response.data.results || [])
       .map(place => mapGooglePlaceToAppFormat(place, 'Attraction', uLat, uLon))
       .sort((a, b) => a.properties.distance - b.properties.distance);
@@ -175,7 +183,6 @@ exports.planTrip = async (req, res) => {
     const netMinutes = diffInMinutes - 225;
     const calculatedRadius = Math.max(2000, (netMinutes / 60) * 5000);
 
-    // ביצוע שתי קריאות במקביל לגוגל
     const [attrRes, restRes] = await Promise.all([
       axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
         params: { location: `${uLat},${uLon}`, radius: calculatedRadius, type: 'tourist_attraction', key: GOOGLE_API_KEY, language: 'he' }
@@ -184,6 +191,10 @@ exports.planTrip = async (req, res) => {
         params: { location: `${uLat},${uLon}`, radius: calculatedRadius, type: 'restaurant', key: GOOGLE_API_KEY, language: 'he' }
       })
     ]);
+
+    // מיפוי תוצאות ה-Promise
+    const attractions = (attrRes.data.results || []).map(p => mapGooglePlaceToAppFormat(p, 'Attraction', uLat, uLon));
+    const restaurants = (restRes.data.results || []).map(p => mapGooglePlaceToAppFormat(p, 'Restaurant', uLat, uLon));
 
     return res.json({
       timeSummary: { grossMinutes: diffInMinutes, netMinutes, calculatedRadius, isValid: netMinutes >= 120 },
