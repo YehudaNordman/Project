@@ -14,7 +14,7 @@ import { calculateTripTime, fetchWeatherData, getMockRecommendations } from '../
  * מנהל את שלבי התכנון: טופס הזנת נתונים, מסך המתנה, והצגת תוצאות.
  * הארכיטקטורה מבוססת על הפרדת לוגיקה (Utils) מתצוגה (Components).
  */
-const GuestPlanner = ({ onResultsShown }) => {
+const GuestPlanner = ({ onResultsShown, onRouteClick }) => {
   // --- מצבים (States) ---
 
   // נתוני הטופס
@@ -105,6 +105,7 @@ const GuestPlanner = ({ onResultsShown }) => {
         currencyCode={formData.currency_code}
         currencyName={formData.currency_name_hebrew}
         onBack={() => setResult(null)}
+        onRouteClick={onRouteClick}
         lat={formData.lat}
         lon={formData.lon}
         landingDate={formData.landingDate}

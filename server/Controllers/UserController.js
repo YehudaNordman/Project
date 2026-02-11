@@ -5,7 +5,7 @@ exports.register = async (req, res) => {
   try {
 
     console.log(1);
-    
+
     let user = new User(req.body);
     if (req.body.password && req.body.email) {
 
@@ -83,15 +83,18 @@ exports.login = async (req, res) => { //התחברות שניה דורש מיי�
     const token = jwt.sign({ userId: user._id }, "secret password", { expiresIn: '1h' });
     res.status(200).json({
       message: "Login successful",
-      token
-      
+      token,
+      user: {
+        email: user.email,
+        fullName: user.fullName
+      }
     });
-   }
+  }
   catch (error) {
     res.json({ message: error.message })
   }
 }
-exports.auth = async (req, res, next) => {  
+exports.auth = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, "secret password");

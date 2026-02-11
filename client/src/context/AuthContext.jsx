@@ -3,20 +3,27 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        try {
+            const savedUser = localStorage.getItem('userData');
+            if (savedUser && savedUser !== "undefined") {
+                return JSON.parse(savedUser);
+            }
+        } catch (e) {
+            console.error("Error parsing userData from localStorage", e);
+        }
+        return null;
+    });
     const [token, setToken] = useState(localStorage.getItem('token') || null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Here we could verify the token with the backend
-        if (token) {
-            // For now, we trust the token exists. 
-            // In a real app, you'd call /user/me or similar to get user details.
-            // Since the current backend doesn't have a 'me' route, we'll just set a placeholder.
-            setUser({ loggedIn: true });
+        if (token && !user) {
+            // If we have a token but no user data (e.g. from old version), 
+            // we might want to try to fetch it. For now, we'll just keep it minimal.
         }
         setLoading(false);
-    }, [token]);
+    }, [token, user]);
 
     const login = async (email, password) => {
         try {
@@ -32,8 +39,9 @@ export const AuthProvider = ({ children }) => {
 
             if (response.ok) {
                 setToken(data.token);
+                setUser(data.user);
                 localStorage.setItem('token', data.token);
-                setUser({ email }); // You might want to get more info from the backend
+                localStorage.setItem('userData', JSON.stringify(data.user));
                 return { success: true };
             } else {
                 return { success: false, message: data.message || 'Login failed' };
@@ -72,6 +80,7 @@ export const AuthProvider = ({ children }) => {
         setToken(null);
         setUser(null);
         localStorage.removeItem('token');
+        localStorage.removeItem('userData');
     };
 
     return (

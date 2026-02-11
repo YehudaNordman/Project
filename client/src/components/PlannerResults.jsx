@@ -12,7 +12,7 @@ import RecommendationsExplorer from './results/RecommendationsExplorer';
  * רכיב PlannerResults - עמוד התוצאות הראשי.
  * רכיב זה משמש כקונטיינר המרכזי שמרכז את כל חלקי התצוגה של התוצאות.
  */
-const PlannerResults = ({ result, onBack, destination, prefetchedWeather, currencyCode, currencyName, landingDate, takeoffDate, landingTime, takeoffTime, lat, lon }) => {
+const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedWeather, currencyCode, currencyName, landingDate, takeoffDate, landingTime, takeoffTime, lat, lon }) => {
     console.log("PlannerResults Props:", { lat, lon, landingDate, takeoffDate, landingTime, takeoffTime });
 
     // State למזג האוויר במידה ולא נטען בטופס (Fallback)
@@ -43,6 +43,7 @@ const PlannerResults = ({ result, onBack, destination, prefetchedWeather, curren
                 landingTime={`${landingDate}T${landingTime}:00`}
                 takeoffTime={`${takeoffDate}T${takeoffTime}:00`}
                 onBack={() => setExplorerView(null)}
+                onRouteClick={onRouteClick}
             />
         );
     }
