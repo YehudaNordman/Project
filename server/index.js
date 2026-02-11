@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const axios = require('axios');
-require('dotenv').config({ path: './Passwords/pass.env' }); //נתיב להבאת הapi
+require('dotenv').config({ path: './password.env' }); //נתיב להבאת הapi
 app.use(express.json())
 app.use(cors())
 const AirportRoute = require('./Routing/AirportRout');
@@ -21,8 +21,8 @@ async function run() {
     await mongoose.connect(uri, clientOptions);
     await mongoose.connection.db.admin().command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } 
-  finally { 
+  }
+  finally {
     // Ensures that the client will close when you finish/error
     // await mongoose.disconnect();
   }

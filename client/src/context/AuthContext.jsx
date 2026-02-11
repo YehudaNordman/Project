@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await fetch('http://172.20.10.3:3005/user/login', {
+            const response = await fetch('http://localhost:3005/user/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const response = await fetch('http://172.20.10.3:3005/user/register', {
+            const response = await fetch('http://localhost:3005/user/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

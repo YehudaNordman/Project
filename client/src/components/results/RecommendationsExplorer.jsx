@@ -17,7 +17,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
 
                 // שליחת הבקשה לשרת עם פרמטרי זמן בפורמט ISO
                 // השרת יחשב את הרדיוס ויבצע את החיפוש לפי המיקום המדויק מ-airports.json
-                const url = `http://172.20.10.3:3005/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}`;
+                const url = `http://localhost:3005/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}`;
 
                 console.log("Fetching recommendations from server:", url);
                 const response = await fetch(url);

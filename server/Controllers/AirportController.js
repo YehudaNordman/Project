@@ -7,7 +7,7 @@ const getApiKey = () => {
   if (process.env.GEOAPIFY_KEY) return process.env.GEOAPIFY_KEY;
   // Fallback direct read if env loading failed for some reason
   try {
-    const envPath = path.join(__dirname, "..", "Passwords", "pass.env");
+    const envPath = path.join(__dirname, "..", "password.env");
     if (fs.existsSync(envPath)) {
       const content = fs.readFileSync(envPath, 'utf8');
       const match = content.match(/GEOAPIFY_KEY\s*=\s*(.*)/);
@@ -113,9 +113,11 @@ exports.fetchAttractions = async (req, res) => {
     }
 
     if (isNaN(finalRadius) || finalRadius <= 0) finalRadius = 5000;
+    // הגדלת רדיוס מינימלי לאטרקציות כדי למצוא מקומות עם אתרים
+    if (finalRadius < 8000) finalRadius = 8000;
     if (finalRadius > 50000) finalRadius = 50000;
 
-    const categories = 'tourism.attraction,entertainment.museum,entertainment.culture,leisure.park,tourism.sights';
+    const categories = 'entertainment,tourism,leisure,commercial.shopping_mall,production.winery,production.brewery';
     const url = `https://api.geoapify.com/v2/places`;
 
     const response = await axios.get(url, {
@@ -123,19 +125,21 @@ exports.fetchAttractions = async (req, res) => {
         categories,
         filter: `circle:${finalLon},${finalLat},${finalRadius}`,
         bias: `proximity:${finalLon},${finalLat}`,
-        limit: 15,
-        apiKey: process.env.GEOAPIFY_KEY // וודא שזה השם ב-pass.env
+        limit: 500, // Fetch more to allow filtering for websites
+        apiKey: API_KEY
       }
     });
 
-    // הוספת הקישור לגוגל מאפס לכל תוצאה
-    const results = (response.data.features || []).map(feature => {
-      const [lat, lon] = feature.geometry.coordinates;
-      return {
-        ...feature.properties,
-        googleMapsUri: `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
-      };
-    });
+    // הוספת קישור למפות והחזרת 200 הכי קרובים (כולל כאלו ללא אתר רשמי)
+    const results = (response.data.features || [])
+      .slice(0, 200)
+      .map(feature => {
+        const [lon, lat] = feature.geometry.coordinates;
+        return {
+          ...feature.properties,
+          googleMapsUri: `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
+        };
+      });
 
     return res.json(results);
   } catch (error) {
@@ -183,19 +187,20 @@ exports.fetchRestaurants = async (req, res) => {
         categories,
         filter: `circle:${finalLon},${finalLat},${finalRadius}`,
         bias: `proximity:${finalLon},${finalLat}`,
-        limit: 15,
-        apiKey: process.env.GEOAPIFY_KEY
+        limit: 500,
+        apiKey: API_KEY
       }
     });
 
-    // הוספת הקישור לגוגל מאפס לכל תוצאה
-    const results = (response.data.features || []).map(feature => {
-      const [lat, lon] = feature.geometry.coordinates;
-      return {
-        ...feature.properties,
-        googleMapsUri: `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
-      };
-    });
+    const results = (response.data.features || [])
+      .slice(0, 200)
+      .map(feature => {
+        const [lon, lat] = feature.geometry.coordinates;
+        return {
+          ...feature.properties,
+          googleMapsUri: `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
+        };
+      });
 
     return res.json(results);
   } catch (error) {
@@ -328,6 +333,7 @@ exports.planTrip = async (req, res) => {  //פונקציה ראשית לתכנו
 
     // 2. קביעת רדיוס
     const calculatedRadius = Math.max(2000, (netMinutes / 60) * 5000);
+    const attractionRadius = Math.max(8000, calculatedRadius);
 
     console.log("Calculated Net Minutes:", netMinutes);
     console.log("Calculated Radius:", calculatedRadius);
@@ -339,7 +345,7 @@ exports.planTrip = async (req, res) => {  //פונקציה ראשית לתכנו
 
     // 3. משיכת נתונים
     const [attractions, restaurants] = await Promise.all([
-      fetchDataFromGeoapify(lat, lon, calculatedRadius, 'entertainment,tourism.attraction'),
+      fetchDataFromGeoapify(lat, lon, attractionRadius, 'entertainment,tourism,leisure,commercial.shopping_mall,production.winery,production.brewery'),
       fetchDataFromGeoapify(lat, lon, calculatedRadius, 'catering.restaurant,catering.cafe')
     ]);
 
@@ -364,7 +370,7 @@ exports.planTrip = async (req, res) => {  //פונקציה ראשית לתכנו
   }
 };
 
-exports.getAirports = async (req, res) => {  
+exports.getAirports = async (req, res) => {
   try {
     const airportsPath = path.join(__dirname, "..", "data", "airports.json");
     const data = JSON.parse(fs.readFileSync(airportsPath, 'utf8'));
@@ -400,11 +406,28 @@ async function fetchDataFromGeoapify(lat, lon, radius, categories) {
         categories,
         filter: `circle:${cleanLon},${cleanLat},${cleanRadius}`,
         bias: `proximity:${cleanLon},${cleanLat}`,
-        limit: 15,
+        limit: 500,
         apiKey: API_KEY
       }
     });
-    return response.data.features || [];
+
+    // סינון עבור האתר הרשמי ולקיחת 200 הכי קרובים
+    const rawFeatures = response.data.features || [];
+    console.log(`🔍 Geoapify Raw Results (${categories}): ${rawFeatures.length} found`);
+
+    // החזרת ה-200 הכי קרובים + הצמדת קישור גוגל מאפס ושיטוח נתונים
+    const results = rawFeatures
+      .slice(0, 200)
+      .map(feature => {
+        const [lon, lat] = feature.geometry.coordinates;
+        return {
+          ...feature.properties,
+          googleMapsUri: `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
+        };
+      });
+
+    console.log(`🎯 Total results returned: ${results.length}`);
+    return results;
   } catch (error) {
     // הדפסה לטרמינל כדי שתדע אם ה-API של Geoapify החזיר שגיאה
     console.error("Geoapify API Error:", error.response ? error.response.data : error.message);
