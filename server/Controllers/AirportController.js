@@ -50,12 +50,22 @@ const mapGooglePlaceToAppFormat = (place, customCategory, userLat, userLon) => {
 
   return {
     name: place.name,
+    address_line2: place.vicinity || place.formatted_address,
+    rating: place.rating || "N/A",
+    user_ratings_total: place.user_ratings_total || 0,
+    website: place.website, // יתכן וריק ב-Nearby Search, אך כדאי לשמור ליתר ביטחון
+    formatted_phone_number: place.formatted_phone_number,
+    // יצירת לינק לתמונה אמיתית מגוגל
     photoUrl: place.photos
       ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${place.photos[0].photo_reference}&key=${GOOGLE_API_KEY}`
       : 'https://via.placeholder.com/800x600?text=No+Image+Available',
     googleMapsUri: place.geometry 
       ? `https://www.google.com/maps/search/?api=1&query=${place.geometry.location.lat},${place.geometry.location.lng}`
       : '#',
+    // לינק ישיר לניווט בגוגל מפות
+    googleMapsUri: `https://www.google.com/maps/search/?api=1&query=${place.geometry.location.lat},${place.geometry.location.lng}`,
+    lat: place.geometry.location.lat,
+    lon: place.geometry.location.lng,
     place_id: place.place_id,
     // עטיפת הנתונים ב-properties כדי שה-sort והפרונט יעבדו
     properties: {

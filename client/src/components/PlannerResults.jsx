@@ -3,6 +3,7 @@ import { fetchWeatherData } from '../utils/plannerUtils';
 import ResultsHeader from './results/ResultsHeader';
 import CurrencyConverter from './results/CurrencyConverter';
 import ResultsSummary from './results/ResultsSummary';
+import QuickToolsSection from './results/QuickToolsSection';
 import AccommodationCard from './results/AccommodationCard';
 import RecommendationCards from './results/RecommendationCards';
 
@@ -69,11 +70,15 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
                 takeoffTime={takeoffTime}
             />
 
-            {/* 2. מחשבון המרת מטבע (חדש!) */}
-            <CurrencyConverter currencyCode={currencyCode} currencyName={currencyName} />
-
             {/* 3. כרטיס סיכום זמנים (ברוטו/נטו) */}
             <ResultsSummary result={result} />
+
+            {/* כלים מהירים: ממיר מטבע והתראת לינה */}
+            <QuickToolsSection
+                destination={destination}
+                landingTime={`${landingDate}T${landingTime}:00`}
+                takeoffTime={`${takeoffDate}T${takeoffTime}:00`}
+            />
 
             {/* 4. כרטיס לינה (יוצג רק בשהות ארוכה) */}
             <AccommodationCard
