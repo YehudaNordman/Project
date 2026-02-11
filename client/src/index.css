@@ -3512,7 +3512,7 @@ body {
   margin-top: 8px;
   font-weight: 900;
   background: linear-gradient(45deg, #1a237e, #86BDBF);
-  -webkit-background-clip: text;
+  /* -webkit-background-clip: text; */
   -webkit-text-fill-color: transparent;
 }
 
@@ -3687,7 +3687,7 @@ body {
 
 .dest-text {
   background: linear-gradient(135deg, #1a237e 0%, #86BDBF 100%);
-  -webkit-background-clip: text;
+  /* -webkit-background-clip: text; */
   -webkit-text-fill-color: transparent;
 }
 
