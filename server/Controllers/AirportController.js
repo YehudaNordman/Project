@@ -123,7 +123,56 @@ exports.getLocationById = async (req, res) => {
   } catch (error) { return res.status(500).json({ message: error.message }); }
 };
 
-// --- פונקציות ה-API של Google Places ---
+// --- פונקציות עזר פנימיות ---
+
+/**
+ * פונקציה שמושכת דפים נוספים מגוגל (כל דף = 20 תוצאות)
+ * @param {Object} params - פרמטרי החיפוש
+ * @param {number} maxPages - מספר הדפים למשוך (2 = 40 תוצאות, 3 = 60 תוצאות)
+ */
+async function getMorePlaces(params, maxPages = 2) {
+  let allResults = [];
+  let nextPageToken = null;
+  let pagesCount = 0;
+
+  try {
+    // דף ראשון
+    const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, { params });
+    allResults = [...(response.data.results || [])];
+    nextPageToken = response.data.next_page_token;
+    pagesCount = 1;
+
+    // לולאה להבאת דפים נוספים
+    while (nextPageToken && pagesCount < maxPages) {
+      // חובה להמתין 2 שניות כדי שהטוקן יופעל ע"י גוגל
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const nextRes = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
+        params: { key: params.key, pagetoken: nextPageToken }
+      });
+
+      allResults = [...allResults, ...(nextRes.data.results || [])];
+      nextPageToken = nextRes.data.next_page_token;
+      pagesCount++;
+    }
+  } catch (err) {
+    console.error("Pagination error:", err.message);
+  }
+  return allResults;
+}
+
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; 
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// --- ייצוא פונקציות ---
 
 exports.fetchAttractions = async (req, res) => {
   try {
@@ -138,17 +187,16 @@ exports.fetchAttractions = async (req, res) => {
     }
     if (finalRadius > 100000) finalRadius = 100000;
 
-    const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
-      params: { location: `${uLat},${uLon}`, radius: finalRadius, type: 'tourist_attraction', key: GOOGLE_API_KEY, language: 'he' }
-    });
+    const params = { location: `${uLat},${uLon}`, radius: finalRadius, type: 'tourist_attraction', key: GOOGLE_API_KEY, language: 'he' };
+    
+    const allPlaces = await getMorePlaces(params, 2); //במידה ורוצים יותר או פחות משנים את הכמות כל מספר מביא 20 מקומות
 
-    const results = (response.data.results || [])
+    const results = allPlaces
       .map(place => mapGooglePlaceToAppFormat(place, 'Attraction', uLat, uLon))
       .sort((a, b) => a.properties.distance - b.properties.distance);
 
     return res.json(results);
   } catch (error) {
-    console.error("fetchAttractions error:", error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -166,17 +214,16 @@ exports.fetchRestaurants = async (req, res) => {
     }
     if (finalRadius > 50000) finalRadius = 50000;
 
-    const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
-      params: { location: `${uLat},${uLon}`, radius: finalRadius, type: 'restaurant', key: GOOGLE_API_KEY, language: 'he' }
-    });
+    const params = { location: `${uLat},${uLon}`, radius: finalRadius, type: 'restaurant', key: GOOGLE_API_KEY, language: 'he' };
+    
+    const allPlaces = await getMorePlaces(params, 2); //שינוי ליותר או פחוצ מקומות
 
-    const results = (response.data.results || [])
+    const results = allPlaces
       .map(place => mapGooglePlaceToAppFormat(place, 'Restaurant', uLat, uLon))
       .sort((a, b) => a.properties.distance - b.properties.distance);
 
     return res.json(results);
   } catch (error) {
-    console.error("fetchRestaurants error:", error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -193,25 +240,20 @@ exports.planTrip = async (req, res) => {
     const netMinutes = diffInMinutes - 225;
     const calculatedRadius = Math.max(2000, (netMinutes / 60) * 5000);
 
-    const [attrRes, restRes] = await Promise.all([
-      axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
-        params: { location: `${uLat},${uLon}`, radius: calculatedRadius, type: 'tourist_attraction', key: GOOGLE_API_KEY, language: 'he' }
-      }),
-      axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
-        params: { location: `${uLat},${uLon}`, radius: calculatedRadius, type: 'restaurant', key: GOOGLE_API_KEY, language: 'he' }
-      })
+    // ביצוע הקריאות עם מנגנון הדפים (שימוש ב-Promise.all לשמירה על מהירות)
+    const [attrPlaces, restPlaces] = await Promise.all([
+      getMorePlaces({ location: `${uLat},${uLon}`, radius: calculatedRadius, type: 'tourist_attraction', key: GOOGLE_API_KEY, language: 'he' }, 2),
+      getMorePlaces({ location: `${uLat},${uLon}`, radius: calculatedRadius, type: 'restaurant', key: GOOGLE_API_KEY, language: 'he' }, 2)
     ]);
-
-    // מיפוי תוצאות ה-Promise
-    const attractions = (attrRes.data.results || []).map(p => mapGooglePlaceToAppFormat(p, 'Attraction', uLat, uLon));
-    const restaurants = (restRes.data.results || []).map(p => mapGooglePlaceToAppFormat(p, 'Restaurant', uLat, uLon));
 
     return res.json({
       timeSummary: { grossMinutes: diffInMinutes, netMinutes, calculatedRadius, isValid: netMinutes >= 120 },
-      results: { attractions, restaurants }
+      results: { 
+        attractions: attrPlaces.map(p => mapGooglePlaceToAppFormat(p, 'Attraction', uLat, uLon)).sort((a, b) => a.properties.distance - b.properties.distance), 
+        restaurants: restPlaces.map(p => mapGooglePlaceToAppFormat(p, 'Restaurant', uLat, uLon)).sort((a, b) => a.properties.distance - b.properties.distance)
+      }
     });
   } catch (error) {
-    console.error("planTrip error:", error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -219,16 +261,10 @@ exports.planTrip = async (req, res) => {
 exports.getAirports = async (req, res) => {
   try {
     const airportsPath = path.join(__dirname, "..", "data", "airports.json");
-    if (!fs.existsSync(airportsPath)) {
-      return res.status(404).json({ message: "Airports data not found" });
-    }
+    if (!fs.existsSync(airportsPath)) return res.status(404).json({ message: "Airports data not found" });
     const data = JSON.parse(fs.readFileSync(airportsPath, 'utf8'));
-    const mappedAirports = data.map(a => ({
-      ...a, lat: a.latitude, lon: a.longitude
-    }));
-    return res.json({ airports: mappedAirports });
+    return res.json({ airports: data.map(a => ({ ...a, lat: a.latitude, lon: a.longitude })) });
   } catch (error) {
-    console.error("getAirports error:", error.message);
     return res.status(500).json({ message: error.message });
   }
 };
