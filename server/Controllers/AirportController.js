@@ -15,7 +15,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // רדיוס כדור הארץ
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
-  const a = 
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -59,7 +59,7 @@ const mapGooglePlaceToAppFormat = (place, customCategory, userLat, userLon) => {
     photoUrl: place.photos
       ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${place.photos[0].photo_reference}&key=${GOOGLE_API_KEY}`
       : 'https://via.placeholder.com/800x600?text=No+Image+Available',
-    googleMapsUri: place.geometry 
+    googleMapsUri: place.geometry
       ? `https://www.google.com/maps/search/?api=1&query=${place.geometry.location.lat},${place.geometry.location.lng}`
       : '#',
     // לינק ישיר לניווט בגוגל מפות
@@ -162,10 +162,10 @@ async function getMorePlaces(params, maxPages = 2) {
 }
 
 function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; 
+  const R = 6371;
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
-  const a = 
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -179,7 +179,7 @@ exports.fetchAttractions = async (req, res) => {
     const { lat, lon, landingTime, takeoffTime } = req.query;
     const uLat = parseFloat(lat);
     const uLon = parseFloat(lon);
-    
+
     let finalRadius = 5000;
     if (landingTime && takeoffTime) {
       const diff = (new Date(takeoffTime) - new Date(landingTime)) / (1000 * 60);
@@ -188,7 +188,7 @@ exports.fetchAttractions = async (req, res) => {
     if (finalRadius > 100000) finalRadius = 100000;
 
     const params = { location: `${uLat},${uLon}`, radius: finalRadius, type: 'tourist_attraction', key: GOOGLE_API_KEY, language: 'he' };
-    
+
     const allPlaces = await getMorePlaces(params, 2); //במידה ורוצים יותר או פחות משנים את הכמות כל מספר מביא 20 מקומות
 
     const results = allPlaces
@@ -215,7 +215,7 @@ exports.fetchRestaurants = async (req, res) => {
     if (finalRadius > 50000) finalRadius = 50000;
 
     const params = { location: `${uLat},${uLon}`, radius: finalRadius, type: 'restaurant', key: GOOGLE_API_KEY, language: 'he' };
-    
+
     const allPlaces = await getMorePlaces(params, 2); //שינוי ליותר או פחוצ מקומות
 
     const results = allPlaces
@@ -233,7 +233,7 @@ exports.planTrip = async (req, res) => {
     const { lat, lon, landingTime, takeoffTime } = req.body;
     const uLat = parseFloat(lat);
     const uLon = parseFloat(lon);
-    
+
     const landing = new Date(landingTime);
     const takeoff = new Date(takeoffTime);
     const diffInMinutes = Math.floor((takeoff - landing) / (1000 * 60));
@@ -248,8 +248,8 @@ exports.planTrip = async (req, res) => {
 
     return res.json({
       timeSummary: { grossMinutes: diffInMinutes, netMinutes, calculatedRadius, isValid: netMinutes >= 120 },
-      results: { 
-        attractions: attrPlaces.map(p => mapGooglePlaceToAppFormat(p, 'Attraction', uLat, uLon)).sort((a, b) => a.properties.distance - b.properties.distance), 
+      results: {
+        attractions: attrPlaces.map(p => mapGooglePlaceToAppFormat(p, 'Attraction', uLat, uLon)).sort((a, b) => a.properties.distance - b.properties.distance),
         restaurants: restPlaces.map(p => mapGooglePlaceToAppFormat(p, 'Restaurant', uLat, uLon)).sort((a, b) => a.properties.distance - b.properties.distance)
       }
     });

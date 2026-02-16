@@ -13,12 +13,12 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeNavId, setActiveNavId] = useState(null);
-    const { user } = useAuth();
+    const { user, openAuthModal } = useAuth();
     const { addToRoute } = useRoute();
 
     const handleAddToRoute = (item) => {
         if (!user) {
-            alert('עליך להתחבר כדי לבנות מסלול');
+            openAuthModal('עליך להתחבר כדי לבנות מסלול ולהתחיל לתכנן את הטיול שלך');
             return;
         }
         addToRoute(item);
@@ -148,7 +148,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
 
                                 <div className="card-footer-luxury">
                                     <button className="add-route-action-btn" onClick={() => handleAddToRoute(item)}>
-                                        <span className="icon-plus-plus">+</span>
+                                        <span className="icon-plus-plus"></span>
                                         הוספה למסלול שלי
                                     </button>
 

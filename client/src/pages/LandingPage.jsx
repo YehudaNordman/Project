@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import GuestPlanner from '../components/GuestPlanner'
 import AuthModal from '../components/AuthModal'
 import MyRouteView from '../components/results/MyRouteView'
+import { useAuth } from '../context/AuthContext'
 
 /**
  * רכיב LandingPage - עמוד הבית והמעטפת הראשית של האפליקציה.
@@ -14,8 +15,8 @@ const LandingPage = () => {
     const [isShowingResults, setIsShowingResults] = useState(false);
     // State למעקב האם מוצג המסלול האישי.
     const [isShowingMyRoute, setIsShowingMyRoute] = useState(false);
-    // State לניהול חלון ההתחברות (Modal)
-    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+    const { openAuthModal } = useAuth();
 
     return (
         /* app-container: המיכל הראשי שמגדיר את מבנה הדף והרקע */
@@ -24,13 +25,13 @@ const LandingPage = () => {
             {/* Navbar (תפריט עליון): יוצג רק אם אנחנו בטופס ההזנה (לא בתוצאות או במסלול) */}
             {!isShowingResults && !isShowingMyRoute && (
                 <Navbar
-                    onLoginClick={() => setIsAuthModalOpen(true)}
+                    onLoginClick={() => openAuthModal()}
                     onRouteClick={() => setIsShowingMyRoute(true)}
                 />
             )}
 
-            {/* חלון מודאלי להתחברות והרשמה */}
-            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+            {/* חלון מודאלי להתחברות והרשמה - מופעל גלובלית דרך AuthContext */}
+            <AuthModal />
 
             {/* main content: האזור המרכזי של האפליקציה */}
             <main className="content">
