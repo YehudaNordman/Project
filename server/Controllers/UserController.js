@@ -105,3 +105,32 @@ exports.auth = async (req, res, next) => {
     res.status(401).json({ message: "Unauthorized" });
   }
 }
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and new password are required" });
+    }
+
+    // וולידציית סיסמה (אותן דרישות כמו בהרשמה)
+    if (password.length < 8 || !/^(?=.*[a-z])(?=.*[A-Z])/.test(password)) {
+      return res.status(400).json({ message: "Password must be at least 8 characters long and contain at least one uppercase letter and one lowercase letter" });
+    }
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Internal Error: User not found" });
+    }
+
+    let salt = bcrypt.genSaltSync(12);
+    user.password = bcrypt.hashSync(password, salt);
+
+    await user.save();
+
+    res.json({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

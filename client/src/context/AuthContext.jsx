@@ -17,13 +17,23 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem('token') || null);
     const [loading, setLoading] = useState(true);
 
+    // מצב לניהול המודאל הגלובלי
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [authModalMessage, setAuthModalMessage] = useState('');
+
     useEffect(() => {
-        if (token && !user) {
-            // If we have a token but no user data (e.g. from old version), 
-            // we might want to try to fetch it. For now, we'll just keep it minimal.
-        }
         setLoading(false);
     }, [token, user]);
+
+    const openAuthModal = (message = '') => {
+        setAuthModalMessage(message);
+        setIsAuthModalOpen(true);
+    };
+
+    const closeAuthModal = () => {
+        setIsAuthModalOpen(false);
+        setAuthModalMessage('');
+    };
 
     const login = async (email, password) => {
         try {
@@ -42,6 +52,7 @@ export const AuthProvider = ({ children }) => {
                 setUser(data.user);
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('userData', JSON.stringify(data.user));
+                closeAuthModal(); // סגירת המודאל לאחר התחברות מוצלחת
                 return { success: true };
             } else {
                 return { success: false, message: data.message || 'Login failed' };
@@ -65,7 +76,6 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
 
             if (response.ok) {
-                // After register, you might want to auto-login or just redirect to login modal
                 return { success: true, message: data.message };
             } else {
                 return { success: false, message: data.message || 'Registration failed' };
@@ -73,6 +83,29 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error('Registration error:', error);
             return { success: false, message: 'הרשמה נכשלה. אנא נסה שוב.' };
+        }
+    };
+
+    const resetPassword = async (email, password) => {
+        try {
+            const response = await fetch('http://127.0.0.1:3005/user/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                return { success: true, message: data.message };
+            } else {
+                return { success: false, message: data.message || 'Reset password failed' };
+            }
+        } catch (error) {
+            console.error('Reset password error:', error);
+            return { success: false, message: 'עדכון הסיסמה נכשל. אנא נסה שוב.' };
         }
     };
 
@@ -84,7 +117,19 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+        <AuthContext.Provider value={{
+            user,
+            token,
+            loading,
+            login,
+            register,
+            resetPassword,
+            logout,
+            isAuthModalOpen,
+            authModalMessage,
+            openAuthModal,
+            closeAuthModal
+        }}>
             {children}
         </AuthContext.Provider>
     );

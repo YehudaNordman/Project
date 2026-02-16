@@ -5,6 +5,7 @@ let isAdmin = require('../Middleware/isAdmin.js');
 
 router.post('/register', controller.register);
 router.post('/login', controller.login);
+router.post('/reset-password', controller.resetPassword);
 
 router.use(controller.auth);    // כל הפונקציות הבאות דורשות אימות חיבור
 router.use(isAdmin);    // כל הפונקציות הבאות דורשות שהמשתמש יהיה אדמין

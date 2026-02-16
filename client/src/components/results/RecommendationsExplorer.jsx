@@ -2,23 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { translateCategory } from '../../utils/translationUtils';
 import { useAuth } from '../../context/AuthContext';
 import { useRoute } from '../../context/RouteContext';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 
-import QuickToolsSection from './QuickToolsSection';
+const containerStyle = {
+    width: '100%',
+    height: '100%'
+};
 
 /**
  * רכיב RecommendationsExplorer - "דף חדש" המציג תוצאות אמת מה-API.
- * מציג רשימה של מסעדות או אטרקציות שנמשכו מהשרת.
  */
 const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, takeoffTime, onBack, onRouteClick }) => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeNavId, setActiveNavId] = useState(null);
-    const { user } = useAuth();
-    const { addToRoute } = useRoute();
+    const [selectedMapItem, setSelectedMapItem] = useState(null);
+    const { user, openAuthModal } = useAuth();
+    const { myRoute, addToRoute } = useRoute();
+
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: "AIzaSyAXfZDMRBOrC08lOEZEPvnggjQyL3_B_SE"
+    });
 
     const handleAddToRoute = (item) => {
         if (!user) {
-            alert('עליך להתחבר כדי לבנות מסלול');
+            openAuthModal('עליך להתחבר כדי לבנות מסלול ולהתחיל לתכנן את הטיול שלך');
             return;
         }
         addToRoute(item);
@@ -46,16 +55,10 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
             setLoading(true);
             try {
                 const endpoint = type === 'restaurants' ? 'fetchRestaurants' : 'fetchAttractions';
-
-
-                // שליחת הבקשה לשרת עם פרמטרי זמן בפורמט ISO
-                // השרת יחשב את הרדיוס ויבצע את החיפוש לפי המיקום המדויק מ-airports.json
                 const url = `http://localhost:3005/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}`;
                 console.log("Fetching recommendations from server:", url);
                 const response = await fetch(url);
                 const data = await response.json();
-                console.log("Data received from server:", data);
-
                 setItems(Array.isArray(data) ? data : (data.features || []));
             } catch (err) {
                 console.error("Error loading recommendations:", err);
@@ -68,6 +71,18 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
             loadData();
         }
     }, [type, lat, lon, landingTime, takeoffTime]);
+
+    const getMapCenter = () => {
+        if (lat && lon) return { lat: parseFloat(lat), lng: parseFloat(lon) };
+        return { lat: 51.505, lng: -0.09 };
+    };
+
+    const mapCenter = getMapCenter();
+
+    // בדיקה האם פריט כבר נמצא במסלול
+    const isInRoute = (item) => {
+        return myRoute.some(r => r.place_id === item.place_id || r.name === item.name);
+    };
 
     return (
         <div className="explorer-page animate-in">
@@ -101,100 +116,171 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                 </div>
             </div>
 
-            <div className="explorer-content">
+            <div className="explorer-content" style={{ flexDirection: 'column', alignItems: 'center' }}>
                 {loading ? (
                     <div className="explorer-loading-view">
                         <div className="spinner-luxury"></div>
                         <p>אנחנו אוספים את המקומות הטובים ביותר עבורך...</p>
                     </div>
                 ) : items.length > 0 ? (
-                    <div className="items-grid-premium">
-                        {items.map((item, index) => (
-                            <div key={index} className="item-card-luxury glass animate-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                                <div className="card-media">
-                                    {item.photoUrl ? (
-                                        <img src={item.photoUrl} alt={item.name} loading="lazy" />
-                                    ) : (
-                                        <div className="placeholder-media">
-                                            {type === 'restaurants' ? '🍽️' : '🎡'}
-                                        </div>
-                                    )}
-                                    <div className="media-overlay">
-                                        <div className="rating-tag">
-                                            ⭐ {item.rating || '4.5'}
-                                        </div>
-                                        {item.distance && (
-                                            <div className="dist-tag">
-                                                {(item.distance / 1000).toFixed(1)} ק"מ מהמרכז
+                    <>
+                        <div className="items-grid-premium">
+                            {items.map((item, index) => (
+                                <div key={index} className="item-card-luxury glass animate-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                                    <div className="card-media">
+                                        {item.photoUrl ? (
+                                            <img src={item.photoUrl} alt={item.name} loading="lazy" />
+                                        ) : (
+                                            <div className="placeholder-media">
+                                                {type === 'restaurants' ? '🍽️' : '🎡'}
                                             </div>
                                         )}
-                                    </div>
-                                </div>
-
-                                <div className="card-body-luxury">
-                                    <div className="category-row">
-                                        <span className="item-category-label">
-                                            {item.categories ? translateCategory(item.categories[0]) : (type === 'restaurants' ? 'מסעדה' : 'אטרקציה')}
-                                        </span>
-                                    </div>
-                                    <h4 className="item-title-luxury">{item.name || 'מקום מומלץ'}</h4>
-                                    <p className="item-address-luxury">📍 {item.address_line2 || item.street || 'כתובת זמינה בבחירה'}</p>
-
-                                    <div className="item-status-luxury">
-                                        <span className={`status-dot ${item.open_now ? 'online' : 'away'}`}></span>
-                                        {item.open_now ? 'פתוח עכשיו' : 'סגור כעת'}
-                                    </div>
-                                </div>
-
-                                <div className="card-footer-luxury">
-                                    <button className="add-route-action-btn" onClick={() => handleAddToRoute(item)}>
-                                        <span className="icon-plus-plus">+</span>
-                                        הוספה למסלול שלי
-                                    </button>
-
-                                    <div className="dual-action-row" style={{ position: 'relative' }}>
-                                        <div className="nav-btn-wrapper">
-                                            <a href="#" onClick={(e) => toggleNavOptions(e, item.place_id || index)} className="action-btn-luxury maps">
-                                                🚀 ניווט מהיר
-                                            </a>
-
-                                            {activeNavId === (item.place_id || index) && (
-                                                <div className="mini-nav-popup animate-in" onClick={e => e.stopPropagation()}>
-                                                    <div className="mini-nav-grid">
-                                                        <a href={item.lat && item.lon ?
-                                                            `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lon}` :
-                                                            `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}`}
-                                                            target="_blank" rel="noopener noreferrer" className="mini-nav-item">
-                                                            <img src="https://www.google.com/s2/favicons?sz=128&domain=maps.google.com" alt="Google" />
-                                                            <span>Google Maps</span>
-                                                        </a>
-                                                        <a href={item.lat && item.lon ?
-                                                            `https://waze.com/ul?ll=${item.lat},${item.lon}&navigate=yes` :
-                                                            `https://waze.com/ul?q=${encodeURIComponent(item.name)}&navigate=yes`}
-                                                            target="_blank" rel="noopener noreferrer" className="mini-nav-item">
-                                                            <img src="https://www.google.com/s2/favicons?sz=128&domain=waze.com" alt="Waze" />
-                                                            <span>Waze</span>
-                                                        </a>
-                                                        <a href={`https://moovitapp.com/index/he/תחבורה_ציבורית-directions?to=${encodeURIComponent(item.name)}&dest.lat=${item.lat}&dest.lon=${item.lon}`}
-                                                            target="_blank" rel="noopener noreferrer" className="mini-nav-item">
-                                                            <img src="https://www.google.com/s2/favicons?sz=128&domain=moovit.com" alt="Moovit" />
-                                                            <span>Moovit</span>
-                                                        </a>
-                                                    </div>
+                                        <div className="media-overlay">
+                                            <div className="rating-tag">
+                                                ⭐ {item.rating || '4.5'}
+                                            </div>
+                                            {item.properties?.distance && (
+                                                <div className="dist-tag" style={{ background: 'white', padding: '4px 10px', borderRadius: '10px', fontWeight: '800', fontSize: '0.75rem', color: '#1a237e' }}>
+                                                    {item.properties.distance} ק"מ
                                                 </div>
                                             )}
                                         </div>
+                                    </div>
 
-                                        {item.website && (
-                                            <a href={item.website} target="_blank" rel="noopener noreferrer" className="action-btn-luxury site official">
-                                                🌐 אתר רשמי
-                                            </a>
-                                        )}
+                                    <div className="card-body-luxury">
+                                        <div className="category-row">
+                                            <span className="item-category-label">
+                                                {item.categories ? translateCategory(item.categories[0]) : (type === 'restaurants' ? 'מסעדה' : 'אטרקציה')}
+                                            </span>
+                                        </div>
+                                        <h4 className="item-title-luxury">{item.name || 'מקום מומלץ'}</h4>
+                                        <p className="item-address-luxury">📍 {item.address_line2 || item.street || 'כתובת זמינה בבחירה'}</p>
+
+                                        <div className="item-status-luxury">
+                                            <span className={`status-dot ${item.open_now ? 'online' : 'away'}`}></span>
+                                            {item.open_now ? 'פתוח עכשיו' : 'סגור כעת'}
+                                        </div>
+                                    </div>
+
+                                    <div className="card-footer-luxury">
+                                        <button
+                                            className={`add-route-action-btn ${isInRoute(item) ? 'item-added' : ''}`}
+                                            onClick={() => handleAddToRoute(item)}
+                                            style={isInRoute(item) ? { background: '#26a69a' } : {}}
+                                        >
+                                            <span className="icon-plus-plus"></span>
+                                            {isInRoute(item) ? '✓ נוסף למסלול' : 'הוספה למסלול שלי'}
+                                        </button>
+
+                                        <div className="dual-action-row" style={{ position: 'relative' }}>
+                                            <div className="nav-btn-wrapper">
+                                                <a href="#" onClick={(e) => toggleNavOptions(e, item.place_id || index)} className="action-btn-luxury maps">
+                                                    🚀 ניווט מהיר
+                                                </a>
+
+                                                {activeNavId === (item.place_id || index) && (
+                                                    <div className="mini-nav-popup animate-in" onClick={e => e.stopPropagation()}>
+                                                        <div className="mini-nav-grid">
+                                                            <a href={item.lat && item.lon ?
+                                                                `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lon}` :
+                                                                `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}`}
+                                                                target="_blank" rel="noopener noreferrer" className="mini-nav-item">
+                                                                <img src="https://www.google.com/s2/favicons?sz=128&domain=maps.google.com" alt="Google" />
+                                                                <span>Google Maps</span>
+                                                            </a>
+                                                            <a href={item.lat && item.lon ?
+                                                                `https://waze.com/ul?ll=${item.lat},${item.lon}&navigate=yes` :
+                                                                `https://waze.com/ul?q=${encodeURIComponent(item.name)}&navigate=yes`}
+                                                                target="_blank" rel="noopener noreferrer" className="mini-nav-item">
+                                                                <img src="https://www.google.com/s2/favicons?sz=128&domain=waze.com" alt="Waze" />
+                                                                <span>Waze</span>
+                                                            </a>
+                                                            <a href={`https://moovitapp.com/index/he/תחבורה_ציבורית-directions?to=${encodeURIComponent(item.name)}&dest.lat=${item.lat}&dest.lon=${item.lon}`}
+                                                                target="_blank" rel="noopener noreferrer" className="mini-nav-item">
+                                                                <img src="https://www.google.com/s2/favicons?sz=128&domain=moovit.com" alt="Moovit" />
+                                                                <span>Moovit</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {item.website && (
+                                                <a href={item.website} target="_blank" rel="noopener noreferrer" className="action-btn-luxury site official">
+                                                    🌐 אתר רשמי
+                                                </a>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
+                            ))}
+                        </div>
+
+                        {/* תצוגת מפה מורחבת מתחת לכרטיסיות */}
+                        <div className="map-section-container">
+                            <h3 className="section-title-premium">גלה את הסביבה על המפה</h3>
+                            <div className="map-resizable-wrapper">
+                                {isLoaded ? (
+                                    <GoogleMap
+                                        mapContainerStyle={containerStyle}
+                                        center={mapCenter}
+                                        zoom={14}
+                                        onLoad={map => {
+                                            const bounds = new window.google.maps.LatLngBounds();
+                                            items.forEach(item => {
+                                                if (item.lat && item.lon) {
+                                                    bounds.extend({ lat: parseFloat(item.lat), lng: parseFloat(item.lon) });
+                                                }
+                                            });
+                                            if (items.length > 0) map.fitBounds(bounds);
+                                        }}
+                                    >
+                                        {items.filter(item => item.lat && item.lon).map((item, idx) => (
+                                            <Marker
+                                                key={idx}
+                                                position={{ lat: parseFloat(item.lat), lng: parseFloat(item.lon) }}
+                                                onClick={() => setSelectedMapItem(item)}
+                                                icon={{
+                                                    url: isInRoute(item)
+                                                        ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                                                        : 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                                                }}
+                                            />
+                                        ))}
+
+                                        {selectedMapItem && (
+                                            <InfoWindow
+                                                position={{ lat: parseFloat(selectedMapItem.lat), lng: parseFloat(selectedMapItem.lon) }}
+                                                onCloseClick={() => setSelectedMapItem(null)}
+                                            >
+                                                <div className="map-popup-content">
+                                                    <strong>{selectedMapItem.name}</strong>
+                                                    <p>{selectedMapItem.address_line2}</p>
+                                                    <button
+                                                        onClick={() => handleAddToRoute(selectedMapItem)}
+                                                        disabled={isInRoute(selectedMapItem)}
+                                                        style={{
+                                                            marginTop: '10px',
+                                                            padding: '5px 12px',
+                                                            background: '#1a237e',
+                                                            color: 'white',
+                                                            border: 'none',
+                                                            borderRadius: '8px',
+                                                            cursor: 'pointer',
+                                                            opacity: isInRoute(selectedMapItem) ? 0.6 : 1
+                                                        }}
+                                                    >
+                                                        {isInRoute(selectedMapItem) ? 'כבר במסלול ✅' : 'הוסף למסלול +'}
+                                                    </button>
+                                                </div>
+                                            </InfoWindow>
+                                        )}
+                                    </GoogleMap>
+                                ) : <div className="map-loading">טוען מפות...</div>}
+                                <div className="resize-handle-hint">↕️ גרור לשינוי גובה המפה | כחול = המלצות | ירוק = הבחירות שלך</div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    </>
                 ) : (
                     <div className="no-data-luxury glass">
                         <div className="no-data-icon">🔍</div>
