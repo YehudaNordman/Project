@@ -1,22 +1,21 @@
 import LandingPage from './pages/LandingPage'
-
+import {BrowserRouter as Router, Routes, Route, BrowserRouter} from 'react-router-dom'
+import MyTrip from './pages/myTrip';
 /**
  * רכיב האפליקציה הראשי (Entry Point).
  * מגדיר את מבנה העטיפה הבסיסי ומטעין את דף הבית.
  */
 function App() {
   return (
-    <div className="App">
-      {/* אלמנטים דקורטיביים של מטוסים "מעופפים" ברקע האתר */}
-      <div className="airplane-bg-element planeify-1">✈️</div>
-      <div className="airplane-bg-element planeify-2">✈️</div>
-      <div className="airplane-bg-element planeify-3">✈️</div>
-
-      {/* טעינת הרכיב המרכזי שמרכז את כל תוכן האתר */}
-      <LandingPage />
-    </div>
+    <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/my-trip" element={<MyTrip />} />
+    </Routes>
+    
+    </BrowserRouter>
   );
 }
 
-export default App
+export default App;
 

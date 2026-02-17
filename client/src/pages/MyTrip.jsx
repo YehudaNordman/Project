@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useRoute } from '../../context/RouteContext';
-import { translateCategory } from '../../utils/translationUtils';
+import { useRoute } from '../context/RouteContext';
+import { translateCategory } from '../utils/translationUtils';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import { useEffect } from 'react';
-import Ai from '../Ai';
+import Ai from '../components/Ai';
 
 
 const containerStyle = {
@@ -12,47 +12,22 @@ const containerStyle = {
 };
 
 
-const MyRouteView = ({ onBack, times }) => {
+const MyTrip = ({ onBack , times}) => {
 
-
-
+    
+    
     const { myRoute, removeFromRoute, clearRoute } = useRoute();
     const [selectedItem, setSelectedItem] = useState(null);
-    const [aiInfo, setAi] = useState();
+    
 
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: "AIzaSyAXfZDMRBOrC08lOEZEPvnggjQyL3_B_SE"
     });
-    const promptText = myRoute.map(item => item.name).join(", ")
 
 
-    const aiFetch = async () => {
-        setAi("AI מכין לך את המסלול...");
-        try {
-            const response = await fetch('http://localhost:3005/ai/ask', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ prompt: promptText + JSON.stringify(times) }), // שליחת שמות המקומות ל-AI
-            });
 
-            // 1. חייב להשתמש ב-await כאן כדי לקבל את הנתונים עצמם
-            const data = await response.json();
-
-            console.log("AI Response:", data);
-
-            // 2. מעדכנים את ה-State עם הנתונים שחזרו (למשל data.answer או data)
-            // חשוב לוודא שמה שאתה מכניס ל-setAi הוא מחרוזת או מערך ולא אובייקט Response
-            setAi(data.answer || data);
-
-        } catch (e) {
-            console.log("Error in AI Fetch:", e);
-            setAi("אירעה שגיאה בקבלת המידע מה-AI. אנא נסה שוב מאוחר יותר.");
-        }
-    }
 
 
     const getMapCenter = () => {
@@ -194,13 +169,11 @@ const MyRouteView = ({ onBack, times }) => {
                 )}
             </div>
 
-            <div className="ai-response-container">
-                {/* אם ai הוא מחרוזת המכילה HTML, זה יציג אותו מעוצב */}
+            <Ai times={times} myRoute={myRoute} />
 
-                <Ai times={times} myRoute={myRoute} />
-            </div>
+         
         </div>
     );
 };
 
-export default MyRouteView;
+export default MyTrip;
