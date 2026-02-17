@@ -8,7 +8,7 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
     useEffect(() => {
         const loadAirports = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:3005/airports/getAirports');
+                const response = await fetch('http://localhost:3006/airports/getAirports');
                 const data = await response.json();
                 setAllAirports(data.airports || []);
             } catch (err) { console.error("Error loading airports:", err); }

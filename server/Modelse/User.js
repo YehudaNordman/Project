@@ -13,12 +13,19 @@ const userSchema = new mongoose.Schema(
             lowercase: true,
             trim: true,
         },
-        password: { 
-            type: String, 
+        password: {
+            type: String,
             required: true,
             minlength: [8, 'Password must be at least 8 characters long'],
         },
-        admin: Boolean
+        admin: Boolean,
+        savedRoutes: [
+            {
+                itinerary: String,
+                times: Object,
+                createdAt: { type: Date, default: Date.now }
+            }
+        ]
     }
 );
 

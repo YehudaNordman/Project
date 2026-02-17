@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await fetch('http://127.0.0.1:3005/user/login', {
+            const response = await fetch('http://localhost:3006/user/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const response = await fetch('http://127.0.0.1:3005/user/register', {
+            const response = await fetch('http://localhost:3006/user/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
 
     const resetPassword = async (email, password) => {
         try {
-            const response = await fetch('http://127.0.0.1:3005/user/reset-password', {
+            const response = await fetch('http://localhost:3006/user/reset-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

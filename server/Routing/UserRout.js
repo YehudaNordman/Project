@@ -8,6 +8,7 @@ router.post('/login', controller.login);
 router.post('/reset-password', controller.resetPassword);
 
 router.use(controller.auth);    // כל הפונקציות הבאות דורשות אימות חיבור
+router.post('/save-route', controller.saveRoute);
 router.use(isAdmin);    // כל הפונקציות הבאות דורשות שהמשתמש יהיה אדמין
 router.get('/', controller.getAll);
 router.get('/:id', controller.getById);

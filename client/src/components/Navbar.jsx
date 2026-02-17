@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
  * כולל לוגו בצד אחד וכפתור גישה לאזור האישי בצד השני.
  * מעוצב בסגנון פרימיום דביק (Sticky).
  */
-const Navbar = ({ onLoginClick, onRouteClick }) => {
+const Navbar = ({ onLoginClick, onRouteClick, onSavedTripsClick }) => {
     const { user, logout } = useAuth();
     const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
@@ -30,6 +30,11 @@ const Navbar = ({ onLoginClick, onRouteClick }) => {
     const handleRouteAction = () => {
         setIsDropdownOpen(false);
         onRouteClick();
+    };
+
+    const handleSavedTripsAction = () => {
+        setIsDropdownOpen(false);
+        if (onSavedTripsClick) onSavedTripsClick();
     };
 
     const handleLogoutAction = () => {
@@ -68,12 +73,19 @@ const Navbar = ({ onLoginClick, onRouteClick }) => {
                                 <div className="dropdown-divider"></div>
 
                                 <div className="dropdown-links">
+                                    <button className="dropdown-item" onClick={handleSavedTripsAction}>
+                                        <span className="item-icon">💾</span>
+                                        <div className="item-text">
+                                            <span className="item-title">מסלולים שמורים</span>
+                                            <span className="item-desc">צפה במסלולי ה-AI ששמרת</span>
+                                        </div>
+                                    </button>
                                     {user ? (
                                         <>
                                             <button className="dropdown-item" onClick={handleRouteAction}>
                                                 <span className="item-icon">🛣️</span>
                                                 <div className="item-text">
-                                                    <span className="item-title">המסלול שלי</span>
+                                                    <span className="item-title">המסלול הנוכחי</span>
                                                     <span className="item-desc">צפייה וניהול המקומות ששמרת</span>
                                                 </div>
                                             </button>

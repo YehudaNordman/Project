@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import GuestPlanner from '../components/GuestPlanner'
 import AuthModal from '../components/AuthModal'
 import MyRouteView from '../components/results/MyRouteView'
+import SavedItinerariesView from '../components/results/SavedItinerariesView'
 import { useAuth } from '../context/AuthContext'
 
 /**
@@ -15,6 +16,8 @@ const LandingPage = () => {
     const [isShowingResults, setIsShowingResults] = useState(false);
     // State למעקב האם מוצג המסלול האישי.
     const [isShowingMyRoute, setIsShowingMyRoute] = useState(false);
+    // State למעקב האם מוצגות הנסיעות השמורות.
+    const [isShowingSavedTrips, setIsShowingSavedTrips] = useState(false);
 
     const [formData, setFormData] = useState({
         destination: '',  // עיר או שדה תעופה
@@ -31,10 +34,11 @@ const LandingPage = () => {
         <div className="app-container" dir="rtl">
 
             {/* Navbar (תפריט עליון): יוצג רק אם אנחנו בטופס ההזנה (לא בתוצאות או במסלול) */}
-            {!isShowingResults && !isShowingMyRoute && (
+            {!isShowingResults && !isShowingMyRoute && !isShowingSavedTrips && (
                 <Navbar
                     onLoginClick={() => openAuthModal()}
                     onRouteClick={() => setIsShowingMyRoute(true)}
+                    onSavedTripsClick={() => setIsShowingSavedTrips(true)}
                 />
             )}
 
@@ -44,10 +48,21 @@ const LandingPage = () => {
             {/* main content: האזור המרכזי של האפליקציה */}
             <main className="content">
                 {isShowingMyRoute ? (
-                    <MyRouteView onBack={() => setIsShowingMyRoute(false)} times={formData} />
+                    <MyRouteView
+                        onBack={() => setIsShowingMyRoute(false)}
+                        times={formData}
+                        onViewSaved={() => {
+                            setIsShowingMyRoute(false);
+                            setIsShowingSavedTrips(true);
+                        }}
+                    />
                 ) : null}
 
-                <div style={{ display: isShowingMyRoute ? 'none' : 'block' }}>
+                {isShowingSavedTrips ? (
+                    <SavedItinerariesView onBack={() => setIsShowingSavedTrips(false)} />
+                ) : null}
+
+                <div style={{ display: (isShowingMyRoute || isShowingSavedTrips) ? 'none' : 'block' }}>
                     <GuestPlanner
                         onResultsShown={setIsShowingResults}
                         onRouteClick={() => setIsShowingMyRoute(true)}

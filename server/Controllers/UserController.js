@@ -134,3 +134,24 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
+
+exports.saveRoute = async (req, res) => {
+  try {
+    const { itinerary, times } = req.body;
+    if (!itinerary) {
+      return res.status(400).json({ message: "Itinerary is required" });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.savedRoutes.push({ itinerary, times });
+    await user.save();
+
+    res.json({ message: "Route saved successfully", savedRoutes: user.savedRoutes });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

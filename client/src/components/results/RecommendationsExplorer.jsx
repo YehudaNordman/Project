@@ -55,7 +55,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
             setLoading(true);
             try {
                 const endpoint = type === 'restaurants' ? 'fetchRestaurants' : 'fetchAttractions';
-                const url = `http://localhost:3005/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}`;
+                const url = `http://localhost:3006/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}`;
                 console.log("Fetching recommendations from server:", url);
                 const response = await fetch(url);
                 const data = await response.json();

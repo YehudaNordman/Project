@@ -2,25 +2,31 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// ✅ הנה השם הנכון מתוך הרשימה ששלחת
-const MODEL_NAME = "gemini-2.5-flash"; 
-
-const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+// ננסה מודלים שונים כ-fallback
+// ננסה מודלים שונים כ-fallback לפי מה שזמין ב-API
+const MODELS = [
+  "gemini-2.0-flash",
+  "gemini-2.0-flash-lite",
+  "gemini-flash-latest",
+  "gemini-pro-latest",
+  "gemini-1.5-flash",
+  "gemini-2.5-flash"
+];
 
 exports.askAi = async (req, res) => {
   try {
-    console.log("🤖 Asking Gemini Model:", MODEL_NAME); 
-    
     const { prompt } = req.body;
     if (!prompt) return res.status(400).json({ message: "Prompt is required" });
 
-    console.log(prompt);
-    
+    console.log("-----------------------------------------");
+    console.log("🤖 AI REQUEST RECEIVED");
+    console.log("-----------------------------------------");
+
     const promptText = `
 אתה מומחה לתכנון טיולים עבור אפליקציית Layover-Hacker. 
 המטרה שלך היא לבנות מסלול טיול אופטימלי בזמן עצירת ביניים (Layover).
 
-אלו המקומות שהמשתמש שמר זמני השהייה: ${prompt}
+אלו המקומות שהמשתמש שמר: ${prompt}
 
 דגשים לבניית המסלול:
 1. סדר לוגי: התחל בנקודת המוצא (שדה התעופה), סדר את האטרקציות לפי המרחק הגאוגרפי ביניהן, וסיים בחזרה לשדה התעופה.
@@ -37,17 +43,51 @@ exports.askAi = async (req, res) => {
 - זמן נסיעה משוער לנקודה הבאה.
 - המלצה על מסעדה קרובה.
 `;
-    const result = await model.generateContent(promptText);
-    const response = await result.response;
-    const text = response.text();
 
-    res.json({ answer: text });
+    let finalAnswer = null;
+    let lastError = null;
+
+    // לולאת Fallback על מודלים שונים
+    for (const modelName of MODELS) {
+      try {
+        console.log(`🤖 Attempting with model: ${modelName}...`);
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent(promptText);
+        const response = await result.response;
+        finalAnswer = response.text();
+
+        if (finalAnswer) {
+          console.log(`✅ AI SUCCESS WITH ${modelName}`);
+          break; // הצלחנו! יוצאים מהלולאה
+        }
+      } catch (err) {
+        console.error(`❌ Error with ${modelName}:`, err.message);
+        lastError = err;
+        // אם זו שגיאת מכסה (429), נמשיך למודל הבא
+        continue;
+      }
+    }
+
+    if (finalAnswer) {
+      return res.json({ answer: finalAnswer });
+    } else {
+      throw lastError || new Error("All models failed to generate content.");
+    }
 
   } catch (error) {
-    console.error("❌ AI Error Details:", error);
-    res.status(500).json({ 
-        message: "Failed to generate AI response", 
-        error: error.message 
+    console.error("❌ FINAL AI ERROR:", error.message);
+
+    let status = 500;
+    let message = "אירעה שגיאה בשרת ה-AI.";
+
+    if (error.message && (error.message.includes("429") || error.message.toLowerCase().includes("quota"))) {
+      status = 429;
+      message = "QUOTA_EXCEEDED: הגענו למכסת הבקשות של גוגל. המתן דקה ונסה שוב.";
+    }
+
+    res.status(status).json({
+      message: message,
+      error: error.message
     });
   }
 };

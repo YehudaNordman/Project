@@ -15,24 +15,29 @@ app.use('/ai', AiRoute);
 
 const uri = "mongodb+srv://davia:Aa123456@cluster0.yldsfaj.mongodb.net/?appName=Cluster0";
 
-const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+const clientOptions = {
+  serverApi: { version: '1', strict: true, deprecationErrors: true },
+  connectTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+  serverSelectionTimeoutMS: 5000,
+};
 
-async function run() {
+async function connectToMongo() {
   try {
-    // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
+    console.log("⏳ Connecting to MongoDB...");
     await mongoose.connect(uri, clientOptions);
-    await mongoose.connection.db.admin().command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } 
-  finally { 
-    // Ensures that the client will close when you finish/error
-    // await mongoose.disconnect();
+    console.log("✅ Successfully connected to MongoDB!");
+  } catch (err) {
+    console.error("❌ MongoDB Connection Error:", err.message);
+    console.log("⚠️ Server will continue to run without MongoDB features.");
   }
 }
-run().catch(console.dir);
-app.listen(3005, () => {
-  console.log("server is good, port 3005!");
 
-})
+connectToMongo();
 
-
+app.listen(3006, () => {
+  console.log("-----------------------------------------");
+  console.log("🚀 SERVER IS RUNNING ON PORT 3006!!!");
+  console.log("📍 API: http://localhost:3006");
+  console.log("-----------------------------------------");
+});
