@@ -29,6 +29,7 @@ const GuestPlanner = ({ onResultsShown, onRouteClick, formData, setFormData }) =
   const [result, setResult] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   // עדכון האב (LandingPage) בשינוי מצב התוצאות
   useEffect(() => {
@@ -53,10 +54,21 @@ const GuestPlanner = ({ onResultsShown, onRouteClick, formData, setFormData }) =
 
     // בדיקת תקינות בסיסית של שדות
     const { destination, landingDate, landingTime, takeoffDate, takeoffTime } = formData;
-    if (!landingDate || !landingTime || !takeoffDate || !takeoffTime) {
-      alert('אנא מלא את כל פרטי הזמנים');
+
+    if (!destination) {
+      setErrorMsg('נא להזין יעד (עיר או שדה תעופה)');
       return;
     }
+    if (!landingDate || !landingTime) {
+      setErrorMsg('נא להזין תאריך ושעת נחיתה');
+      return;
+    }
+    if (!takeoffDate || !takeoffTime) {
+      setErrorMsg('נא להזין תאריך ושעת המראה');
+      return;
+    }
+
+    setErrorMsg('');
 
     setIsLoading(true);
     setResult(null);
@@ -126,6 +138,7 @@ const GuestPlanner = ({ onResultsShown, onRouteClick, formData, setFormData }) =
         handleChange={handleChange}
         setFormData={setFormData}
         onSubmit={handleCalculate}
+        error={errorMsg}
       />
       <Testimonials />
     </div>

@@ -76,6 +76,8 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
             {/* כלים מהירים: ממיר מטבע והתראת לינה */}
             <QuickToolsSection
                 destination={destination}
+                currencyCode={currencyCode}
+                currencyName={currencyName}
                 landingTime={`${landingDate}T${landingTime}:00`}
                 takeoffTime={`${takeoffDate}T${takeoffTime}:00`}
             />

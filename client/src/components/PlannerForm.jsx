@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const PlannerForm = ({ formData, handleChange, setFormData, onSubmit }) => {
+const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [allAirports, setAllAirports] = useState([]);
@@ -32,14 +32,49 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit }) => {
         }
     }, [formData.destination, allAirports]);
 
+    const countryToCurrency = {
+        'בריטניה': { code: 'GBP', name: 'פאונד' },
+        'צרפת': { code: 'EUR', name: 'אירו' },
+        'איטליה': { code: 'EUR', name: 'אירו' },
+        'גרמניה': { code: 'EUR', name: 'אירו' },
+        'ספרד': { code: 'EUR', name: 'אירו' },
+        'הולנד': { code: 'EUR', name: 'אירו' },
+        'יוון': { code: 'EUR', name: 'אירו' },
+        'קפריסין': { code: 'EUR', name: 'אירו' },
+        'אוסטריה': { code: 'EUR', name: 'אירו' },
+        'בלגיה': { code: 'EUR', name: 'אירו' },
+        'פורטוגל': { code: 'EUR', name: 'אירו' },
+        'אירלנד': { code: 'EUR', name: 'אירו' },
+        'פינלנד': { code: 'EUR', name: 'אירו' },
+        'ארצות הברית': { code: 'USD', name: 'דולר ארה"ב' },
+        'USA': { code: 'USD', name: 'דולר ארה"ב' },
+        'קנדה': { code: 'CAD', name: 'דולר קנדי' },
+        'יפן': { code: 'JPY', name: 'יין יפני' },
+        'תאילנד': { code: 'THB', name: 'בהאט תאילנדי' },
+        'הונגריה': { code: 'HUF', name: 'פורינט הונגרי' },
+        'צ׳כיה': { code: 'CZK', name: 'קורונה צ׳כית' },
+        'טורקיה': { code: 'TRY', name: 'לירה טורקית' },
+        'איחוד האמירויות': { code: 'AED', name: 'דירהם' },
+        'סין': { code: 'CNY', name: 'יואן סיני' },
+        'אוסטרליה': { code: 'AUD', name: 'דולר אוסטרלי' },
+        'שווייץ': { code: 'CHF', name: 'פרנק שוויצרי' },
+        'שוויץ': { code: 'CHF', name: 'פרנק שוויצרי' },
+        'פולין': { code: 'PLN', name: 'זלוטי פולני' },
+        'ישראל': { code: 'ILS', name: 'שקל חדש' },
+    };
+
     const handleSelectAirport = (airport) => {
+        const currency = airport.currency_code
+            ? { code: airport.currency_code, name: airport.currency_name_hebrew }
+            : (countryToCurrency[airport.state_hebrew] || { code: 'USD', name: 'דולר ארה"ב' });
+
         setFormData(prev => ({
             ...prev,
             destination: airport.city_hebrew,
             lat: airport.lat,
             lon: airport.lon,
-            currency_code: airport.currency_code,
-            currency_name_hebrew: airport.currency_name_hebrew
+            currency_code: currency.code,
+            currency_name_hebrew: currency.name
         }));
         setShowSuggestions(false);
     };
@@ -104,6 +139,13 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit }) => {
                         </div>
                     </div>
                 </div>
+
+                {error && (
+                    <div className="planner-error-box animate-in">
+                        <span className="error-icon">⚠️</span>
+                        <span className="error-text">{error}</span>
+                    </div>
+                )}
 
                 <button type="submit" className="calculate-btn">חשב לי את הזמן</button>
             </form>

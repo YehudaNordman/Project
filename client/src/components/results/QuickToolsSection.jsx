@@ -1,45 +1,79 @@
 import React, { useState, useEffect } from 'react';
+import { fetchExchangeRate } from '../../utils/plannerUtils';
 
 const currencyData = {
-    'ILS': { name: 'שקל חדש', symbol: '₪', rate: 1 },
-    'USD': { name: 'דולר ארה"ב', symbol: '$', rate: 3.7 },
-    'EUR': { name: 'אירו', symbol: '€', rate: 4.1 },
-    'GBP': { name: 'פאונד', symbol: '£', rate: 4.8 },
-    'JPY': { name: 'יין יפני', symbol: '¥', rate: 0.025 },
-    'THB': { name: 'בהאט תאילנדי', symbol: '฿', rate: 0.1 },
+    'ILS': { name: 'שקל חדש', symbol: '₪' },
+    'USD': { name: 'דולר ארה"ב', symbol: '$' },
+    'EUR': { name: 'אירו', symbol: '€' },
+    'GBP': { name: 'פאונד', symbol: '£' },
+    'JPY': { name: 'יין יפני', symbol: '¥' },
+    'THB': { name: 'בהאט תאילנדי', symbol: '฿' },
 };
 
 const destinationToCurrency = {
-    'לונדון': 'GBP',
-    'פריז': 'EUR',
-    'רומא': 'EUR',
-    'מדריד': 'EUR',
-    'ברלין': 'EUR',
-    'אמסטרדם': 'EUR',
-    'ניו יורק': 'USD',
-    'טוקיו': 'JPY',
-    'תאילנד': 'THB',
+    'לונדון': { code: 'GBP', name: 'פאונד', symbol: '£' },
+    'פריז': { code: 'EUR', name: 'אירו', symbol: '€' },
+    'רומא': { code: 'EUR', name: 'אירו', symbol: '€' },
+    'מדריד': { code: 'EUR', name: 'אירו', symbol: '€' },
+    'ברלין': { code: 'EUR', name: 'אירו', symbol: '€' },
+    'אמסטרדם': { code: 'EUR', name: 'אירו', symbol: '€' },
+    'ניו יורק': { code: 'USD', name: 'דולר ארה"ב', symbol: '$' },
+    'טוקיו': { code: 'JPY', name: 'יין יפני', symbol: '¥' },
+    'תאילנד': { code: 'THB', name: 'בהאט תאילנדי', symbol: '฿' },
+    'בודפשט': { code: 'HUF', name: 'פורינט הונגרי', symbol: 'Ft' },
+    'פראג': { code: 'CZK', name: 'קורונה צ׳כית', symbol: 'Kč' },
+    'אתונה': { code: 'EUR', name: 'אירו', symbol: '€' },
+    'וינה': { code: 'EUR', name: 'אירו', symbol: '€' },
+    'ליסבון': { code: 'EUR', name: 'אירו', symbol: '€' },
+    'ברצלונה': { code: 'EUR', name: 'אירו', symbol: '€' },
+    'תל אביב': { code: 'ILS', name: 'שקל חדש', symbol: '₪' },
 };
 
-const QuickToolsSection = ({ destination, landingTime, takeoffTime }) => {
-    const defaultDestCurrency = destinationToCurrency[destination] || 'USD';
+const QuickToolsSection = ({ destination, currencyCode: propCurrencyCode, currencyName: propCurrencyName, landingTime, takeoffTime }) => {
+    // פונקציית עזר להוצאת סמל מטבע
+    const getSymbol = (code) => {
+        const symbols = { 'ILS': '₪', 'USD': '$', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 'THB': '฿' };
+        return symbols[code] || '';
+    };
+
+    // קביעת מטבע היעד - עדיפות לפרופס מהטופס, אחר כך למיפוי, ולבסוף דולר
+    const destInfo = (propCurrencyCode && propCurrencyName)
+        ? { code: propCurrencyCode, name: propCurrencyName, symbol: getSymbol(propCurrencyCode) }
+        : (destinationToCurrency[destination] || { code: 'USD', name: 'דולר ארה"ב', symbol: '$' });
+
     const [sourceCurrency, setSourceCurrency] = useState('ILS');
     const [amount, setAmount] = useState('100');
     const [converted, setConverted] = useState(0);
+    const [rate, setRate] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const destCurrencyInfo = currencyData[defaultDestCurrency];
-    const sourceCurrencyInfo = currencyData[sourceCurrency];
+    const sourceCurrencyInfo = currencyData[sourceCurrency] || { name: sourceCurrency, symbol: sourceCurrency };
 
+    // חישוב משך השהות
     const durationHrs = (new Date(takeoffTime) - new Date(landingTime)) / (1000 * 60 * 60);
-    const showAccommodation = durationHrs > 24;
 
+    // עדכון שער החליפין כשמטבע המקור או היעד משתנים
+    useEffect(() => {
+        const updateRate = async () => {
+            setIsLoading(true);
+            try {
+                // הבאת שער בין מטבע המקור (למשל ILS) למטבע היעד
+                const newRate = await fetchExchangeRate(destInfo.code, sourceCurrency);
+                setRate(newRate);
+            } catch (err) {
+                console.error("Failed to fetch rate:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        updateRate();
+    }, [destInfo.code, sourceCurrency]);
+
+    // עדכון הסכום המומר כשחל שינוי בסכום או בשער
     useEffect(() => {
         const val = parseFloat(amount) || 0;
-        // Logic: amount in sourceCurrency -> convert to ILS -> convert to destinationCurrency
-        const amountInILS = val * sourceCurrencyInfo.rate;
-        const finalAmount = amountInILS / destCurrencyInfo.rate;
-        setConverted(finalAmount.toFixed(2));
-    }, [amount, sourceCurrency, destCurrencyInfo]);
+        setConverted((val * rate).toFixed(2));
+    }, [amount, rate]);
 
     return (
         <div className="quick-tools-wrapper">
@@ -83,18 +117,20 @@ const QuickToolsSection = ({ destination, landingTime, takeoffTime }) => {
                             {/* צד יעד */}
                             <div className="column-modern">
                                 <div className="amount-field-wrapper">
-                                    <div className="result-value">{converted}</div>
+                                    <div className="result-value">
+                                        {isLoading ? '...' : converted}
+                                    </div>
                                 </div>
                                 <div className="info-field-wrapper">
-                                    <span className="currency-label">מטבע יעד:</span>
+                                    <span className="currency-label">מטבע יעד: {destination}</span>
                                     <div className="dest-pill-modern">
-                                        {destCurrencyInfo.symbol} ({destCurrencyInfo.name})
+                                        {destInfo.symbol} {destInfo.name} ({destInfo.code})
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <p className="rate-info">
-                            שער המרה: 1 {sourceCurrencyInfo.name} ≈ {(sourceCurrencyInfo.rate / destCurrencyInfo.rate).toFixed(3)} {destCurrencyInfo.name}
+                            שער המרה: 1 {sourceCurrencyInfo.name} ≈ {isLoading ? '...' : rate.toFixed(3)} {destInfo.name}
                         </p>
                     </div>
                 </div>

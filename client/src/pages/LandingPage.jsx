@@ -45,14 +45,16 @@ const LandingPage = () => {
             <main className="content">
                 {isShowingMyRoute ? (
                     <MyRouteView onBack={() => setIsShowingMyRoute(false)} times={formData} />
-                ) : (
+                ) : null}
+
+                <div style={{ display: isShowingMyRoute ? 'none' : 'block' }}>
                     <GuestPlanner
                         onResultsShown={setIsShowingResults}
                         onRouteClick={() => setIsShowingMyRoute(true)}
                         setFormData={setFormData}
                         formData={formData}
                     />
-                )}
+                </div>
 
                 {/* Footer: שורת המידע התחתונה שקבועה בכל האתר */}
                 <Footer />

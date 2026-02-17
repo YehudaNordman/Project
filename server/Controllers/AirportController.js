@@ -67,13 +67,15 @@ const mapGooglePlaceToAppFormat = (place, customCategory, userLat, userLon) => {
     lat: place.geometry.location.lat,
     lon: place.geometry.location.lng,
     place_id: place.place_id,
+    open_now: place.opening_hours ? place.opening_hours.open_now : null,
     // עטיפת הנתונים ב-properties כדי שה-sort והפרונט יעבדו
     properties: {
       address_line2: place.vicinity || place.formatted_address,
       rating: place.rating || "N/A",
       user_ratings_total: place.user_ratings_total || 0,
       distance: parseFloat(distance.toFixed(2)), // עיגול ל-2 ספרות
-      categories: customCategory ? [customCategory] : (place.types || [])
+      categories: customCategory ? [customCategory] : (place.types || []),
+      open_now: place.opening_hours ? place.opening_hours.open_now : null
     }
   };
 };

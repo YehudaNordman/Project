@@ -116,7 +116,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                 </div>
             </div>
 
-            <div className="explorer-content" style={{ flexDirection: 'column', alignItems: 'center' }}>
+            <div className="explorer-content">
                 {loading ? (
                     <div className="explorer-loading-view">
                         <div className="spinner-luxury"></div>
@@ -157,8 +157,17 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                                         <p className="item-address-luxury">📍 {item.address_line2 || item.street || 'כתובת זמינה בבחירה'}</p>
 
                                         <div className="item-status-luxury">
-                                            <span className={`status-dot ${item.open_now ? 'online' : 'away'}`}></span>
-                                            {item.open_now ? 'פתוח עכשיו' : 'סגור כעת'}
+                                            {item.open_now !== null && item.open_now !== undefined ? (
+                                                <>
+                                                    <span className={`status-dot ${item.open_now ? 'online' : 'away'}`}></span>
+                                                    {item.open_now ? 'פתוח עכשיו' : 'סגור כעת'}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span className="status-dot unknown" style={{ background: '#94a3b8' }}></span>
+                                                    <span>בדיקת שעות במקום</span>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
 
