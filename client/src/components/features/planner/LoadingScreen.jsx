@@ -1,11 +1,11 @@
 import React from 'react';
-import waitingLogo from './background/Gemini_Generated_Image_27yxmk27yxmk27yx.png';
+import waitingLogo from '../../background/Gemini_Generated_Image_27yxmk27yxmk27yx.png';
 
 /**
  * רכיב LoadingScreen - מסך המתנה פרימיום עם אנימציית מטוס.
  * מוצג בזמן חישוב התוצאות ומשיכת נתונים.
  */
-const LoadingScreen = () => {
+const LoadingScreen = ({ message = "מחשבים לכם את המסלול המושלם..." }) => {
     return (
         <div className="loading-screen full-bg" style={{ backgroundImage: `url(${waitingLogo})` }} dir="rtl">
             <div className="loading-content white-text">
@@ -33,7 +33,7 @@ const LoadingScreen = () => {
                     </div>
                 </div>
                 {/* טקסט פועם מתחת ללואדר */}
-                <p className="pulse-text">מחשבים לכם את המסלול המושלם...</p>
+                <p className="pulse-text">{message}</p>
             </div>
         </div>
     );

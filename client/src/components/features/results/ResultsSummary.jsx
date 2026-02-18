@@ -1,5 +1,6 @@
 import React from 'react';
-import CalculationBreakdown from '../CalculationBreakdown';
+import CalculationBreakdown from '../planner/CalculationBreakdown';
+import PressureGauge from '../planner/PressureGauge';
 
 /**
  * רכיב ResultsSummary - מציג את כרטיס סיכום זמני הסיור (נטו וברוטו)
@@ -15,6 +16,7 @@ const ResultsSummary = ({ result }) => {
             <div className="summary-content-wrapper">
                 {/* רכיב פירוט החישוב - מציג את הברוטו והקיזוזים */}
                 <CalculationBreakdown result={result} />
+
 
                 <div className="summary-result-divider"></div>
 
@@ -35,9 +37,7 @@ const ResultsSummary = ({ result }) => {
                         </div>
                     ) : (
                         <div className="recommendation-box success">
-                            <div className="label">זמן נטו לסיור מלא:</div>
-                            <div className="time-display">{result?.netTime}</div>
-                            <div className="message">🚀 יש לך המון זמן לטייל! תוכל ליהנות מכמה אטרקציות ומסעדה טובה.</div>
+                            <div className="message premium-blue-text">🚀 יש לך המון זמן לטייל! תוכל ליהנות מכמה אטרקציות ומסעדה טובה.</div>
                         </div>
                     )}
                 </div>

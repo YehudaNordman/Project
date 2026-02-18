@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import GuestPlanner from '../components/GuestPlanner'
-import AuthModal from '../components/AuthModal'
-import MyRouteView from '../components/results/MyRouteView'
-import SavedItinerariesView from '../components/results/SavedItinerariesView'
+import Navbar from '../components/layout/Navbar'
+import Footer from '../components/layout/Footer'
+import GuestPlanner from '../components/features/planner/GuestPlanner'
+import AuthModal from '../components/features/auth/AuthModal'
+import MyRouteView from '../components/features/itinerary/MyRouteView'
+import SavedItinerariesView from '../components/features/itinerary/SavedItinerariesView'
+import UserProfile from '../components/features/auth/UserProfile'
 import { useAuth } from '../context/AuthContext'
 
 /**
@@ -18,6 +19,8 @@ const LandingPage = () => {
     const [isShowingMyRoute, setIsShowingMyRoute] = useState(false);
     // State למעקב האם מוצגות הנסיעות השמורות.
     const [isShowingSavedTrips, setIsShowingSavedTrips] = useState(false);
+    // State למעקב האם מוצג פרופיל המשתמש
+    const [isShowingProfile, setIsShowingProfile] = useState(false);
 
     const [formData, setFormData] = useState({
         destination: '',  // עיר או שדה תעופה
@@ -39,11 +42,15 @@ const LandingPage = () => {
                     onLoginClick={() => openAuthModal()}
                     onRouteClick={() => setIsShowingMyRoute(true)}
                     onSavedTripsClick={() => setIsShowingSavedTrips(true)}
+                    onProfileClick={() => setIsShowingProfile(true)}
                 />
             )}
 
             {/* חלון מודאלי להתחברות והרשמה - מופעל גלובלית דרך AuthContext */}
             <AuthModal />
+
+            {/* User Profile Modal */}
+            {isShowingProfile && <UserProfile onClose={() => setIsShowingProfile(false)} />}
 
             {/* main content: האזור המרכזי של האפליקציה */}
             <main className="content">

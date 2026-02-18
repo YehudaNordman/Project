@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchExchangeRate } from '../../utils/plannerUtils';
+import { fetchExchangeRate } from '../../../services/plannerService';
 
 /**
  * רכיב CurrencyConverter - כלי להמרת מטבע רב-מטבעי.
@@ -46,12 +46,21 @@ const CurrencyConverter = ({ currencyCode, currencyName }) => {
 
             <div className="converter-body">
                 <div className="converter-input-group">
-                    <label>בחר מטבע מקור וסכום</label>
-                    <div className="input-with-select">
+                    <label>סכום במטבע מקור:</label>
+                    <div className="amount-field-wrapper">
+                        <input
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            placeholder="הזן סכום"
+                        />
+                    </div>
+                    <div className="info-field-wrapper">
+                        <span className="currency-label">מטבע מקור:</span>
                         <select
                             value={baseCurrency}
                             onChange={(e) => setBaseCurrency(e.target.value)}
-                            className="currency-select"
+                            className="currency-select-premium"
                         >
                             {commonCurrencies.map(curr => (
                                 <option key={curr.code} value={curr.code}>
@@ -59,28 +68,27 @@ const CurrencyConverter = ({ currencyCode, currencyName }) => {
                                 </option>
                             ))}
                         </select>
-                        <input
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            className="converter-input"
-                        />
                     </div>
                 </div>
 
-                <div className="converter-arrow">←</div>
+                <div className="converter-arrow-static">←</div>
 
                 <div className="converter-result-group">
-                    <label>סכום ב-{currencyName}</label>
-                    <div className="result-display">
-                        {loading ? 'טוען...' : converted}
-                        <span className="unit">{currencyCode}</span>
+                    <label>סכום ב-{currencyName}:</label>
+                    <div className="amount-field-wrapper">
+                        <div className="result-value">
+                            {loading ? '...' : converted}
+                        </div>
+                    </div>
+                    <div className="info-field-wrapper">
+                        <span className="currency-label">מטבע יעד:</span>
+                        <div className="dest-pill-modern">{currencyCode} - {currencyName}</div>
                     </div>
                 </div>
             </div>
 
-            <div className="converter-footer">
-                * שער החליפין הנוכחי: 1 {baseCurrency} = {loading ? '...' : (rate || 0).toFixed(4)} {currencyCode}
+            <div className="rate-info">
+                * שער חליפין: 1 {baseCurrency} = {loading ? '...' : (rate || 0).toFixed(4)} {currencyCode}
             </div>
         </div>
     );

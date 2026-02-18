@@ -21,10 +21,6 @@ const CalculationBreakdown = ({ result }) => {
                 <strong className="item-value red-text">- {result.offsets.landing} דקות</strong>
             </div>
             <div className="breakdown-item offset">
-                <span className="item-label">נסיעות הלוך-חזור:</span>
-                <strong className="item-value red-text">- {result.offsets.travel} דקות</strong>
-            </div>
-            <div className="breakdown-item offset">
                 <span className="item-label">ביטוח ועלייה למטוס:</span>
                 <strong className="item-value red-text">- {result.offsets.security} דקות</strong>
             </div>

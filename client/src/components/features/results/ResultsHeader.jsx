@@ -19,9 +19,9 @@ const ResultsHeader = ({ weather, destination, landingDate, landingTime, takeoff
     };
 
     return (
-        <div className="results-header-container">
-            {/* גוש מזג האוויר */}
-            <div className="weather-summary-box">
+        <div className="results-header-row">
+            {/* גוש מזג האוויר - עבר לצד ימין (קרוב לכפתור) */}
+            <div className="weather-bubble">
                 <span className="weather-emoji">{getWeatherEmoji(weather?.icon)}</span>
                 <div className="weather-info-text">
                     <div className="temp-display">{weather?.temp || '--'}°C</div>
@@ -29,10 +29,8 @@ const ResultsHeader = ({ weather, destination, landingDate, landingTime, takeoff
                 </div>
             </div>
 
-            <div className="header-main-divider"></div>
-
-            {/* גוש זמני הטיסות */}
-            <div className="flight-times-summary">
+            {/* גוש זמני הטיסות - עבר לצד שמאל (רחוק מהכפתור) */}
+            <div className="flight-times-bubble">
                 <div className="time-item">
                     <span className="time-icon">🛬</span>
                     <div className="time-details">
@@ -41,7 +39,7 @@ const ResultsHeader = ({ weather, destination, landingDate, landingTime, takeoff
                     </div>
                 </div>
 
-                <div className="header-divider"></div>
+                <div className="bubble-divider">|</div>
 
                 <div className="time-item">
                     <span className="time-icon">🛫</span>

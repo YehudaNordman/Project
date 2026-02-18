@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchExchangeRate } from '../../utils/plannerUtils';
+import { fetchExchangeRate } from '../../../services/plannerService';
 
 const currencyData = {
     'ILS': { name: 'שקל חדש', symbol: '₪' },
@@ -37,9 +37,20 @@ const QuickToolsSection = ({ destination, currencyCode: propCurrencyCode, curren
     };
 
     // קביעת מטבע היעד - עדיפות לפרופס מהטופס, אחר כך למיפוי, ולבסוף דולר
-    const destInfo = (propCurrencyCode && propCurrencyName)
-        ? { code: propCurrencyCode, name: propCurrencyName, symbol: getSymbol(propCurrencyCode) }
-        : (destinationToCurrency[destination] || { code: 'USD', name: 'דולר ארה"ב', symbol: '$' });
+    const getDestInfo = () => {
+        if (propCurrencyCode && propCurrencyName) {
+            return { code: propCurrencyCode, name: propCurrencyName, symbol: getSymbol(propCurrencyCode) };
+        }
+
+        // נסיון למצוא לפי יעד
+        const destEntry = Object.entries(destinationToCurrency).find(([key, val]) => destination.includes(key));
+        if (destEntry) return destEntry[1];
+
+        // ברירת מחדל
+        return { code: 'USD', name: 'דולר ארה"ב', symbol: '$' };
+    };
+
+    const destInfo = getDestInfo();
 
     const [sourceCurrency, setSourceCurrency] = useState('ILS');
     const [amount, setAmount] = useState('100');

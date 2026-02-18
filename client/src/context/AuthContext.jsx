@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { API_BASE_URL } from '../constants';
 
 const AuthContext = createContext();
 
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await fetch('http://localhost:3006/user/login', {
+            const response = await fetch(`${API_BASE_URL}/user/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const response = await fetch('http://localhost:3006/user/register', {
+            const response = await fetch(`${API_BASE_URL}/user/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +89,7 @@ export const AuthProvider = ({ children }) => {
 
     const resetPassword = async (email, password) => {
         try {
-            const response = await fetch('http://localhost:3006/user/reset-password', {
+            const response = await fetch(`${API_BASE_URL}/user/reset-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

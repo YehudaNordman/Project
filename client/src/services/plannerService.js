@@ -2,7 +2,7 @@
  * פונקציות עזר לחישוב זמני הטיול ומזג האוויר.
  */
 
-import { decodeWeather } from './weatherUtils';
+import { decodeWeather } from '../utils/weatherUtils';
 
 /**
  * פונקציה לחישוב זמני הטיול
@@ -24,11 +24,12 @@ export const calculateTripTime = (landingDate, landingTime, takeoffDate, takeoff
     const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
 
     // קיזוזים קבועים (בדקות)
+    // קיזוזים קבועים (בדקות)
     const offsets = {
         landing: 45,    // זמן יציאה מהמטוס, כבודה וביקורת דרכונים
-        travel: 60,     // נסיעות לעיר ובחזרה (ממוצע)
-        security: 120,  // זמן ביטחון ועלייה למטוס (שעתיים לפני המראה)
-        total: 225      // סה"כ קיזוזים
+        travel: 0,      // נסיעות לעיר ובחזרה (בוטל בחישוב)
+        security: 180,  // זמן ביטחון ועלייה למטוס (3 שעות לפני המראה)
+        total: 225      // סה"כ קיזוזים (45 + 0 + 180)
     };
 
     const netMinutes = diffInMinutes - offsets.total;

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { fetchWeatherData } from '../utils/plannerUtils';
-import ResultsHeader from './results/ResultsHeader';
-import CurrencyConverter from './results/CurrencyConverter';
-import ResultsSummary from './results/ResultsSummary';
-import QuickToolsSection from './results/QuickToolsSection';
-import AccommodationCard from './results/AccommodationCard';
-import RecommendationCards from './results/RecommendationCards';
+import { fetchWeatherData } from '../../../services/plannerService';
+import ResultsHeader from '../results/ResultsHeader';
+import CurrencyConverter from '../results/CurrencyConverter';
+import ResultsSummary from '../results/ResultsSummary';
+import QuickToolsSection from '../results/QuickToolsSection';
+import AccommodationCard from '../results/AccommodationCard';
+import RecommendationCards from '../results/RecommendationCards';
 
-import RecommendationsExplorer from './results/RecommendationsExplorer';
+import RecommendationsExplorer from '../results/RecommendationsExplorer';
 
 /**
  * רכיב PlannerResults - עמוד התוצאות הראשי.
