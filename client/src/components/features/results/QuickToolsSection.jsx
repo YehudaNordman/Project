@@ -122,7 +122,6 @@ const QuickToolsSection = ({ destination, currencyCode: propCurrencyCode, curren
                                     </select>
                                 </div>
                             </div>
-
                             <div className="converter-arrow">➡️</div>
 
                             {/* צד יעד */}

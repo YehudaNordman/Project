@@ -24,10 +24,10 @@
         url('../../../components/background/Gemini_Generated_Image_nin71enin71enin7.png') !important;
     background-size: cover !important;
     backdrop-filter: blur(25px) !important;
-    width: 100% !important;
-    max-width: 950px !important;
+    width: 95% !important;
+    max-width: 1000px !important;
     padding: 1.5rem !important;
-    margin: 0 auto !important;
+    margin: 0 auto 2rem !important;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12) !important;
     border-radius: 30px !important;
     border: 1px solid rgba(255, 255, 255, 0.8) !important;
@@ -100,11 +100,11 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    width: 100%;
+    width: 95%;
     max-width: 1000px;
     margin: 2rem auto;
     justify-content: center;
-    padding: 0 1rem;
+    padding: 0;
 }
 
 @media (min-width: 768px) {
@@ -267,8 +267,8 @@
 
 /* Quick Tools */
 .quick-tools-wrapper {
-    width: 100%;
-    max-width: 900px;
+    width: 95%;
+    max-width: 1000px;
     margin: 4rem auto;
     animation: fadeInUp 0.8s ease-out both;
 }
@@ -456,22 +456,12 @@
     justify-content: center;
 }
 
-.converter-arrow-static {
-    font-size: 2.5rem;
-    background: #e2e8f0;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-}
+
 
 /* AI Response Card Premium */
 .ai-response-card {
-    width: 92%;
-    max-width: 850px;
+    width: 95%;
+    max-width: 1000px;
     margin: 4rem auto;
     background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(25px) saturate(180%);
@@ -585,17 +575,17 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
-    width: 100%;
-    margin-bottom: 2rem;
+    width: 95%;
+    max-width: 1000px;
+    margin: 0 auto 2rem;
     position: relative;
     z-index: 10;
 }
 
 @media (min-width: 768px) {
     .results-header-row {
-        justify-content: flex-start;
+        justify-content: center;
         gap: 1.5rem;
-        padding-right: 80px;
     }
 }
 
@@ -612,7 +602,9 @@
 /* Header Layout */
 .explorer-header-premium {
     text-align: center;
-    margin-bottom: 3rem;
+    width: 95%;
+    max-width: 1000px;
+    margin: 0 auto 3rem;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
@@ -649,6 +641,22 @@
 
 .back-btn-circle-top:hover svg {
     stroke: white;
+}
+
+.back-btn-text {
+    background: #1a237e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn-text:hover {
+    background: #283593;
+    transform: translateY(-2px);
 }
 
 /* My Route Button - Premium Style */
@@ -703,7 +711,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
-    max-width: 1100px;
+    width: 95%;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 1rem;
 }
@@ -1106,8 +1115,8 @@
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
-    width: 100%;
-    max-width: 850px;
+    width: 95%;
+    max-width: 1000px;
     margin: 3rem auto;
     text-align: center;
     position: relative;

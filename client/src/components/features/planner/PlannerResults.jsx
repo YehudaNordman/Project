@@ -52,14 +52,6 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
 
     return (
         <div className="planner-results-container">
-            {/* כפתור חזרה מעוצב (Fixed) */}
-            <button className="back-circle-btn" onClick={onBack} title="חזור לחיפוש">
-                <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 19 19 12 12 5"></polyline>
-                </svg>
-            </button>
-
             {/* 1. כותרת ומזג אוויר */}
             <ResultsHeader
                 weather={weather}

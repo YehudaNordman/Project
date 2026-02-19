@@ -116,15 +116,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
             <div className="animate-in">
                 <div className="explorer-header-premium glass">
                     <div className="explorer-header-top">
-                        <div className="header-actions">
-                            <button className="back-btn-circle-top" onClick={onBack} title="חזרה">
-                                <svg viewBox="0 0 24 24" width="42" height="42" stroke="#1a237e" strokeWidth="2.5" fill="none">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="10 8 14 12 10 16"></polyline>
-                                    <line x1="8" y1="12" x2="14" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
+
                     </div>
 
                     <div className="explorer-header-main">
@@ -309,7 +301,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                                             )}
                                         </GoogleMap>
                                     ) : <div className="map-loading">טוען מפות...</div>}
-                                    <div className="resize-handle-hint">↕️ גרור לשינוי גובה המפה | כחול = המלצות | ירוק = הבחירות שלך</div>
+                                    <div className="resize-handle-hint">גרור לשינוי גובה המפה | כחול = המלצות | ירוק = הבחירות שלך</div>
                                 </div>
                             </div>
                         </>
@@ -329,7 +321,10 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                     onClick={scrollToTop}
                     title="גלילה לראש העמוד"
                 >
-                    ↑
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                        <polyline points="5 12 12 5 19 12"></polyline>
+                    </svg>
                 </button>
             )}
         </div>

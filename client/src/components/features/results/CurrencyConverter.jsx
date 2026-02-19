@@ -69,10 +69,7 @@ const CurrencyConverter = ({ currencyCode, currencyName }) => {
                             ))}
                         </select>
                     </div>
-                </div>
-
-                <div className="converter-arrow-static">←</div>
-
+                </div>                <div className="converter-arrow-static">←</div>
                 <div className="converter-result-group">
                     <label>סכום ב-{currencyName}:</label>
                     <div className="amount-field-wrapper">

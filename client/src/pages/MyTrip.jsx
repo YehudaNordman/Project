@@ -12,13 +12,13 @@ const containerStyle = {
 };
 
 
-const MyTrip = ({ onBack , times}) => {
+const MyTrip = ({ onBack, times }) => {
 
-    
-    
+
+
     const { myRoute, removeFromRoute, clearRoute } = useRoute();
     const [selectedItem, setSelectedItem] = useState(null);
-    
+
 
 
     const { isLoaded } = useJsApiLoader({
@@ -44,13 +44,7 @@ const MyTrip = ({ onBack , times}) => {
     return (
         <div className="explorer-page animate-in">
             <div className="explorer-header glass">
-                <button className="back-btn-simple" onClick={onBack}>
-                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 19 19 12 12 5"></polyline>
-                    </svg>
-                    חזור
-                </button>
+
                 <div className="header-text-group">
                     <h2>המסלול שלי 🛣️</h2>
                     <p>המקומות ששמרת לטיול שלך</p>
@@ -171,7 +165,7 @@ const MyTrip = ({ onBack , times}) => {
 
             <Ai times={times} myRoute={myRoute} />
 
-         
+
         </div>
     );
 };

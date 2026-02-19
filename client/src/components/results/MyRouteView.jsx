@@ -193,13 +193,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                 <div className="explorer-header-premium glass">
                     <div className="explorer-header-top">
                         <div className="header-actions">
-                            <button className="back-btn-circle-top" onClick={onBack} title="חזרה">
-                                <svg viewBox="0 0 24 24" width="42" height="42" stroke="#1a237e" strokeWidth="2.5" fill="none">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="10 8 14 12 10 16"></polyline>
-                                    <line x1="8" y1="12" x2="14" y2="12"></line>
-                                </svg>
-                            </button>
+
                         </div>
                     </div>
 
