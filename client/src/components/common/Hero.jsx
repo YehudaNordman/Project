@@ -9,11 +9,10 @@ const Hero = () => {
         <div className="hero-section animate-in">
             {/* כותרת ראשית מעוצבת עם מעבר צבעים (Gradient) */}
             <h1 className="hero-title">
-                Maximize Your <br />
-                <span className="text-gradient-animate">Travel Pause</span>
+                נצלו כל רגע <br />
+                <span className="text-gradient-animate">מזמן ההמתנה</span>
             </h1>
-            {/* תת-כותרת המסבירה את הערך המוסף של האתר */}
-            <p className="hero-subtitle">הופכים את זמן ההמתנה שלך בשדה התעופה לטיול בלתי נשכח</p>
+
         </div>
     );
 };
