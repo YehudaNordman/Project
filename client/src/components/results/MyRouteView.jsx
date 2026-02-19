@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useRoute } from '../../../context/RouteContext';
-import { useAuth } from '../../../context/AuthContext';
-import { calculateTripTime } from '../../../services/plannerService';
+import { useRoute } from '../../context/RouteContext';
+import { useAuth } from '../../context/AuthContext';
+import { calculateTripTime } from '../../services/plannerService';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import { API_BASE_URL } from '../../../constants';
+import { API_BASE_URL } from '../../constants';
 
 const containerStyle = {
     width: '100%',

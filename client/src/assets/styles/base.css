@@ -1,5 +1,5 @@
 /* Base styles and resets - Full Recovery */
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;700;900&family=Inter:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;700;900&family=Inter:wght@400;700&display=swap'); */
 
 body {
     margin: 0;
@@ -9,10 +9,20 @@ body {
     background-position: center top;
     background-repeat: no-repeat;
     min-height: 100vh;
-    width: 100vw;
-    font-family: 'Inter', 'Outfit', sans-serif;
-    background-attachment: fixed;
+    width: 100%;
+    /* Changed from 100vw to prevent scroll */
+    max-width: 100%;
+    overflow-x: hidden;
+    font-family: 'Google Sans', 'Outfit', sans-serif;
     direction: rtl;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+    height: auto;
 }
 
 * {

@@ -9,6 +9,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
+    /* Prevent any bleed */
 }
 
 .hero-badge {
@@ -17,7 +19,7 @@
     padding: 0.5rem 1.2rem;
     border-radius: 50px;
     color: #1a237e;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 800;
     margin-bottom: 1.5rem;
     display: flex;
@@ -25,6 +27,14 @@
     gap: 8px;
     backdrop-filter: blur(5px);
     animation: fadeInDown 0.8s ease-out;
+    max-width: 90%;
+    /* Prevent overflow on tiny screens */
+}
+
+@media (min-width: 768px) {
+    .hero-badge {
+        font-size: 0.9rem;
+    }
 }
 
 .badge-dot {
@@ -38,11 +48,33 @@
 
 .hero-title {
     color: #1a237e;
-    font-size: clamp(3rem, 10vw, 5.5rem);
+    font-size: 2.8rem;
+    /* Mobile first */
     font-weight: 950;
-    margin-bottom: 1rem;
-    letter-spacing: -3px;
-    line-height: 1;
+    margin-bottom: 0.8rem;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+}
+
+@media (min-width: 480px) {
+    .hero-title {
+        font-size: 3.5rem;
+        letter-spacing: -2px;
+    }
+}
+
+@media (min-width: 768px) {
+    .hero-title {
+        font-size: 4.5rem;
+        letter-spacing: -2.5px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero-title {
+        font-size: 5.5rem;
+        letter-spacing: -3px;
+    }
 }
 
 .text-gradient-animate {
@@ -57,11 +89,17 @@
 
 .hero-subtitle {
     color: #455a64;
-    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+    font-size: clamp(1.1rem, 3.5vw, 1.8rem);
     font-weight: 700;
-    max-width: 700px;
+    max-width: 90%;
     margin: 0 auto 2rem;
     line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+    .hero-subtitle {
+        max-width: 700px;
+    }
 }
 
 /* Planner Container */
@@ -73,8 +111,14 @@
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
-    padding: 1rem 2rem 2rem 2rem;
+    padding: 0.5rem 1rem 2rem 1rem;
     flex: 1;
+}
+
+@media (min-width: 768px) {
+    .guest-planner-container {
+        padding: 1rem 2rem 2rem 2rem;
+    }
 }
 
 .planner-card.glass {
@@ -83,10 +127,10 @@
     background-size: cover !important;
     background-position: center top !important;
     backdrop-filter: blur(20px);
-    border-radius: 40px;
-    padding: 1.2rem 4rem;
+    border-radius: 30px;
+    padding: 2rem 1.5rem;
     text-align: center;
-    width: 95%;
+    width: 100%;
     max-width: 950px;
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
@@ -94,6 +138,14 @@
     box-sizing: border-box;
     overflow: visible;
     position: relative;
+}
+
+@media (min-width: 768px) {
+    .planner-card.glass {
+        border-radius: 40px;
+        padding: 1.2rem 4rem;
+        width: 95%;
+    }
 }
 
 .planner-card h1 {
@@ -343,21 +395,33 @@
 /* Info Cards */
 .info-cards-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: stretch;
+    align-items: center;
     gap: 1.2rem;
     width: 100%;
     max-width: 1280px;
     margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+    .info-cards-container {
+        flex-direction: row;
+        align-items: stretch;
+        padding: 0;
+    }
 }
 
 .info-item-card {
     flex: 1;
-    min-width: 280px;
+    width: 100%;
+    min-width: 0;
+    /* Fix for flex containers */
+    max-width: 400px;
     background: rgba(255, 255, 255, 0.08) !important;
     backdrop-filter: blur(10px) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    padding: 2.5rem 1.8rem;
     border-radius: 24px;
     text-align: center;
     transition: none;
@@ -369,7 +433,13 @@
     position: relative;
     overflow: hidden;
     padding: 0;
-    /* Remove padding to handle content with overlays */
+}
+
+@media (min-width: 768px) {
+    .info-item-card {
+        min-width: 280px;
+        max-width: none;
+    }
 }
 
 .info-card-content-wrapper {
