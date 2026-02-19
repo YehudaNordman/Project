@@ -1,0 +1,248 @@
+/* My Route and Saved Itineraries Styles - Full Recovery */
+
+.ai-magic-button {
+    background: linear-gradient(135deg, #4169e1 0%, #008080 100%);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 20px rgba(65, 105, 225, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 30px auto;
+    animation: ai-magic-glow 3s infinite ease-in-out;
+}
+
+@keyframes ai-magic-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 15px rgba(65, 105, 225, 0.4);
+        filter: brightness(1);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(65, 105, 225, 0.7);
+        filter: brightness(1.2);
+    }
+}
+
+.ai-magic-button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(65, 105, 225, 0.5);
+    filter: brightness(1.15);
+}
+
+.ai-response-card {
+    width: 92%;
+    max-width: 850px;
+    margin: 30px auto;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    color: #0f172a;
+    transition: all 0.3s ease;
+}
+
+.ai-card-header {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ai-card-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1a237e;
+    background: linear-gradient(135deg, #1a237e 0%, #008080 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.ai-content {
+    padding: 24px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #1a237e;
+    text-align: right;
+}
+
+.ai-content h4 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: #1a237e;
+    margin: 1.5rem 0 0.8rem 0;
+    border-bottom: 2px solid rgba(26, 35, 126, 0.1);
+    display: inline-block;
+}
+
+/* Saved Trips */
+.saved-trip-card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(0, 128, 128, 0.2) !important;
+    border-radius: 25px !important;
+    padding: 25px !important;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    cursor: pointer;
+    text-align: right;
+}
+
+.saved-trip-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 20px 40px rgba(0, 128, 128, 0.15) !important;
+}
+
+.saved-trip-card.active-expanded {
+    background: rgba(255, 255, 255, 1) !important;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1) !important;
+}
+
+.saved-trip-card h3 {
+    margin: 0 !important;
+    font-size: 2.8rem !important;
+    color: #008080 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+}
+
+.trip-time-info {
+    font-size: 1.2rem !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    opacity: 0.9 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.delete-trip-btn-circle {
+    background: rgba(255, 0, 0, 0.08) !important;
+    color: #ff4444 !important;
+    border: none !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.delete-trip-btn-circle:hover {
+    background: #ff4444 !important;
+    color: white !important;
+}
+
+.pdf-download-btn {
+    background: #1a237e !important;
+    color: white !important;
+    padding: 12px 30px !important;
+    border-radius: 50px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    margin-top: 25px !important;
+}
+
+.pdf-download-btn:hover {
+    background: #86BDBF !important;
+    color: #1a237e !important;
+    transform: translateY(-2px) !important;
+}
+
+.save-route-btn {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: save-pulse 2s infinite ease-in-out;
+}
+
+.save-route-btn.saved {
+    background: #15803d;
+    animation: none;
+}
+
+@keyframes save-pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(30, 41, 59, 0.4);
+    }
+
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 10px rgba(30, 41, 59, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(30, 41, 59, 0);
+    }
+}
+
+/* Layout helpers */
+.itinerary-content-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 2rem !important;
+}
+
+.itinerary-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.2rem !important;
+    padding-bottom: 4rem !important;
+    align-items: center !important;
+}
+
+.map-resizable-wrapper {
+    height: 300px !important;
+    width: 100% !important;
+    border-radius: 15px !important;
+    overflow: hidden !important;
+    border: 2px solid rgba(134, 189, 191, 0.3) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05) !important;
+}
+
+.view-saved-btn {
+    background: rgba(134, 189, 191, 0.2) !important;
+    color: #1a237e !important;
+    border: 2px solid #86BDBF !important;
+    padding: 12px 25px !important;
+    border-radius: 30px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.view-saved-btn:hover {
+    background: #86BDBF !important;
+    color: white !important;
+}

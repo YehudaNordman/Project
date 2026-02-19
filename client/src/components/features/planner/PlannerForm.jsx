@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../../constants';
 
 const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) => {
     const [suggestions, setSuggestions] = useState([]);
@@ -8,7 +9,7 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
     useEffect(() => {
         const loadAirports = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:3005/airports/getAirports');
+                const response = await fetch(`${API_BASE_URL}/airports/getAirports`);
                 const data = await response.json();
                 setAllAirports(data.airports || []);
             } catch (err) { console.error("Error loading airports:", err); }

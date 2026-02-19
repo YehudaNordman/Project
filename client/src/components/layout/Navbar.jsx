@@ -1,12 +1,12 @@
 import React from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 /**
  * רכיב Navbar - תפריט הניווט העליון של האתר.
  * כולל לוגו בצד אחד וכפתור גישה לאזור האישי בצד השני.
  * מעוצב בסגנון פרימיום דביק (Sticky).
  */
-const Navbar = ({ onLoginClick, onRouteClick }) => {
+const Navbar = ({ onLoginClick, onRouteClick, onSavedTripsClick, onProfileClick }) => {
     const { user, logout } = useAuth();
     const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
@@ -30,6 +30,16 @@ const Navbar = ({ onLoginClick, onRouteClick }) => {
     const handleRouteAction = () => {
         setIsDropdownOpen(false);
         onRouteClick();
+    };
+
+    const handleSavedTripsAction = () => {
+        setIsDropdownOpen(false);
+        if (onSavedTripsClick) onSavedTripsClick();
+    };
+
+    const handleProfileClick = () => {
+        setIsDropdownOpen(false);
+        if (onProfileClick) onProfileClick();
     };
 
     const handleLogoutAction = () => {
@@ -70,14 +80,21 @@ const Navbar = ({ onLoginClick, onRouteClick }) => {
                                 <div className="dropdown-links">
                                     {user ? (
                                         <>
+                                            <button className="dropdown-item" onClick={handleSavedTripsAction}>
+                                                <span className="item-icon">💾</span>
+                                                <div className="item-text">
+                                                    <span className="item-title">מסלולים שמורים</span>
+                                                    <span className="item-desc">צפה במסלולי ה-AI ששמרת</span>
+                                                </div>
+                                            </button>
                                             <button className="dropdown-item" onClick={handleRouteAction}>
                                                 <span className="item-icon">🛣️</span>
                                                 <div className="item-text">
-                                                    <span className="item-title">המסלול שלי</span>
+                                                    <span className="item-title">המסלול הנוכחי</span>
                                                     <span className="item-desc">צפייה וניהול המקומות ששמרת</span>
                                                 </div>
                                             </button>
-                                            <button className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>
+                                            <button className="dropdown-item" onClick={handleProfileClick}>
                                                 <span className="item-icon">👤</span>
                                                 <div className="item-text">
                                                     <span className="item-title">פרופיל משתמש</span>

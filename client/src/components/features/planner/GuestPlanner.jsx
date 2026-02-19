@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 /* ייבוא רכיבי המשנה של העמוד */
 import PlannerResults from './PlannerResults';
-import InfoCards from './InfoCards';
-import Hero from './Hero';
-import Testimonials from './Testimonials';
+import InfoCards from '../../common/InfoCards';
+import Hero from '../../common/Hero';
+import Testimonials from '../../common/Testimonials';
 import LoadingScreen from './LoadingScreen';
 import PlannerForm from './PlannerForm';
 /* ייבוא פונקציות עזר וחישוב */
-import { calculateTripTime, fetchWeatherData, getMockRecommendations } from '../utils/plannerUtils';
+import { calculateTripTime, fetchWeatherData, getMockRecommendations } from '../../../services/plannerService';
 
 /**
  * רכיב GuestPlanner - הלב של מתכנן הטיולים לאורחים.
@@ -59,12 +59,29 @@ const GuestPlanner = ({ onResultsShown, onRouteClick, formData, setFormData }) =
       setErrorMsg('נא להזין יעד (עיר או שדה תעופה)');
       return;
     }
-    if (!landingDate || !landingTime) {
+    if (!landingDate && !landingTime) {
       setErrorMsg('נא להזין תאריך ושעת נחיתה');
       return;
     }
-    if (!takeoffDate || !takeoffTime) {
+    if (!landingDate) {
+      setErrorMsg('נא להזין תאריך נחיתה');
+      return;
+    }
+    if (!landingTime) {
+      setErrorMsg('נא להזין שעת נחיתה');
+      return;
+    }
+
+    if (!takeoffDate && !takeoffTime) {
       setErrorMsg('נא להזין תאריך ושעת המראה');
+      return;
+    }
+    if (!takeoffDate) {
+      setErrorMsg('נא להזין תאריך המראה');
+      return;
+    }
+    if (!takeoffTime) {
+      setErrorMsg('נא להזין שעת המראה');
       return;
     }
 

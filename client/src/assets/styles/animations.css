@@ -1,0 +1,306 @@
+/* Global Animations - Full Recovery */
+
+@keyframes warning-flash {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.02);
+        filter: brightness(1.2);
+    }
+}
+
+@keyframes bg-warning-flash {
+
+    0%,
+    100% {
+        background: rgba(211, 47, 47, 0.05);
+        border-color: rgba(211, 47, 47, 0.5);
+        box-shadow: 0 0 0px rgba(211, 47, 47, 0);
+    }
+
+    50% {
+        background: rgba(211, 47, 47, 0.25);
+        border-color: rgba(211, 47, 47, 1);
+        box-shadow: 0 0 30px rgba(211, 47, 47, 0.3);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes button-flicker {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+        box-shadow: 0 8px 20px rgba(134, 189, 191, 0.3);
+    }
+
+    50% {
+        transform: scale(1.02);
+        filter: brightness(1.1);
+        box-shadow: 0 0 12px rgba(134, 189, 191, 0.5), 0 0 25px rgba(134, 189, 191, 0.2), 0 10px 25px rgba(134, 189, 191, 0.3);
+    }
+}
+
+@keyframes toast-in {
+    from {
+        top: -100px;
+        opacity: 0;
+    }
+
+    to {
+        top: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fly-across {
+    from {
+        transform: translateX(-10vw) translateY(0) rotate(15deg);
+    }
+
+    to {
+        transform: translateX(110vw) translateY(-10vh) rotate(15deg);
+    }
+}
+
+@keyframes fly-across-reverse {
+    from {
+        transform: translateX(110vw) translateY(0) rotate(-165deg);
+    }
+
+    to {
+        transform: translateX(-10vw) translateY(10vh) rotate(-165deg);
+    }
+}
+
+@keyframes logo-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+    }
+}
+
+@keyframes rotate-orbit {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes jet-bob-tangent {
+    from {
+        transform: rotate(-90deg) translateY(0) scale(1.05);
+    }
+
+    to {
+        transform: rotate(-90deg) translateY(-5px) scale(1);
+    }
+}
+
+@keyframes particle-fade-back {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(40px, 0) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes gradientText {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 300% 50%;
+    }
+}
+
+@keyframes scrollWheel {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(15px);
+        opacity: 0;
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalSlideUp {
+    from {
+        transform: translateY(40px) scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+@keyframes ai-magic-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 15px rgba(65, 105, 225, 0.4), 0 0 30px rgba(0, 128, 128, 0.2);
+        filter: brightness(1);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(65, 105, 225, 0.7), 0 0 50px rgba(0, 128, 128, 0.4);
+        filter: brightness(1.2);
+    }
+}
+
+@keyframes badge-pop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes save-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(30, 41, 59, 0.4);
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow: 0 0 0 10px rgba(30, 41, 59, 0);
+        transform: scale(1.02);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(30, 41, 59, 0);
+        transform: scale(1);
+    }
+}
+
+/* Utility Animations */
+.animate-in {
+    animation: slideFadeUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}

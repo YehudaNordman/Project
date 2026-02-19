@@ -1,4 +1,6 @@
-﻿@keyframes warning-flash {
+﻿@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;700;900&family=Inter:wght@400;700&display=swap');
+
+@keyframes warning-flash {
 
   0%,
   100% {
@@ -113,6 +115,87 @@ textarea {
   right: 0;
   padding: 1.5rem 2rem;
   z-index: 100;
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a237e;
+  border: 2px solid #86BDBF;
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+  animation: toast-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes toast-in {
+  from {
+    top: -100px;
+    opacity: 0;
+  }
+
+  to {
+    top: 30px;
+    opacity: 1;
+  }
+}
+
+.saved-trip-card {
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.saved-trip-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(0, 128, 128, 0.15) !important;
+  border-color: rgba(0, 128, 128, 0.3);
+}
+
+.saved-trip-card.expanded {
+  background: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
+.delete-trip-btn:hover {
+  background: rgba(255, 0, 0, 0.2) !important;
+  transform: scale(1.1);
+}
+
+.delete-trip-btn:hover {
+  background: rgba(255, 0, 0, 0.2) !important;
+  transform: scale(1.1);
+}
+
+.pdf-download-btn {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: 1px solid #1a237e;
+  color: #1a237e;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.pdf-download-btn:hover {
+  background-color: #e8eaf6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 35, 126, 0.1);
 }
 
 .login-button {
@@ -4739,4 +4822,262 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* AI Magic Button Styles - Custom Polish */
+.ai-magic-button {
+  background: linear-gradient(135deg, #4169e1 0%, #008080 100%);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 20px rgba(65, 105, 225, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 30px auto;
+  position: relative;
+  overflow: hidden;
+  animation: ai-magic-glow 3s infinite ease-in-out;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+.ai-magic-button:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(65, 105, 225, 0.5);
+  filter: brightness(1.15);
+}
+
+.ai-magic-button:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+@keyframes ai-magic-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(65, 105, 225, 0.4), 0 0 30px rgba(0, 128, 128, 0.2);
+    filter: brightness(1);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(65, 105, 225, 0.7), 0 0 50px rgba(0, 128, 128, 0.4);
+    filter: brightness(1.2);
+  }
+}
+
+.ai-response-card {
+  width: 92%;
+  max-width: 850px;
+  margin: 30px auto;
+  padding: 0;
+  /* Header handles its own padding */
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  color: #0f172a;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.ai-card-header {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ai-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.ai-card-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1a237e 0%, #008080 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.2px;
+}
+
+.ai-content {
+  padding: 24px;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #1a237e;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+}
+
+.ai-content h4 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.8rem;
+  color: #1a237e;
+  margin: 1.5rem 0 0.8rem 0;
+  border-bottom: 2px solid rgba(26, 35, 126, 0.1);
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.ai-content p {
+  margin-bottom: 1rem;
+  color: #334155;
+}
+
+.ai-content strong {
+  color: #1a237e;
+  font-weight: 800;
+  background: rgba(134, 189, 191, 0.2);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+.ai-content ul,
+.ai-content ol {
+  margin-right: 25px;
+  margin-bottom: 1.2rem;
+  list-style-type: none;
+}
+
+.ai-content li {
+  margin-bottom: 0.8rem;
+  position: relative;
+  padding-right: 15px;
+}
+
+.ai-content li::before {
+  content: '→';
+  position: absolute;
+  right: -20px;
+  color: #008080;
+  font-weight: bold;
+}
+
+/* Safety Badge Styles */
+.safety-badge-container {
+  padding: 0 24px 24px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.safety-badge {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #15803d;
+  padding: 12px 24px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.1);
+  animation: badge-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.safety-icon {
+  font-size: 1.2rem;
+}
+
+@keyframes badge-pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Save Route Button Styles */
+.save-route-container {
+  padding: 0 24px 24px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.save-route-btn {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  animation: save-pulse 2s infinite ease-in-out;
+}
+
+.save-route-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.save-route-btn.saved {
+  background: #15803d;
+  animation: none;
+  transform: scale(1.05);
+}
+
+.save-route-btn.saving {
+  opacity: 0.8;
+  cursor: wait;
+}
+
+.save-route-btn.error {
+  background: #dc2626;
+  animation: none;
+}
+
+@keyframes save-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(30, 41, 59, 0.4);
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px rgba(30, 41, 59, 0);
+    transform: scale(1.02);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(30, 41, 59, 0);
+    transform: scale(1);
+  }
+}
+
+.ai-error-state {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.ai-error-state .ai-content {
+  color: #991b1b;
+  background: rgba(254, 226, 226, 0.4);
+  margin: 20px;
+  border-radius: 12px;
+  border: 1px dashed #f87171;
+  font-weight: 600;
 }
