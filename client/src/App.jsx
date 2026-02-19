@@ -1,22 +1,21 @@
-import LandingPage from './pages/LandingPage'
+import React from 'react';
+import MainLayout from './components/layout/MainLayout';
+import AppRoutes from './routes/AppRoutes';
 
-/**
- * רכיב האפליקציה הראשי (Entry Point).
- * מגדיר את מבנה העטיפה הבסיסי ומטעין את דף הבית.
- */
 function App() {
   return (
     <div className="App">
-      {/* אלמנטים דקורטיביים של מטוסים "מעופפים" ברקע האתר */}
+      {/* Decorative background elements */}
       <div className="airplane-bg-element planeify-1">✈️</div>
       <div className="airplane-bg-element planeify-2">✈️</div>
       <div className="airplane-bg-element planeify-3">✈️</div>
 
-      {/* טעינת הרכיב המרכזי שמרכז את כל תוכן האתר */}
-      <LandingPage />
+      <MainLayout>
+        <AppRoutes />
+      </MainLayout>
     </div>
   );
 }
 
-export default App
+export default App;
 

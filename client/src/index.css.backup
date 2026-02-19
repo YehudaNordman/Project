@@ -1,7 +1,6 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;700;900&family=Inter:wght@400;700&display=swap');
+﻿// @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;700;900&family=Inter:wght@400;700&display=swap');
 
 @keyframes warning-flash {
-
   0%,
   100% {
     opacity: 1;

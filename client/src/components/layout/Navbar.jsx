@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 /**
@@ -124,10 +125,10 @@ const Navbar = ({ onLoginClick, onRouteClick, onSavedTripsClick, onProfileClick 
 
                 {/* צד שמאל: לוגו המותג וסלוגן האתר */}
                 <div className="navbar-left">
-                    <div className="logo-container">
+                    <Link to="/" className="logo-container" style={{ textDecoration: 'none' }}>
                         <span className="logo-text">Bonus<span className="logo-accent">Trip</span></span>
                         <p className="slogan-text">Your Layover, Upgraded</p>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </nav>
