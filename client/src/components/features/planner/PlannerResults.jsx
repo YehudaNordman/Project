@@ -14,8 +14,6 @@ import RecommendationsExplorer from '../results/RecommendationsExplorer';
  * רכיב זה משמש כקונטיינר המרכזי שמרכז את כל חלקי התצוגה של התוצאות.
  */
 const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedWeather, currencyCode, currencyName, landingDate, takeoffDate, landingTime, takeoffTime, lat, lon }) => {
-    console.log("PlannerResults Props:", { lat, lon, landingDate, takeoffDate, landingTime, takeoffTime });
-
     // State למזג האוויר במידה ולא נטען בטופס (Fallback)
     const [weather, setWeather] = useState(prefetchedWeather || null);
 
@@ -37,6 +35,7 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
     if (explorerView) {
         return (
             <RecommendationsExplorer
+            setExplorerView={setExplorerView}
                 type={explorerView}
                 destination={destination}
                 lat={lat}

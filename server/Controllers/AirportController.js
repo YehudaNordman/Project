@@ -132,7 +132,7 @@ exports.getLocationById = async (req, res) => {
  * @param {Object} params - פרמטרי החיפוש
  * @param {number} maxPages - מספר הדפים למשוך (2 = 40 תוצאות, 3 = 60 תוצאות)
  */
-async function getMorePlaces(params, maxPages = 2) {
+async function getMorePlaces(params, maxPages = 3) {  // ניתן לשנות את maxPages כדי להביא יותר או פחות תוצאות (כל מספר מביא 20 מקומות נוספים)
   let allResults = [];
   let nextPageToken = null;
   let pagesCount = 0;
