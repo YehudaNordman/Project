@@ -14,8 +14,6 @@ import RecommendationsExplorer from '../results/RecommendationsExplorer';
  * רכיב זה משמש כקונטיינר המרכזי שמרכז את כל חלקי התצוגה של התוצאות.
  */
 const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedWeather, currencyCode, currencyName, landingDate, takeoffDate, landingTime, takeoffTime, lat, lon }) => {
-    console.log("PlannerResults Props:", { lat, lon, landingDate, takeoffDate, landingTime, takeoffTime });
-
     // State למזג האוויר במידה ולא נטען בטופס (Fallback)
     const [weather, setWeather] = useState(prefetchedWeather || null);
 
@@ -37,6 +35,7 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
     if (explorerView) {
         return (
             <RecommendationsExplorer
+                setExplorerView={setExplorerView}
                 type={explorerView}
                 destination={destination}
                 lat={lat}
@@ -75,12 +74,16 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
             />
 
             {/* 4. כרטיס לינה (יוצג רק בשהות ארוכה) */}
-            <AccommodationCard
-                result={result}
-                destination={destination}
-                landingDate={landingDate}
-                takeoffDate={takeoffDate}
-            />
+            <div className="quick-tools-wrapper" style={{ marginTop: '0' }}>
+                <div className="quick-tools-container">
+                    <AccommodationCard
+                        result={result}
+                        destination={destination}
+                        landingDate={landingDate}
+                        takeoffDate={takeoffDate}
+                    />
+                </div>
+            </div>
 
             {/* 5. המלצות (יוצג רק אם יש מספיק זמן נטו) */}
             <RecommendationCards
