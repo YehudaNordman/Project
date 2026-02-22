@@ -138,7 +138,7 @@
 }
 
 .navbar-content {
-    max-width: 1000px;
+    max-width: 1400px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -641,7 +641,7 @@
 /* Testimonials - Spectacular Sliding Carousel */
 .testimonials-section.static-view {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 6rem auto;
     padding: 0 1rem;
     text-align: center;
