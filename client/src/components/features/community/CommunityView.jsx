@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../constants';
 import { useAuth } from '../../../context/AuthContext';
 import ItineraryStepCard from '../itinerary/ItineraryStepCard';
+import '../../../assets/styles/components/community.css';
 
 const CommunityView = () => {
     const { user, token, openAuthModal } = useAuth();
@@ -9,6 +10,7 @@ const CommunityView = () => {
     const [loading, setLoading] = useState(true);
     const [commentTexts, setCommentTexts] = useState({});
     const [expandedPosts, setExpandedPosts] = useState({}); // To track which posts are showing the full plan
+    const [showQuickComment, setShowQuickComment] = useState({}); // To track which posts have the quick comment input open
 
     useEffect(() => {
         fetchPosts();
@@ -68,11 +70,55 @@ const CommunityView = () => {
         }
     };
 
-    if (loading) return <div className="loading-community">טוען קהילה...</div>;
+    if (loading) return (
+        <div className="loading-community" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '60vh',
+            gap: '20px'
+        }}>
+            <div className="spinner" style={{
+                width: '50px',
+                height: '50px',
+                border: '5px solid #f3f3f3',
+                borderTop: '5px solid #1a237e',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+            }}></div>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+            <h2 style={{ color: '#1a237e' }}>טוען את הקהילה...</h2>
+        </div>
+    );
 
     return (
         <div className="community-container animate-in">
             <header className="community-header glass">
+                <button
+                    onClick={() => window.history.back()}
+                    className="back-arrow-btn"
+                    style={{
+                        position: 'absolute',
+                        top: '20px',
+                        right: '20px',
+                        background: 'white',
+                        border: '2px solid #1a237e',
+                        borderRadius: '50%',
+                        width: '40px',
+                        height: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '1.2rem',
+                        color: '#1a237e',
+                        transition: 'all 0.3s ease',
+                        boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+                    }}
+                >
+                    ➜
+                </button>
                 <h1>קהילת <span className="logo-accent">BonusTrip</span></h1>
                 <p>שתפו מסלולים, קבלו השראה וגלו איך אחרים מטיילים בעולם</p>
             </header>
@@ -83,9 +129,13 @@ const CommunityView = () => {
                         {/* Main Summary Row */}
                         <div className="post-compact-row" onClick={() => setExpandedPosts({ ...expandedPosts, [post._id]: !expandedPosts[post._id] })}>
                             <div className="post-row-left">
-                                <div className="user-avatar-small">{post.userEmail[0].toUpperCase()}</div>
+                                <div className="user-avatar-small">
+                                    {(post.userId?.fullName || post.userName || post.userEmail)[0].toUpperCase()}
+                                </div>
                                 <div className="user-info-stacked">
-                                    <span className="user-email-text">{post.userEmail}</span>
+                                    <span className="user-email-text">
+                                        {post.userId?.fullName || post.userName || post.userEmail}
+                                    </span>
                                     <span className="post-date-text">{new Date(post.createdAt).toLocaleDateString('he-IL')}</span>
                                 </div>
                             </div>
@@ -100,14 +150,49 @@ const CommunityView = () => {
 
                             <div className="post-row-right">
                                 <div className="post-stats-row">
-                                    <span className="stat-pill">❤️ {post.likes.length}</span>
-                                    <span className="stat-pill">💬 {post.comments.length}</span>
+                                    <button
+                                        className={`stat-pill like-pill ${post.likes.includes(user?._id) ? 'active' : ''}`}
+                                        onClick={(e) => { e.stopPropagation(); handleLike(post._id); }}
+                                        title={post.likes.includes(user?._id) ? "בטל לייק" : "שלח לייק"}
+                                    >
+                                        <span className="heart-icon">❤️</span>
+                                        <span className="count">{post.likes.length}</span>
+                                    </button>
+                                    <button
+                                        className="stat-pill comment-pill"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setShowQuickComment({ ...showQuickComment, [post._id]: !showQuickComment[post._id] });
+                                        }}
+                                        title="הוסף תגובה"
+                                    >
+                                        <span className="comment-icon">💬</span>
+                                        <span className="count">{post.comments.length}</span>
+                                    </button>
                                 </div>
                                 <button className="expand-row-btn">
                                     {expandedPosts[post._id] ? '🔼 סגור' : '✨ צפה במסלול'}
                                 </button>
                             </div>
                         </div>
+
+                        {/* Quick Comment Input (Outside) */}
+                        {showQuickComment[post._id] && (
+                            <div className="quick-comment-wrapper animate-in" onClick={(e) => e.stopPropagation()}>
+                                <div className="add-comment-input-row">
+                                    <input
+                                        type="text"
+                                        placeholder="הוסף תגובה מהירה..."
+                                        value={commentTexts[post._id] || ''}
+                                        onChange={(e) => setCommentTexts({ ...commentTexts, [post._id]: e.target.value })}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') handleComment(post._id);
+                                        }}
+                                    />
+                                    <button onClick={() => handleComment(post._id)}>שלח</button>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Expandable Content Area */}
                         {expandedPosts[post._id] && (
@@ -136,14 +221,16 @@ const CommunityView = () => {
                                             className={`like-btn-premium ${post.likes.includes(user?._id) ? 'active' : ''}`}
                                             onClick={(e) => { e.stopPropagation(); handleLike(post._id); }}
                                         >
-                                            {post.likes.includes(user?._id) ? '❤️ אהבתי' : '🤍 שלח לייק'}
+                                            {post.likes.includes(user?._id) ? '❤️ אהבתי' : '❤️ שלח לייק'}
                                         </button>
                                     </div>
 
                                     <div className="comments-list-expanded">
                                         {post.comments.map((comment, i) => (
                                             <div key={i} className="comment-item-glass">
-                                                <span className="comment-user">{comment.userEmail.split('@')[0]}:</span>
+                                                <span className="comment-user">
+                                                    {comment.userId?.fullName || comment.userName || (comment.userEmail ? comment.userEmail.split('@')[0] : 'משתמש')}:
+                                                </span>
                                                 <span className="comment-text">{comment.text}</span>
                                             </div>
                                         ))}

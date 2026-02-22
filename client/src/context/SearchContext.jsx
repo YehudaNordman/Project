@@ -4,7 +4,7 @@ const SearchContext = createContext();
 
 export const SearchProvider = ({ children }) => {
     const [formData, setFormData] = useState(() => {
-        const saved = localStorage.getItem('lastSearchFormData');
+        const saved = sessionStorage.getItem('lastSearchFormData');
         return saved ? JSON.parse(saved) : {
             destination: '',
             landingDate: '',
@@ -15,32 +15,32 @@ export const SearchProvider = ({ children }) => {
     });
 
     const [results, setResults] = useState(() => {
-        const saved = localStorage.getItem('lastSearchResults');
+        const saved = sessionStorage.getItem('lastSearchResults');
         return saved ? JSON.parse(saved) : null;
     });
 
     const [weatherData, setWeatherData] = useState(() => {
-        const saved = localStorage.getItem('lastSearchWeather');
+        const saved = sessionStorage.getItem('lastSearchWeather');
         return saved ? JSON.parse(saved) : null;
     });
 
     useEffect(() => {
-        localStorage.setItem('lastSearchFormData', JSON.stringify(formData));
+        sessionStorage.setItem('lastSearchFormData', JSON.stringify(formData));
     }, [formData]);
 
     useEffect(() => {
-        localStorage.setItem('lastSearchResults', JSON.stringify(results));
+        sessionStorage.setItem('lastSearchResults', JSON.stringify(results));
     }, [results]);
 
     useEffect(() => {
-        localStorage.setItem('lastSearchWeather', JSON.stringify(weatherData));
+        sessionStorage.setItem('lastSearchWeather', JSON.stringify(weatherData));
     }, [weatherData]);
 
     const clearSearch = () => {
         setResults(null);
         setWeatherData(null);
-        localStorage.removeItem('lastSearchResults');
-        localStorage.removeItem('lastSearchWeather');
+        sessionStorage.removeItem('lastSearchResults');
+        sessionStorage.removeItem('lastSearchWeather');
     };
 
     return (

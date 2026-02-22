@@ -5,18 +5,18 @@ const RouteContext = createContext();
 export const RouteProvider = ({ children }) => {
     const [myRoute, setMyRoute] = useState(() => {
         try {
-            const saved = localStorage.getItem('userRoute');
+            const saved = sessionStorage.getItem('userRoute');
             if (saved && saved !== "undefined") {
                 return JSON.parse(saved);
             }
         } catch (e) {
-            console.error("Error parsing userRoute from localStorage", e);
+            console.error("Error parsing userRoute from sessionStorage", e);
         }
         return [];
     });
 
     useEffect(() => {
-        localStorage.setItem('userRoute', JSON.stringify(myRoute));
+        sessionStorage.setItem('userRoute', JSON.stringify(myRoute));
     }, [myRoute]);
 
     const addToRoute = (item) => {

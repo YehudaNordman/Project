@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Hero from '../components/common/Hero';
 import InfoCards from '../components/common/InfoCards';
@@ -6,13 +6,22 @@ import Testimonials from '../components/common/Testimonials';
 import PlannerForm from '../components/features/planner/PlannerForm';
 import LoadingScreen from '../components/features/planner/LoadingScreen';
 import { useSearch } from '../context/SearchContext';
+import { useRoute } from '../context/RouteContext';
 import { calculateTripTime, fetchWeatherData, getMockRecommendations } from '../services/plannerService';
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const { formData, setFormData, setResults, setWeatherData } = useSearch();
+    const { formData, setFormData, setResults, setWeatherData, clearSearch } = useSearch();
+    const { clearRoute } = useRoute();
     const [isLoading, setIsLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
+
+    // Clear previous search results and route when landing on home page
+    // to ensure a fresh start for the next search session.
+    useEffect(() => {
+        clearSearch();
+        clearRoute();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,6 +39,7 @@ const HomePage = () => {
 
         setErrorMsg('');
         setIsLoading(true);
+        clearRoute(); // Clear the current itinerary route when starting a fresh search
 
         try {
             // Start weather fetch

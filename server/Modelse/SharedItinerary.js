@@ -10,6 +10,7 @@ const SharedItinerarySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    userName: String, // Added field
     destination: {
         type: String,
         required: true
@@ -34,6 +35,7 @@ const SharedItinerarySchema = new mongoose.Schema({
             ref: 'User'
         },
         userEmail: String,
+        userName: String, // Added field
         text: String,
         createdAt: {
             type: Date,

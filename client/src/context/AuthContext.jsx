@@ -117,6 +117,12 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('userData');
     };
 
+    const updateUser = (newUserData) => {
+        const updatedUser = { ...user, ...newUserData };
+        setUser(updatedUser);
+        localStorage.setItem('userData', JSON.stringify(updatedUser));
+    };
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -126,6 +132,7 @@ export const AuthProvider = ({ children }) => {
             register,
             resetPassword,
             logout,
+            updateUser,
             isAuthModalOpen,
             authModalMessage,
             openAuthModal,

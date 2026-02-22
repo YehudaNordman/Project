@@ -4,13 +4,39 @@ import { API_BASE_URL } from '../../../constants';
 import '../../../assets/styles/components/auth.css'; // Assuming we can use auth styles or create new ones
 
 const UserProfile = ({ onClose }) => {
-    const { user, token } = useAuth();
+    const { user, token, updateUser } = useAuth();
     const [stats, setStats] = useState({ savedTripsCount: 0 });
+    const [isEditingName, setIsEditingName] = useState(false);
     const [isEditingEmail, setIsEditingEmail] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
+    const [newName, setNewName] = useState(user?.fullName || '');
     const [newEmail, setNewEmail] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
+
+    const handleUpdateName = async () => {
+        if (!newName.trim()) return;
+        try {
+            const response = await fetch(`${API_BASE_URL}/user/update-me`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ fullName: newName })
+            });
+            if (response.ok) {
+                const updatedUser = await response.json();
+                updateUser({ fullName: updatedUser.fullName });
+                setIsEditingName(false);
+                alert("השם עודכן בהצלחה!");
+            } else {
+                alert("עדכון השם נכשל.");
+            }
+        } catch (error) {
+            console.error("Error updating name:", error);
+        }
+    };
 
     // Fetch user stats (number of saved trips)
     useEffect(() => {
@@ -75,6 +101,27 @@ const UserProfile = ({ onClose }) => {
 
                 <div className="profile-actions-section">
                     <h3>הגדרות חשבון</h3>
+
+                    <div className="action-row">
+                        <div className="field-info">
+                            <label>שם מלא</label>
+                            <span>{user.fullName}</span>
+                        </div>
+                        <button className="edit-btn" onClick={() => setIsEditingName(!isEditingName)}>
+                            ✏️ שינוי שם
+                        </button>
+                    </div>
+                    {isEditingName && (
+                        <div className="edit-form animate-in">
+                            <input
+                                type="text"
+                                placeholder="שם חדש"
+                                value={newName}
+                                onChange={(e) => setNewName(e.target.value)}
+                            />
+                            <button className="save-btn" onClick={handleUpdateName}>עדכן שם</button>
+                        </div>
+                    )}
 
                     <div className="action-row">
                         <div className="field-info">

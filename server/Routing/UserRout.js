@@ -8,6 +8,7 @@ router.post('/login', controller.login);
 router.post('/reset-password', controller.resetPassword);
 
 router.use(controller.auth);    // כל הפונקציות הבאות דורשות אימות חיבור
+router.put('/update-me', controller.updateById); // מאפשר למשתמש לעדכן את עצמו ללא צורך באדמין
 router.use(isAdmin);    // כל הפונקציות הבאות דורשות שהמשתמש יהיה אדמין
 router.get('/', controller.getAll);
 router.get('/:id', controller.getById);

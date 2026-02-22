@@ -55,7 +55,8 @@ exports.deleteById = async (req, res) => {
 
 exports.updateById = async (req, res) => {
   try {
-    let user = await User.findByIdAndUpdate(req.params.id, req.body);
+    const id = req.params.id || req.user._id;
+    let user = await User.findByIdAndUpdate(id, req.body, { new: true });
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
