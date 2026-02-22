@@ -3,19 +3,19 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // ✅ הנה השם הנכון מתוך הרשימה ששלחת
-const MODEL_NAME = "gemini-2.5-flash"; 
+const MODEL_NAME = "gemini-2.5-flash";
 
 const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
 exports.askAi = async (req, res) => {
   try {
-    console.log("🤖 Asking Gemini Model:", MODEL_NAME); 
-    
+    console.log("🤖 Asking Gemini Model:", MODEL_NAME);
+
     const { prompt } = req.body;
     if (!prompt) return res.status(400).json({ message: "Prompt is required" });
 
     console.log(prompt);
-    
+
     const promptText = `
 אתה מומחה לתכנון טיולים עבור אפליקציית Layover-Hacker. 
 המטרה שלך היא לבנות מסלול טיול אופטימלי בזמן עצירת ביניים (Layover).
@@ -42,15 +42,21 @@ exports.askAi = async (req, res) => {
 `;
     const result = await model.generateContent(promptText);
     const response = await result.response;
-    const text = response.text();
+    let text = response.text();
+
+    // Enhanced cleaning: Extract only the content between the first { and the last }
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      text = jsonMatch[0];
+    }
 
     res.json({ answer: text });
 
   } catch (error) {
     console.error("❌ AI Error Details:", error);
-    res.status(500).json({ 
-        message: "Failed to generate AI response", 
-        error: error.message 
+    res.status(500).json({
+      message: "Failed to generate AI response",
+      error: error.message
     });
   }
 };

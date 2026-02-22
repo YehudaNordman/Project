@@ -102,6 +102,14 @@ const Navbar = ({ onLoginClick, onRouteClick, onSavedTripsClick, onProfileClick 
                                                     <span className="item-desc">הגדרות ופרטים אישיים</span>
                                                 </div>
                                             </button>
+                                            <button className="dropdown-item community-item" style={{ border: '1px solid rgba(134, 189, 191, 0.4) !important' }}
+                                                onClick={() => { setIsDropdownOpen(false); window.location.href = '/community'; }}>
+                                                <span className="item-icon">👥</span>
+                                                <div className="item-text">
+                                                    <span className="item-title">קהילת המטיילים</span>
+                                                    <span className="item-desc">טיפים, המלצות ושיתופים</span>
+                                                </div>
+                                            </button>
                                             <div className="dropdown-divider"></div>
                                             <button className="dropdown-item logout-item" onClick={handleLogoutAction}>
                                                 <span className="item-icon">🏃‍♂️</span>

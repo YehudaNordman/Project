@@ -276,3 +276,182 @@
     background: #86BDBF !important;
     color: white !important;
 }
+
+.itinerary-steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* AI Itinerary Bento Card Styles */
+.itinerary-step-card {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.itinerary-step-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 30px 60px rgba(26, 35, 126, 0.1);
+    border-color: #86BDBF;
+}
+
+.glass-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.card-header-bento {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    z-index: 1;
+}
+
+.step-tag {
+    font-size: 0.7rem;
+    font-weight: 900;
+    color: #86BDBF;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.step-title {
+    font-size: 1.8rem;
+    font-weight: 950;
+    color: #1a237e;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.hours-badge-premium {
+    background: #1a237e;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    box-shadow: 0 10px 20px rgba(26, 35, 126, 0.2);
+}
+
+.icon-small {
+    width: 18px;
+    height: 18px;
+}
+
+.card-description-bento {
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 1.2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.card-description-bento p {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #475569;
+    font-weight: 600;
+}
+
+.card-footer-bento-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    z-index: 1;
+}
+
+@media (max-width: 600px) {
+    .card-footer-bento-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.footer-item {
+    background: white;
+    padding: 1.2rem;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.footer-item:hover {
+    transform: translateY(-3px);
+    border-color: rgba(134, 189, 191, 0.3);
+}
+
+.item-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.item-icon-wrapper svg {
+    width: 24px;
+    height: 24px;
+}
+
+.item-icon-wrapper.blue {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.item-icon-wrapper.teal {
+    background: #f0fdfa;
+    color: #0d9488;
+}
+
+.item-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.item-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+}

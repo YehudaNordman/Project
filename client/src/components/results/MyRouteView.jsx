@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { calculateTripTime } from '../../services/plannerService';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { API_BASE_URL } from '../../constants';
+import ItineraryStepCard from '../features/itinerary/ItineraryStepCard';
 
 const containerStyle = {
     width: '100%',
@@ -90,7 +91,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
         setAiError(false);
         setAi("");
 
-        const systemPrompt = `You are a travel expert for BonusTrip. Plan a layout for ${destination} for ${netTravelTime} hours. Return a structured list with times.`;
+        const systemPrompt = `You are a travel expert for BonusTrip. Plan an optimal itinerary for ${destination} for ${netTravelTime} hours.`;
         const itinerarySummary = myRoute.map(item => `${item.name} (${item.address_line2 || ''})`).join(', ');
 
         const enhancedPrompt = `
@@ -99,7 +100,9 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
             Places chosen by user: ${itinerarySummary}
             
             Instruction: ${systemPrompt}
-            Important: Return exactly in Hebrew and use HTML tags like <h3> and <ul>.
+            Important: Return exactly in Hebrew. 
+            Format: MUST return ONLY a valid JSON object with an "itinerary" array containing "title", "hours", "description", "transport", and "food" for each step.
+            Do NOT include any Markdown tags or extra text.
         `;
 
         try {
@@ -338,7 +341,27 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                                 <h3>תכנית הטיול שלך</h3>
                             </div>
                             <div className={aiError ? "ai-error-state" : ""} dir="rtl">
-                                <div className="ai-content" dangerouslySetInnerHTML={{ __html: aiInfo }} />
+                                {(() => {
+                                    try {
+                                        const parsed = JSON.parse(aiInfo);
+                                        const itinerary = parsed.itinerary || (Array.isArray(parsed) ? parsed : null);
+
+                                        if (itinerary && Array.isArray(itinerary)) {
+                                            return (
+                                                <div className="itinerary-steps-container" style={{ padding: '20px' }}>
+                                                    {itinerary.map((step, idx) => (
+                                                        <ItineraryStepCard key={idx} data={step} />
+                                                    ))}
+                                                </div>
+                                            );
+                                        }
+                                        // Fallback if it's not the expected structure
+                                        return <div className="ai-content" dangerouslySetInnerHTML={{ __html: aiInfo }} />;
+                                    } catch (e) {
+                                        // Fallback to HTML rendering if not JSON
+                                        return <div className="ai-content" dangerouslySetInnerHTML={{ __html: aiInfo }} />;
+                                    }
+                                })()}
                             </div>
                             {!aiError && (
                                 <div className="save-route-container animate-in">

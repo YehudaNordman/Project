@@ -10,7 +10,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-x: hidden;
 }
 
 @media (min-width: 768px) {

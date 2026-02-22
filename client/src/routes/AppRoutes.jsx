@@ -5,7 +5,8 @@ import ResultsPage from '../pages/ResultsPage';
 import MyRoutePage from '../pages/MyRoutePage';
 import SavedTripsPage from '../pages/SavedTripsPage';
 import ProfilePage from '../pages/ProfilePage';
-import RecommendationsExplorer from '../components/features/results/RecommendationsExplorer';   
+import CommunityPage from '../pages/CommunityPage';
+import RecommendationsExplorer from '../components/features/results/RecommendationsExplorer';
 
 
 const AppRoutes = () => {
@@ -16,6 +17,7 @@ const AppRoutes = () => {
             <Route path="/my-route" element={<MyRoutePage />} />
             <Route path="/saved-trips" element={<SavedTripsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/community" element={<CommunityPage />} />
             <Route path="/explorer" element={<RecommendationsExplorer />} />
             {/* Catch-all route to redirect back home if path not found */}
             <Route path="*" element={<HomePage />} />

@@ -12,7 +12,6 @@ body {
     width: 100%;
     /* Changed from 100vw to prevent scroll */
     max-width: 100%;
-    overflow-x: hidden;
     font-family: 'Google Sans', 'Outfit', sans-serif;
     direction: rtl;
 }
