@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRoute } from '../../context/RouteContext';
 import { useAuth } from '../../context/AuthContext';
 import { calculateTripTime } from '../../services/plannerService';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import { API_BASE_URL } from '../../constants';
 import ItineraryStepCard from '../features/itinerary/ItineraryStepCard';
 
@@ -43,6 +43,32 @@ const Typewriter = ({ html, speed = 10, onComplete }) => {
     }, [html, speed, onComplete]);
 
     return <div className="ai-content" dangerouslySetInnerHTML={{ __html: displayedHtml }} />;
+};
+
+const tryParseJSON = (str) => {
+    if (!str || typeof str !== 'string') return null;
+    let jsonStr = str.trim();
+
+    // Remove markdown code blocks
+    jsonStr = jsonStr.replace(/^```json\s*|```$/g, '').trim();
+
+    try {
+        return JSON.parse(jsonStr);
+    } catch (e) {
+        // Find the first { or [ and the last } or ]
+        const startBracket = jsonStr.search(/[\{\[]/);
+        const endBracket = Math.max(jsonStr.lastIndexOf('}'), jsonStr.lastIndexOf(']'));
+
+        if (startBracket !== -1 && endBracket !== -1 && endBracket > startBracket) {
+            const potentialJson = jsonStr.substring(startBracket, endBracket + 1);
+            try {
+                return JSON.parse(potentialJson);
+            } catch (e2) {
+                return null;
+            }
+        }
+    }
+    return null;
 };
 
 const MyRouteView = ({ onBack, times, onViewSaved }) => {
@@ -161,7 +187,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
 
             // Save to Server Database if user is logged in
             if (token) {
-                await fetch(`${API_BASE_URL}/user/save-route`, {
+                await fetch(`${API_BASE_URL}/user/save-itinerary`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -305,7 +331,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                                     {isLoaded ? (
                                         <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={12}>
                                             {myRoute.filter(item => item.lat && item.lon).map((item, idx) => (
-                                                <Marker
+                                                <MarkerF
                                                     key={idx}
                                                     position={{ lat: parseFloat(item.lat), lng: parseFloat(item.lon) }}
                                                     onClick={() => setSelectedItem(item)}
@@ -342,8 +368,8 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                             </div>
                             <div className={aiError ? "ai-error-state" : ""} dir="rtl">
                                 {(() => {
-                                    try {
-                                        const parsed = JSON.parse(aiInfo);
+                                    const parsed = tryParseJSON(aiInfo);
+                                    if (parsed) {
                                         const itinerary = parsed.itinerary || (Array.isArray(parsed) ? parsed : null);
 
                                         if (itinerary && Array.isArray(itinerary)) {
@@ -356,10 +382,10 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                                             );
                                         }
                                         // Fallback if it's not the expected structure
-                                        return <div className="ai-content" dangerouslySetInnerHTML={{ __html: aiInfo }} />;
-                                    } catch (e) {
+                                        return <Typewriter html={aiInfo} onComplete={() => setIsTyping(false)} />;
+                                    } else {
                                         // Fallback to HTML rendering if not JSON
-                                        return <div className="ai-content" dangerouslySetInnerHTML={{ __html: aiInfo }} />;
+                                        return <Typewriter html={aiInfo} onComplete={() => setIsTyping(false)} />;
                                     }
                                 })()}
                             </div>

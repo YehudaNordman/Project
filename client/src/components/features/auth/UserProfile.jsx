@@ -62,7 +62,18 @@ const UserProfile = ({ onClose }) => {
 
                 // Let's try to simulate a fetch or just use local count + server count logic.
                 // For this step, I'll count local items as a baseline.
-                setStats({ savedTripsCount: localData.length });
+                const response = await fetch(`${API_BASE_URL}/user/my-itineraries`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setStats({ savedTripsCount: data.length });
+                }
 
             } catch (error) {
                 console.error("Error fetching stats", error);
