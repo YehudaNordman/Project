@@ -5,6 +5,7 @@ import { useRoute } from '../../../context/RouteContext';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import { API_BASE_URL } from '../../../constants';
 import LoadingScreen from '../planner/LoadingScreen';
+import { useNavigate } from 'react-router-dom';
 
 const mapContainerStyle = {
     width: '100%',
@@ -25,6 +26,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
     const { user, openAuthModal } = useAuth();
     const { myRoute, addToRoute, removeFromRoute } = useRoute(); // הנחה שקיימת פונקציית removeFromRoute
 
+    
     // Toggle visibility of scroll-to-top button
     useEffect(() => {
         const checkScrollTop = () => {
