@@ -95,30 +95,6 @@ const CommunityView = () => {
     return (
         <div className="community-container animate-in">
             <header className="community-header glass">
-                <button
-                    onClick={() => window.history.back()}
-                    className="back-arrow-btn"
-                    style={{
-                        position: 'absolute',
-                        top: '20px',
-                        right: '20px',
-                        background: 'white',
-                        border: '2px solid #1a237e',
-                        borderRadius: '50%',
-                        width: '40px',
-                        height: '40px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '1.2rem',
-                        color: '#1a237e',
-                        transition: 'all 0.3s ease',
-                        boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
-                    }}
-                >
-                    ➜
-                </button>
                 <h1>קהילת <span className="logo-accent">BonusTrip</span></h1>
                 <p>שתפו מסלולים, קבלו השראה וגלו איך אחרים מטיילים בעולם</p>
             </header>
