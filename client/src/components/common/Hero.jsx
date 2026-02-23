@@ -9,9 +9,13 @@ const Hero = () => {
         <div className="hero-section animate-in">
             {/* כותרת ראשית מעוצבת עם מעבר צבעים (Gradient) */}
             <h1 className="hero-title">
-                נצלו כל רגע <br />
-                <span className="text-gradient-animate">מזמן ההמתנה</span>
+                <span className="text-gradient-animate">BonusTrip</span>
             </h1>
+
+            {/* Subtitle with the same gradient effect, attached under the title */}
+            <h2 className="hero-subtitle" style={{ marginTop: '0.0rem' }}>
+                <span className="text-gradient-animate">From connection to action</span>
+            </h2>
 
         </div>
     );

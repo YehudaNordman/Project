@@ -188,7 +188,7 @@ const SavedItinerariesView = ({ onBack }) => {
             <div className="explorer-header-premium glass" style={{ marginTop: '20px', background: 'rgba(255, 255, 255, 0.85)', position: 'relative', zIndex: 1 }}>
                 <div className="explorer-header-main">
                     <h1 className="explorer-title-premium">
-                        המסלולים השמורים שלי 
+                        המסלולים השמורים שלי
                     </h1>
                     <p className="explorer-subtitle-premium">
                         צפייה בכל הטיולים שתכננת בעזרת ה-AI
@@ -228,11 +228,11 @@ const SavedItinerariesView = ({ onBack }) => {
                                             position: 'absolute',
                                             top: '15px',
                                             left: '15px',
-                                            background: '#ffebee',
+                                            background: '#fff5f5',
                                             color: '#d32f2f',
                                             border: 'none',
-                                            width: '32px',
-                                            height: '32px',
+                                            width: '36px',
+                                            height: '36px',
                                             borderRadius: '50%',
                                             cursor: 'pointer',
                                             fontSize: '18px',
@@ -243,8 +243,9 @@ const SavedItinerariesView = ({ onBack }) => {
                                             zIndex: 5
                                         }}
                                         title="מחק מסלול"
+                                        aria-label="מחק מסלול"
                                     >
-                                        ✕
+                                        🗑️
                                     </button>
 
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

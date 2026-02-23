@@ -25,7 +25,7 @@
     align-items: center;
     justify-content: flex-start;
     min-height: 100vh;
-    padding: 6rem 1rem 2rem;
+    padding: 4rem 0.75rem 2rem; /* reduced top padding for smaller screens */
     /* Increased top padding for navbar */
     box-sizing: border-box;
     width: 100%;
@@ -125,8 +125,7 @@
     -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(134, 189, 191, 0.2);
     z-index: 1000;
-    padding: 0.6rem 1rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem 0.75rem;
 }
 
 @media (min-width: 768px) {
