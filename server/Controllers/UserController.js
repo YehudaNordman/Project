@@ -78,7 +78,8 @@ exports.login = async (req, res) => {
       token,
       user: {
         email: user.email,
-        fullName: user.fullName
+        fullName: user.fullName,
+        admin: user.admin || false
       }
     });
   } catch (error) {

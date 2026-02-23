@@ -73,3 +73,18 @@ exports.addComment = async (req, res) => {
         res.status(500).json({ message: "Error adding comment", error: error.message });
     }
 };
+
+// Admin-only: delete a shared itinerary
+exports.deleteSharedItinerary = async (req, res) => {
+    try {
+        // only admins can delete
+        if (!req.user || !req.user.admin) return res.status(403).json({ message: 'Forbidden' });
+
+        const { id } = req.params;
+        const deleted = await SharedItinerary.findByIdAndDelete(id);
+        if (!deleted) return res.status(404).json({ message: 'Not found' });
+        res.json({ message: 'Deleted' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting itinerary', error: error.message });
+    }
+};

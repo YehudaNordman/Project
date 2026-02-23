@@ -25,6 +25,9 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
     const [showScrollTop, setShowScrollTop] = useState(false);
     const { user, openAuthModal } = useAuth();
     const { myRoute, addToRoute, removeFromRoute } = useRoute(); // הנחה שקיימת פונקציית removeFromRoute
+    const [pageCount, setPageCount] = useState(1);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(true); // show load-more while fewer than 60 results and more pages exist
 
 
     // Toggle visibility of scroll-to-top button
@@ -87,13 +90,19 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
             setLoading(true);
             try {
                 const endpoint = type === 'restaurants' ? 'fetchRestaurants' : 'fetchAttractions';
-                const url = `${API_BASE_URL}/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}`;
+                // Initial load should request only a single Google page (20 results)
+                const url = `${API_BASE_URL}/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}&maxPages=1`;
                 const response = await fetch(url);
                 const data = await response.json();
-                setItems(Array.isArray(data) ? data : (data.features || []));
+                const dataArray = Array.isArray(data) ? data : (data.features || []);
+                setItems(dataArray);
+                setPageCount(1);
+                // If fewer than 20 results returned, no more pages. Also hide when we already have 60+.
+                setHasMore(dataArray.length >= 20 && dataArray.length < 60);
             } catch (err) {
                 console.error("Error loading recommendations:", err);
                 setItems([]);
+                setHasMore(false);
             }
             setLoading(false);
         };
@@ -112,6 +121,38 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
 
     const isInRoute = (item) => {
         return myRoute.some(r => r.place_id === item.place_id || r.name === item.name);
+    };
+
+    const loadMore = async () => {
+        // prevent loading beyond 3 pages total (initial 1 + 2 clicks = 3)
+        if (pageCount >= 3) return;
+        setLoadingMore(true);
+        try {
+            const endpoint = type === 'restaurants' ? 'fetchRestaurants' : 'fetchAttractions';
+            // request one additional page from server
+            const nextPageRequest = pageCount + 1;
+            const url = `${API_BASE_URL}/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}&maxPages=${nextPageRequest}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            const newItems = Array.isArray(data) ? data : (data.features || []);
+            // append only the new items not already in list (by place_id)
+            const existingIds = new Set(items.map(i => i.place_id || i.name));
+            const appended = newItems.filter(i => !existingIds.has(i.place_id || i.name));
+            setItems(prev => [...prev, ...appended]);
+            setPageCount(nextPageRequest);
+            // determine if more pages likely exist: if we received less than 20 new items, probably no more
+            const newTotal = (items.length || 0) + appended.length;
+            const noMoreFromServer = appended.length === 0 || newItems.length < 20;
+            // hide if we've reached 60 items, or server returned no more items, or reached page cap
+            if (newTotal >= 60 || noMoreFromServer || nextPageRequest >= 3) {
+                setHasMore(false);
+            } else {
+                setHasMore(true);
+            }
+        } catch (err) {
+            console.error('Error loading more items', err);
+        }
+        setLoadingMore(false);
     };
 
     if (loading) {
@@ -396,49 +437,55 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                 <button className="scroll-top-btn animate-in" onClick={scrollToTop} title="גלילה לראש העמוד">↑</button>
             )}
             {/* --- כפתור הצג עוד --- */}
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: '40px',
-                marginBottom: '20px',
-                width: '100%'
-            }}>
-                <button
-                    onClick={() => {
-                        /* כאן תוכל להוסיף לוגיקה לטעינת עוד פריטים בעתיד */
-                        console.log("Loading more items...");
-                    }}
-                    style={{
-                        padding: '14px 40px',
-                        fontSize: '1.1rem',
-                        fontWeight: '700',
-                        color: '#ffffff',
-                        backgroundColor: '#1a237e', // כחול כהה זהה
-                        border: 'none',
-                        borderRadius: '50px',
-                        cursor: 'pointer',
-                        boxShadow: '0 6px 20px rgba(26, 35, 126, 0.25)',
-                        transition: 'all 0.3s ease',
-                        outline: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px'
-                    }}
-                    onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#283593';
-                        e.currentTarget.style.transform = 'translateY(-3px)';
-                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(26, 35, 126, 0.35)';
-                    }}
-                    onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = '#1a237e';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 35, 126, 0.25)';
-                    }}
-                >
-                    <span>הצג עוד תוצאות</span>
-                    <span style={{ fontSize: '1.2rem' }}>↓</span>
-                </button>
-            </div>
+            {/* show load-more while we have fewer than 60 items and server likely has more */}
+            {hasMore && (
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: '40px',
+                    marginBottom: '20px',
+                    width: '100%'
+                }}>
+                    <button
+                        onClick={loadMore}
+                        disabled={loadingMore}
+                        style={{
+                            padding: '14px 40px',
+                            fontSize: '1.1rem',
+                            fontWeight: '700',
+                            color: '#ffffff',
+                            backgroundColor: '#1a237e', // כחול כהה זהה
+                            border: 'none',
+                            borderRadius: '50px',
+                            cursor: loadingMore ? 'wait' : 'pointer',
+                            boxShadow: '0 6px 20px rgba(26, 35, 126, 0.25)',
+                            transition: 'all 0.3s ease',
+                            outline: 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            opacity: loadingMore ? 0.7 : 1
+                        }}
+                        onMouseOver={(e) => {
+                            if (!loadingMore) {
+                                e.currentTarget.style.backgroundColor = '#283593';
+                                e.currentTarget.style.transform = 'translateY(-3px)';
+                                e.currentTarget.style.boxShadow = '0 8px 25px rgba(26, 35, 126, 0.35)';
+                            }
+                        }}
+                        onMouseOut={(e) => {
+                            if (!loadingMore) {
+                                e.currentTarget.style.backgroundColor = '#1a237e';
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 35, 126, 0.25)';
+                            }
+                        }}
+                    >
+                        <span>{loadingMore ? 'טוען עוד...' : 'הצג עוד תוצאות'}</span>
+                        <span style={{ fontSize: '1.2rem' }}>↓</span>
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

@@ -191,7 +191,10 @@ exports.fetchAttractions = async (req, res) => {
 
     const params = { location: `${uLat},${uLon}`, radius: finalRadius, type: 'tourist_attraction', key: GOOGLE_API_KEY, language: 'he' };
 
-    const allPlaces = await getMorePlaces(params, 2); //במידה ורוצים יותר או פחות משנים את הכמות כל מספר מביא 20 מקומות
+    // read maxPages requested by client (default 2)
+    const maxPages = parseInt(req.query.maxPages, 10) || 2;
+
+    const allPlaces = await getMorePlaces(params, maxPages); //במידה ורוצים יותר או פחות משנים את הכמות כל מספר מביא 20 מקומות
 
     const results = allPlaces
       .map(place => mapGooglePlaceToAppFormat(place, 'Attraction', uLat, uLon))
@@ -218,7 +221,10 @@ exports.fetchRestaurants = async (req, res) => {
 
     const params = { location: `${uLat},${uLon}`, radius: finalRadius, type: 'restaurant', key: GOOGLE_API_KEY, language: 'he' };
 
-    const allPlaces = await getMorePlaces(params, 2); //שינוי ליותר או פחוצ מקומות
+    // read maxPages requested by client (default 2)
+    const maxPages = parseInt(req.query.maxPages, 10) || 2;
+
+    const allPlaces = await getMorePlaces(params, maxPages); //שינוי ליותר או פחוצ מקומות
 
     const results = allPlaces
       .map(place => mapGooglePlaceToAppFormat(place, 'Restaurant', uLat, uLon))

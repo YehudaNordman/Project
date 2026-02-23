@@ -87,6 +87,31 @@ const CommunityView = () => {
         }
     };
 
+    // Admin-only delete handler
+    const handleDeletePost = async (id, e) => {
+        if (e) e.stopPropagation();
+        if (!user || !user.admin) {
+            alert('רק מנהל יכול למחוק פוסטים.');
+            return;
+        }
+        if (!window.confirm('האם אתה בטוח שברצונך למחוק את המסלול מהקהילה?')) return;
+        try {
+            const res = await fetch(`${API_BASE_URL}/community/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                fetchPosts();
+            } else {
+                const body = await res.json().catch(() => ({}));
+                alert(body.message || 'שגיאה במחיקה');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('שגיאת רשת בעת ניסיון המחיקה');
+        }
+    };
+
     if (loading) return (
         <div className="loading-community" style={{
             display: 'flex',
@@ -177,6 +202,16 @@ const CommunityView = () => {
                                         <span className="comment-icon">💬</span>
                                         <span className="count">{post.comments.length}</span>
                                     </button>
+                                    {user?.admin && (
+                                        <button
+                                            className="stat-pill delete-pill"
+                                            onClick={(e) => { e.stopPropagation(); handleDeletePost(post._id); }}
+                                            title="מחק מסלול (מנהל בלבד)"
+                                            style={{ background: '#fff5f5', color: '#d32f2f' }}
+                                        >
+                                            🗑️
+                                        </button>
+                                    )}
                                 </div>
                                 <button className="expand-row-btn">
                                     {expandedPosts[post._id] ? '🔼 סגור' : '✨ צפה במסלול'}
