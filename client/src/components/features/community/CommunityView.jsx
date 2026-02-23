@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { API_BASE_URL } from '../../../constants';
 import { useAuth } from '../../../context/AuthContext';
 import ItineraryStepCard from '../itinerary/ItineraryStepCard';
@@ -11,6 +11,7 @@ const CommunityView = () => {
     const [commentTexts, setCommentTexts] = useState({});
     const [expandedPosts, setExpandedPosts] = useState({}); // To track which posts are showing the full plan
     const [showQuickComment, setShowQuickComment] = useState({}); // To track which posts have the quick comment input open
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         fetchPosts();
@@ -27,6 +28,22 @@ const CommunityView = () => {
             setLoading(false);
         }
     };
+
+    // Compute displayed posts based on search term (live filtering). If search is empty, show all posts.
+    const displayedPosts = useMemo(() => {
+        const q = (searchTerm || '').trim().toLowerCase();
+        if (!q) return posts;
+        return posts.filter(post => {
+            const destination = (post.destination || '').toString().toLowerCase();
+            return destination.includes(q);
+        });
+    }, [posts, searchTerm]);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const clearSearch = () => setSearchTerm('');
 
     const handleLike = async (id) => {
         if (!token) {
@@ -99,8 +116,23 @@ const CommunityView = () => {
                 <p>שתפו מסלולים, קבלו השראה וגלו איך אחרים מטיילים בעולם</p>
             </header>
 
+            {/* Search bar - live filter by destination */}
+            <div className="community-search community-search-bar">
+                <input
+                    className="community-search-input"
+                    type="search"
+                    placeholder="חפש מקום או יעד..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    aria-label="חפש מקום"
+                />
+                {searchTerm && (
+                    <button className="community-search-clear" onClick={clearSearch}>נקה</button>
+                )}
+            </div>
+
             <div className="community-feed-compact">
-                {posts.map((post) => (
+                {displayedPosts.map((post) => (
                     <div key={post._id} className="community-post-item-wrapper glass">
                         {/* Main Summary Row */}
                         <div className="post-compact-row" onClick={() => setExpandedPosts({ ...expandedPosts, [post._id]: !expandedPosts[post._id] })}>

@@ -14,6 +14,9 @@
 }
 
 .community-header {
+    position: relative;
+    z-index: 20; /* ensure header sits above other page elements */
+    margin-top: -140px; /* pull header up further */
     text-align: center;
     margin-bottom: 3rem;
     padding: 3rem 2rem;
@@ -23,6 +26,7 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
     width: 100%;
     backdrop-filter: blur(10px);
+    transition: transform 240ms ease, box-shadow 240ms ease;
 }
 
 .community-header h1 {
@@ -411,7 +415,55 @@
     box-shadow: 0 4px 15px rgba(26, 35, 126, 0.2);
 }
 
+.community-search-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.community-search-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(26, 35, 126, 0.15);
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,255,0.8));
+  color: #0d1330;
+  box-shadow: 0 4px 18px rgba(26,35,126,0.06);
+  font-size: 14px;
+}
+
+.community-search-input::placeholder {
+  color: rgba(13,19,48,0.45);
+}
+
+.community-search-input:focus {
+  outline: none;
+  border-color: #1a237e;
+  box-shadow: 0 6px 24px rgba(26,35,126,0.12);
+}
+
+.community-search-clear {
+  background: #1a237e;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.community-search-clear:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(26,35,126,0.15);
+}
+
 @media (max-width: 768px) {
+    .community-header {
+        margin-top: -60px; /* less pull on small screens to avoid overlap */
+        padding: 2rem 1.25rem;
+    }
+
     .community-header h1 {
         font-size: 2.2rem;
     }
