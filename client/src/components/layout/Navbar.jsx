@@ -135,7 +135,7 @@ const Navbar = ({ onLoginClick, onRouteClick, onSavedTripsClick, onProfileClick 
                 <div className="navbar-left">
                     <Link to="/" className="logo-container" style={{ textDecoration: 'none' }}>
                         <span className="logo-text">Bonus<span className="logo-accent">Trip</span></span>
-                        <p className="slogan-text">Your Layover, Upgraded</p>
+                        <p className="slogan-text">our YLayover, Upgraded</p>
                     </Link>
                 </div>
             </div>
