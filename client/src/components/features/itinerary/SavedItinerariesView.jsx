@@ -149,7 +149,7 @@ const SavedItinerariesView = ({ onBack }) => {
 
                 <div className="explorer-header-main">
                     <h1 className="explorer-title-premium">
-                        המסלולים השמורים שלי 💾
+                        המסלולים השמורים שלי 
                     </h1>
                     <p className="explorer-subtitle-premium">
                         צפייה בכל הטיולים שתכננת בעזרת ה-AI
@@ -407,7 +407,7 @@ const SavedItinerariesView = ({ onBack }) => {
                             margin: '0 auto',
                             boxShadow: '0 5px 15px rgba(26, 35, 126, 0.3)'
                         }}>
-                            ✈️ חזור להמלצות (מסעדות ואטרקציות)
+                            ✈️ חזור להמלצות
                         </button>
                     </div>
                 )}
