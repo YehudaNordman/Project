@@ -1,15 +1,24 @@
 /* Search Results, Cards, and Exploration Styles - Full Recovery */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
 
 .planner-results-container {
     min-height: 100vh;
     width: 100%;
-    max-width: 100vw;
+    max-width: 100%;
     margin: 0 auto;
     position: relative;
-    padding: 2.5rem 1rem 5rem;
+    padding: 1.5rem 0.5rem 5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
 }
 
 @media (min-width: 768px) {
@@ -1280,4 +1289,101 @@
         opacity: 1;
         transform: translate(-50%, 0) scale(1);
     }
+}
+
+/* ==========================================================================
+   Responsiveness Fixes - Full Width & Mobile First
+   ========================================================================== */
+
+.explorer-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+@media (min-width: 1024px) {
+    .explorer-layout {
+        flex-direction: row;
+        gap: 30px;
+        padding: 0 2rem;
+    }
+}
+
+.explorer-sidebar {
+    width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .explorer-sidebar {
+        width: 350px;
+        min-width: 350px;
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+        align-self: flex-start;
+    }
+}
+
+.explorer-main-content {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+}
+
+@media (min-width: 768px) {
+    .explorer-main-content {
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    }
+}
+
+@media (max-width: 768px) {
+    .explorer-title-premium {
+        font-size: 2rem !important;
+    }
+
+    .explorer-header-premium {
+        padding: 1.5rem !important;
+        margin-bottom: 2rem !important;
+        width: 98% !important;
+    }
+
+    .back-btn-circle-top {
+        top: 15px !important;
+        right: 15px !important;
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .back-btn-circle-top svg {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    .hero-route-btn-premium {
+        padding: 8px 15px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .items-grid-premium {
+        padding: 0.5rem !important;
+        gap: 1rem !important;
+    }
+
+    .item-card-luxury {
+        max-width: 100% !important;
+    }
+}
+
+/* Global Width Fix */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
 }

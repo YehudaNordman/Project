@@ -113,8 +113,12 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setToken(null);
         setUser(null);
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData');
+        // Full cache cleanup
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // Navigate to home and force a clean state
+        window.location.href = '/';
     };
 
     const updateUser = (newUserData) => {

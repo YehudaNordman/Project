@@ -127,13 +127,6 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
             <div className="explorer-header-premium glass animate-in">
                 <div className="explorer-header-top">
                     <div className="header-actions">
-                        <button className="back-btn-circle-top" onClick={onBack} title="חזרה">
-                            <svg viewBox="0 0 24 24" width="42" height="42" stroke="#1a237e" strokeWidth="2.5" fill="none">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="10 8 14 12 10 16"></polyline>
-                                <line x1="8" y1="12" x2="14" y2="12"></line>
-                            </svg>
-                        </button>
                     </div>
                 </div>
 
@@ -154,20 +147,9 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                 </div>
             </div>
 
-            <div style={{
-                display: 'flex',
-                gap: '30px',
-
-            }}>
-
+            <div className="explorer-layout">
                 {/* צד ימין - Sticky Sidebar */}
-                <div style={{
-                    minWidth: 350,
-                    position: 'sticky',
-                    top: '100px',
-                    height: 'fit-content',
-                    alignSelf: 'flex-start'
-                }} >
+                <aside className="explorer-sidebar">
                     <div className="sidebar-content glass" style={{ padding: '20px', borderRadius: '20px', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
                         {/* מפה קטנה עד בינונית */}
                         <div className="mini-map-container">
@@ -244,14 +226,10 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                             </div>
                         </div>
                     </div>
-                </div>
+                </aside>
 
                 {/* צד שמאל - רשימת אטרקציות נגללת */}
-                <div style={{
-                    padding: '20px',
-                    borderRadius: '20px',
-                    boxShadow: 'rgba(0, 0, 0, 0.1) 0px 8px 32px'
-                }}>
+                <main className="explorer-main-content">
                     {items.length > 0 ? (
                         <div>
                             <div style={{
@@ -411,7 +389,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                             <button className="back-home-btn" onClick={onBack}>חזור לחיפוש</button>
                         </div>
                     )}
-                </div>
+                </main>
             </div>
 
             {showScrollTop && (

@@ -416,6 +416,10 @@
         font-size: 2.2rem;
     }
 
+    .community-header p {
+        font-size: 1rem;
+    }
+
     .post-compact-row {
         flex-direction: column;
         gap: 20px;
@@ -433,10 +437,34 @@
     .destination-info-row {
         width: 100%;
         justify-content: center;
+        flex-direction: column !important;
+        gap: 5px !important;
+        padding: 15px !important;
     }
 
     .post-row-right {
         flex-direction: column;
         gap: 15px;
+    }
+
+    .expand-row-btn {
+        width: 100% !important;
+    }
+
+    .post-expanded-content {
+        padding: 1.5rem !important;
+    }
+
+    .like-btn-premium {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .add-comment-input-row {
+        flex-direction: column !important;
+    }
+
+    .add-comment-input-row button {
+        padding: 12px !important;
     }
 }

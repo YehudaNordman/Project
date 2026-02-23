@@ -455,3 +455,44 @@
     font-weight: 700;
     color: #1e293b;
 }
+
+/* Itinerary Responsiveness Polish */
+@media (max-width: 768px) {
+    .itinerary-step-card {
+        padding: 1.2rem !important;
+        border-radius: 20px !important;
+    }
+
+    .step-title {
+        font-size: 1.4rem !important;
+    }
+
+    .hours-badge-premium {
+        padding: 5px 12px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .card-header-bento {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+
+    .footer-item {
+        padding: 0.8rem !important;
+        gap: 10px !important;
+    }
+
+    .item-icon-wrapper {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    .saved-trip-card {
+        padding: 15px !important;
+    }
+
+    .saved-trip-card h3 {
+        font-size: 1.8rem !important;
+    }
+}

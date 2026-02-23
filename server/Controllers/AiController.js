@@ -54,6 +54,15 @@ exports.askAi = async (req, res) => {
 
   } catch (error) {
     console.error("❌ AI Error Details:", error);
+
+    // Check if it's a 429 quota error
+    if (error.status === 429) {
+      return res.status(429).json({
+        message: "AI Quota exceeded. Please try again in a few seconds.",
+        error: "Too Many Requests"
+      });
+    }
+
     res.status(500).json({
       message: "Failed to generate AI response",
       error: error.message
