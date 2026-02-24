@@ -1,8 +1,9 @@
 /**
- * פונקציית עזר לתרגום קוד מזג האוויר של Open-Meteo לעברית ותיאור.
- * מחזירה אובייקט עם תיאור (desc) ואייקון (icon).
+ * פונקציית עזר לתרגום קודי מזג האוויר של Open-Meteo לתיאור קריא בעברית ולאייקון מתאים.
+ * המערכת משתמשת בקודים אלו כדי להציג את התחזית ביעד בצורה ויזואלית וברורה.
  */
 export const decodeWeather = (code) => {
+    // מילוי אובייקט המרת קודים לתיאורים (WMO Weather interpretation codes)
     const codes = {
         0: { desc: 'שמיים בהירים', icon: 'sun' },
         1: { desc: 'בעיקר בהיר', icon: 'sun' },
@@ -24,5 +25,7 @@ export const decodeWeather = (code) => {
         82: { desc: 'ממטרים כבדים', icon: 'rain' },
         95: { desc: 'סופת רעמים', icon: 'thunder' },
     };
+
+    // החזרת התרגום המתאים או ערך ברירת מחדל אם הקוד אינו מוכר
     return codes[code] || { desc: 'מזג אוויר משתנה', icon: 'cloud' };
 };

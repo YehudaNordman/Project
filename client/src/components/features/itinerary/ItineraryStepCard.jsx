@@ -1,15 +1,15 @@
 import React from 'react';
 
 /**
- * ItineraryStepCard Component
- * renders a single itinerary step in a premium bento-box glassmorphism style.
+ * רכיב ItineraryStepCard
+ * מציג שלב בודד בלו"ז הטיול בעיצוב "בנטו-בוקס" יוקרתי (Bento Box style).
  * 
- * @param {Object} data - The itinerary step JSON object
- * @param {string} data.title - Attraction Name & Location
- * @param {string} data.hours - Activity Hours
- * @param {string} data.description - Why it's worth visiting
- * @param {string} data.transport - Travel time info
- * @param {string} data.food - Nearby restaurant recommendation
+ * @param {Object} data - אובייקט נתוני השלב שחולץ מתגובת ה-AI
+ * @param {string} data.title - שם האטרקציה ומיקומה
+ * @param {string} data.hours - שעות הפעילות המומלצות
+ * @param {string} data.description - הסבר קצר על המקום ולמה כדאי לבקר
+ * @param {string} data.transport - מידע על דרכי הגעה וזמני נסיעה
+ * @param {string} data.food - המלצה על מסעדה או בית קפה באזור
  */
 const ItineraryStepCard = ({ data }) => {
     if (!data) return null;
@@ -18,14 +18,15 @@ const ItineraryStepCard = ({ data }) => {
 
     return (
         <div className="itinerary-step-card animate-in">
-            {/* Background Blur Effect */}
+            {/* שכבת טשטוש לרקע (Glassmorphism Effect) */}
             <div className="glass-overlay"></div>
 
             <div className="card-header-bento">
                 <div className="title-section">
-                    <span className="step-tag">ACTIVITY</span>
+                    <span className="step-tag">פעילות</span>
                     <h3 className="step-title">{title}</h3>
                 </div>
+                {/* תגית שעות בולטת עם אייקון שעון */}
                 <div className="hours-badge-premium">
                     <svg className="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -39,7 +40,9 @@ const ItineraryStepCard = ({ data }) => {
                 <p>{description}</p>
             </div>
 
+            {/* גריד תחתון המציג מידע משלים (תחבורה ואוכל) */}
             <div className="card-footer-bento-grid">
+                {/* תא תחבורה */}
                 <div className="footer-item transport-cell">
                     <div className="item-icon-wrapper blue">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -49,11 +52,12 @@ const ItineraryStepCard = ({ data }) => {
                         </svg>
                     </div>
                     <div className="item-details">
-                        <span className="item-label">Transport</span>
+                        <span className="item-label">דרכי הגעה</span>
                         <span className="item-value">{transport}</span>
                     </div>
                 </div>
 
+                {/* תא קולינריה */}
                 <div className="footer-item food-cell">
                     <div className="item-icon-wrapper teal">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -64,7 +68,7 @@ const ItineraryStepCard = ({ data }) => {
                         </svg>
                     </div>
                     <div className="item-details">
-                        <span className="item-label">Dining</span>
+                        <span className="item-label">איפה אוכלים</span>
                         <span className="item-value">{food}</span>
                     </div>
                 </div>

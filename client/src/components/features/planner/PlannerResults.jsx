@@ -11,13 +11,14 @@ import RecommendationsExplorer from '../results/RecommendationsExplorer';
 
 /**
  * רכיב PlannerResults - עמוד התוצאות הראשי.
- * רכיב זה משמש כקונטיינר המרכזי שמרכז את כל חלקי התצוגה של התוצאות.
+ * רכיב זה משמש כקונטיינר המרכזי שמרכז את כל חלקי התצוגה של התוצאות (מזג אוויר, זמנים, כלים, המלצות).
  */
 const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedWeather, currencyCode, currencyName, landingDate, takeoffDate, landingTime, takeoffTime, lat, lon }) => {
-    // State למזג האוויר במידה ולא נטען בטופס (Fallback)
+
+    // State לניהול נתוני מזג האוויר במידה ולא הגיעו מראש
     const [weather, setWeather] = useState(prefetchedWeather || null);
 
-    // טעינת מזג אוויר אם חסר
+    // טעינת מזג האוויר אם המידע לא הועבר ב-Props
     useEffect(() => {
         if (!prefetchedWeather && destination) {
             const loadWeather = async () => {
@@ -28,10 +29,10 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
         }
     }, [destination, prefetchedWeather]);
 
-    // State לניהול דפי "גילוי" (מסעדות/אטרקציות)
+    // State לניהול דפי "גילוי" (Explorer) - האם להציג עכשיו רשימת מסעדות או אטרקציות לבחירה
     const [explorerView, setExplorerView] = useState(null); // 'restaurants' | 'attractions' | null
 
-    // אם אנחנו במצב "גילוי", נציג את ה-Explorer כ"דף חדש"
+    // אם המשתמש בחר להיכנס למצב "גילוי", הרינדור עובר לרכיב ה-Explorer
     if (explorerView) {
         return (
             <RecommendationsExplorer
@@ -51,7 +52,7 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
 
     return (
         <div className="planner-results-container">
-            {/* 1. כותרת ומזג אוויר */}
+            {/* 1. הצגת כותרת היעד, זמני טיסה ומזג אוויר */}
             <ResultsHeader
                 weather={weather}
                 destination={destination}
@@ -61,10 +62,10 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
                 takeoffTime={takeoffTime}
             />
 
-            {/* 3. כרטיס סיכום זמנים (ברוטו/נטו) */}
+            {/* 2. סיכום חישובי ה-AI: זמן ברוטו (מרגע שהמטוס נחת) מול זמן נטו (זמן לטיול בפועל) */}
             <ResultsSummary result={result} />
 
-            {/* כלים מהירים: ממיר מטבע והתראת לינה */}
+            {/* 3. סקציית הכלים המהירים: ממיר מטבע מובנה ליעד והתראות חכמות */}
             <QuickToolsSection
                 destination={destination}
                 currencyCode={currencyCode}
@@ -73,7 +74,7 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
                 takeoffTime={`${takeoffDate}T${takeoffTime}:00`}
             />
 
-            {/* 4. כרטיס לינה (יוצג רק בשהות ארוכה) */}
+            {/* 4. כרטיס המלצת לינה: יוצג אוטומטית רק אם השהות במדינה היא מעל 24 שעות */}
             <div className="quick-tools-wrapper" style={{ marginTop: '0' }}>
                 <div className="quick-tools-container">
                     <AccommodationCard
@@ -85,7 +86,7 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
                 </div>
             </div>
 
-            {/* 5. המלצות (יוצג רק אם יש מספיק זמן נטו) */}
+            {/* 5. המלצות AI: כרטיסיות המציעות למשתמש לחקור מסעדות או אטרקציות ולהוסיף אותן למסלול */}
             <RecommendationCards
                 isValid={result?.isValid}
                 destination={destination}

@@ -5,17 +5,18 @@ import { API_BASE_URL } from '../../../constants';
 import savedBg from '../../background/Gemini_Generated_Image_nin71enin71enin7.png';
 import ItineraryStepCard from './ItineraryStepCard';
 
+/**
+ * פונקציית עזר לפיענוח JSON מטקסט AI.
+ * מוודאת שגם אם ה-AI מחזיר בלוק קוד מרקדאון, נצליח לחלץ את האובייקט.
+ */
 const tryParseJSON = (str) => {
     if (!str || typeof str !== 'string') return null;
     let jsonStr = str.trim();
-
-    // Remove markdown code blocks
     jsonStr = jsonStr.replace(/^```json\s*|```$/g, '').trim();
 
     try {
         return JSON.parse(jsonStr);
     } catch (e) {
-        // Find the first { or [ and the last } or ]
         const startBracket = jsonStr.search(/[\{\[]/);
         const endBracket = Math.max(jsonStr.lastIndexOf('}'), jsonStr.lastIndexOf(']'));
 
@@ -31,20 +32,27 @@ const tryParseJSON = (str) => {
     return null;
 };
 
+/**
+ * רכיב SavedItinerariesView - מציג את רשימת המסלולים שהמשתמש שמר.
+ * מאפשר צפייה בפרטים, הורדה כ-PDF, שיתוף בקהילה ומחיקה.
+ */
 const SavedItinerariesView = ({ onBack }) => {
     const { user, token } = useAuth();
     const [savedTrips, setSavedTrips] = useState([]);
-    const [expandedTrip, setExpandedTrip] = useState(null);
-    const [isSharing, setIsSharing] = useState(null); // ID of the trip being shared
+    const [expandedTrip, setExpandedTrip] = useState(null); // ניהול פתיחה/סגירה של מסלול בודד
+    const [isSharing, setIsSharing] = useState(null); // מזהה המסלול שנמצא בתהליך שיתוף
 
     useEffect(() => {
-        // Scroll to top when view opens
+        // גלילה לראש העמוד בעת פתיחת התצוגה
         window.scrollTo(0, 0);
         if (!user && onBack) {
             onBack();
         }
     }, [user, onBack]);
 
+    /**
+     * משיכת כל המסλולים השמורים של המשתמש מהשרת
+     */
     useEffect(() => {
         const fetchUserRoutes = async () => {
             if (!user || !token) return;
@@ -57,7 +65,7 @@ const SavedItinerariesView = ({ onBack }) => {
                     setSavedTrips(data);
                 }
             } catch (err) {
-                console.error("Error fetching user routes:", err);
+                console.error("שגיאה במשיכת מסלולים:", err);
             }
         };
         fetchUserRoutes();
@@ -65,8 +73,11 @@ const SavedItinerariesView = ({ onBack }) => {
 
     if (!user) return null;
 
+    /**
+     * מחיקת מסלול קיים
+     */
     const deleteTrip = async (e, tripId) => {
-        e.stopPropagation();
+        e.stopPropagation(); // מניעת פתיחת המסלול בעת לחיצה על כפתור המחיקה
         if (!window.confirm("האם אתה בטוח שברצונך למחוק את המסלול?")) return;
 
         try {
@@ -76,12 +87,13 @@ const SavedItinerariesView = ({ onBack }) => {
             });
 
             if (response.ok) {
+                // עדכון הרשימה המקומית לאחר המחיקה
                 const updated = savedTrips.filter(t => t._id !== tripId);
                 setSavedTrips(updated);
                 if (expandedTrip === tripId) setExpandedTrip(null);
             }
         } catch (err) {
-            console.error("Error deleting trip:", err);
+            console.error("שגיאה במחיקה:", err);
         }
     };
 
@@ -90,7 +102,7 @@ const SavedItinerariesView = ({ onBack }) => {
     };
 
     /**
-     * PDF Generation Logic
+     * לוגיקת יצירת קובץ PDF - בונה מבנה HTML זמני וממירה אותו לקובץ מעוצב.
      */
     const downloadDestinationPDF = (e, trip) => {
         e.stopPropagation();
@@ -101,7 +113,7 @@ const SavedItinerariesView = ({ onBack }) => {
         element.style.background = "#fff";
         element.style.unicodeBidi = "isolate";
 
-        // Parse JSON if possible, otherwise fallback to original
+        // יצירת תוכן ה-PDF מתוך נתוני ה-AI (JSON או טקסט חופשי)
         let itineraryHtml = "";
         const parsed = tryParseJSON(trip.aiPlan);
         if (parsed) {
@@ -139,6 +151,7 @@ const SavedItinerariesView = ({ onBack }) => {
             itineraryHtml = `<div style="text-align: right; padding: 20px; line-height: 1.8;">${trip.aiPlan}</div>`;
         }
 
+        // עטיפת הכל בתוך ה-Template של ה-PDF
         element.innerHTML = `
             <div style="border: 2px solid #e0e0e0; border-radius: 15px; padding: 30px;">
                 <table style="width: 100%; margin-bottom: 30px;">
@@ -161,6 +174,7 @@ const SavedItinerariesView = ({ onBack }) => {
                 </div>
             </div>`;
 
+        // ייצוא הקובץ בעזרת ספריית html2pdf
         html2pdf().from(element).set({
             margin: [0.4, 0.4],
             filename: `BonusTrip_${trip.destination}.pdf`,
@@ -185,14 +199,11 @@ const SavedItinerariesView = ({ onBack }) => {
             overflowX: 'hidden'
         }}>
 
+            {/* כותרת פרימיום לתצוגת המסלולים השמורים */}
             <div className="explorer-header-premium glass" style={{ marginTop: '20px', background: 'rgba(255, 255, 255, 0.85)', position: 'relative', zIndex: 1 }}>
                 <div className="explorer-header-main">
-                    <h1 className="explorer-title-premium">
-                        המסלולים השמורים שלי
-                    </h1>
-                    <p className="explorer-subtitle-premium">
-                        צפייה בכל הטיולים שתכננת בעזרת ה-AI
-                    </p>
+                    <h1 className="explorer-title-premium">המסלולים השמורים שלי</h1>
+                    <p className="explorer-subtitle-premium">צפייה בכל הטיולים שתכננת בעזרת ה-AI</p>
                 </div>
             </div>
 
@@ -205,43 +216,12 @@ const SavedItinerariesView = ({ onBack }) => {
                                 key={trip._id || index}
                                 className={`saved-trip-card glass animate-in ${isExpanded ? 'active-expanded' : ''}`}
                                 onClick={() => toggleExpand(trip._id)}
-                                style={{
-                                    background: 'rgba(255, 255, 255, 0.9)',
-                                    borderRadius: '24px',
-                                    padding: '25px',
-                                    marginBottom: '20px',
-                                    boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-                                    border: '1px solid rgba(255,255,255,0.4)',
-                                    backdropFilter: 'blur(10px)',
-                                    transition: 'all 0.3s ease',
-                                    cursor: 'pointer',
-                                    position: 'relative',
-                                    overflow: 'hidden'
-                                }}
                             >
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-
+                                    {/* כפתור מחיקה מהיר */}
                                     <button
                                         onClick={(e) => deleteTrip(e, trip._id)}
                                         className="delete-trip-btn-circle"
-                                        style={{
-                                            position: 'absolute',
-                                            top: '15px',
-                                            left: '15px',
-                                            background: '#fff5f5',
-                                            color: '#d32f2f',
-                                            border: 'none',
-                                            width: '36px',
-                                            height: '36px',
-                                            borderRadius: '50%',
-                                            cursor: 'pointer',
-                                            fontSize: '18px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            transition: 'all 0.2s ease',
-                                            zIndex: 5
-                                        }}
                                         title="מחק מסלול"
                                         aria-label="מחק מסלול"
                                     >
@@ -258,17 +238,8 @@ const SavedItinerariesView = ({ onBack }) => {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="flight-route-badge" style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '10px',
-                                            background: 'rgba(134, 189, 191, 0.2)',
-                                            padding: '8px 18px',
-                                            borderRadius: '50px',
-                                            fontSize: '0.9rem',
-                                            width: 'fit-content',
-                                            margin: '15px auto 0'
-                                        }}>
+                                        {/* תגית זמני טיסה */}
+                                        <div className="flight-route-badge">
                                             <span dir="ltr" style={{ fontWeight: '600' }}>({trip.flightDetails?.landingTime || trip.landingTime}) {trip.flightDetails?.landingDate || trip.landingDate}</span>
                                             <span style={{ color: '#008080', fontWeight: '900', fontSize: '1.2rem' }}>➜</span>
                                             <span dir="ltr" style={{ fontWeight: '600' }}>({trip.flightDetails?.takeoffTime || trip.takeoffTime}) {trip.flightDetails?.takeoffDate || trip.takeoffDate}</span>
@@ -277,7 +248,7 @@ const SavedItinerariesView = ({ onBack }) => {
                                 </div>
 
                                 {isExpanded && (
-                                    <div className="trip-full-plan animate-in" style={{ marginTop: '25px', padding: '20px', background: 'rgba(255,255,255,0.6)', borderRadius: '16px' }}>
+                                    <div className="trip-full-plan animate-in">
                                         <div className="ai-content-wrapper">
                                             {(() => {
                                                 const parsed = tryParseJSON(trip.aiPlan);
@@ -298,28 +269,15 @@ const SavedItinerariesView = ({ onBack }) => {
                                             })()}
                                         </div>
 
+                                        {/* פעולות על המסלול הפתוח: PDF ושיתוף בקהילה */}
                                         <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'center', gap: '15px' }}>
                                             <button
                                                 className="pdf-download-btn"
                                                 onClick={(e) => downloadDestinationPDF(e, trip)}
-                                                style={{
-                                                    background: '#1a237e',
-                                                    color: 'white',
-                                                    border: 'none',
-                                                    padding: '12px 25px',
-                                                    borderRadius: '12px',
-                                                    fontSize: '1rem',
-                                                    fontWeight: '700',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '10px',
-                                                    boxShadow: '0 4px 15px rgba(26, 35, 126, 0.3)',
-                                                    transition: 'all 0.3s ease'
-                                                }}
                                             >
                                                 הורד סיכום מסלול (PDF)
                                             </button>
+
                                             <button
                                                 className={`share-community-btn ${isSharing === trip._id ? 'loading' : ''}`}
                                                 disabled={isSharing === trip._id}
@@ -364,21 +322,6 @@ const SavedItinerariesView = ({ onBack }) => {
                                                         setIsSharing(null);
                                                     }
                                                 }}
-                                                style={{
-                                                    background: 'linear-gradient(135deg, #86BDBF 0%, #1a237e 100%)',
-                                                    color: 'white',
-                                                    padding: '12px 25px',
-                                                    borderRadius: '12px',
-                                                    border: 'none',
-                                                    fontWeight: '700',
-                                                    cursor: isSharing === trip._id ? 'wait' : 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '10px',
-                                                    boxShadow: '0 4px 15px rgba(134, 189, 191, 0.4)',
-                                                    transition: 'all 0.3s ease',
-                                                    opacity: isSharing === trip._id ? 0.7 : 1
-                                                }}
                                             >
                                                 {isSharing === trip._id ? '⌛ משתף...' : '👥 שתף בקהילה'}
                                             </button>
@@ -387,15 +330,7 @@ const SavedItinerariesView = ({ onBack }) => {
                                 )}
 
                                 {!isExpanded && (
-                                    <div style={{
-                                        marginTop: '20px',
-                                        fontSize: '0.9rem',
-                                        color: '#008080',
-                                        fontWeight: '700',
-                                        textAlign: 'center',
-                                        paddingTop: '15px',
-                                        borderTop: '1px dashed rgba(0,0,0,0.1)'
-                                    }}>
+                                    <div className="expand-hint">
                                         ↡ לחץ לחשיפת המסלול המלא ↡
                                     </div>
                                 )}
@@ -403,31 +338,15 @@ const SavedItinerariesView = ({ onBack }) => {
                         );
                     })
                 ) : (
-                    <div className="no-results-msg glass" style={{
-                        padding: '3rem',
-                        background: 'rgba(255, 255, 255, 0.9)',
-                        borderRadius: '24px',
-                        textAlign: 'center',
-                        boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
-                    }}>
+                    // הודעה כאשר אין מסלולים שמורים
+                    <div className="no-results-msg glass">
                         <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📂</div>
                         <h3 style={{ fontSize: '2rem', color: '#1a237e', margin: '0 0 1rem' }}>עדיין אין מסלולים שמורים</h3>
                         <p style={{ fontSize: '1.2rem', marginBottom: '2rem', color: '#546e7a' }}>התחל לתכנן את הטיול הבא שלך והמסלולים ישמרו כאן אוטומטית!</p>
-                        <button className="retry-btn" onClick={() => window.location.href = '/results'} style={{
-                            background: '#1a237e',
-                            color: 'white',
-                            padding: '12px 30px',
-                            borderRadius: '50px',
-                            border: 'none',
-                            fontSize: '1.2rem',
-                            fontWeight: '800',
-                            cursor: 'pointer'
-                        }}>תכנן מסלול חדש</button>
+                        <button className="retry-btn" onClick={() => window.location.href = '/results'}>תכנן מסלול חדש</button>
                     </div>
                 )}
             </div>
-
-
         </div>
     );
 };

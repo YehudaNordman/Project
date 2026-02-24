@@ -1,9 +1,10 @@
 /**
- * Utility for translating Geoapify categories and UI labels to Hebrew.
+ * כלי עזר לתרגום קטגוריות של Geoapify ותוויות ממשק לעברית.
+ * משמש להצגת שמות ידידותיים למשתמש עבור סוגי מקומות (מסעדות, מוזיאונים וכו').
  */
 
 export const categoryTranslations = {
-    // Catering / Food
+    // קטגוריות אוכל והסעדה
     'catering': 'הסעדה',
     'catering.restaurant': 'מסעדה',
     'catering.cafe': 'בית קפה',
@@ -12,14 +13,14 @@ export const categoryTranslations = {
     'catering.pub': 'פאב',
     'catering.ice_cream': 'גלידריה',
 
-    // Tourism & Sightseeing
+    // תיירות ואטרקציות
     'tourism': 'תיירות',
     'tourism.attraction': 'אטרקציה',
     'tourism.sights': 'אתר תיירות',
     'tourism.information': 'מידע לתייר',
     'tourism.viewpoint': 'נקודת תצפית',
 
-    // Entertainment & Culture
+    // בידור ותרבות
     'entertainment': 'בידור ופנאי',
     'entertainment.museum': 'מוזיאון',
     'entertainment.culture': 'מרכז תרבות',
@@ -28,16 +29,16 @@ export const categoryTranslations = {
     'entertainment.zoo': 'גן חיות',
     'entertainment.aquarium': 'אקווריום',
 
-    // Leisure & Nature
+    // פנאי וטבע
     'leisure': 'פנאי',
     'leisure.park': 'פארק',
     'leisure.garden': 'גן',
-    'leisure.playground': 'גיל שעשועים',
+    'leisure.playground': 'גן שעשועים',
     'leisure.swimming_pool': 'בריכה',
     'leisure.beach': 'חוף ים',
     'natural': 'טבע',
 
-    // Others
+    // קטגוריות נוספות
     'amenity': 'שירותים',
     'healthcare': 'בריאות',
     'shopping': 'קניות',
@@ -47,13 +48,12 @@ export const categoryTranslations = {
 };
 
 /**
- * Translates a single category or a list of categories.
- * @param {string|string[]} category 
- * @returns {string}
+ * פונקציה המתרגמת קטגוריה בודדת או רשימת קטגוריות לעברית.
+ * אם מועבר מערך, היא מחפשת את התרגום הספציפי ביותר הזמין.
  */
 export const translateCategory = (category) => {
     if (Array.isArray(category)) {
-        // Find the most specific translation available
+        // חיפוש מהסוף להתחלה כדי למצוא את התת-קטגוריה הכי ספציפית
         for (let i = category.length - 1; i >= 0; i--) {
             if (categoryTranslations[category[i]]) {
                 return categoryTranslations[category[i]];
@@ -65,8 +65,8 @@ export const translateCategory = (category) => {
 };
 
 /**
- * Formats address lines to look better in Hebrew context if needed.
- * Currently just a placeholder for potential future logic.
+ * עיצוב כתובות לתצוגה נעימה. 
+ * מוודא שאם אין כתובת, המשתמש יראה טקסט ברירת מחדל.
  */
 export const formatAddress = (address) => {
     return address || 'כתובת לא ידועה';

@@ -13,29 +13,32 @@ import { decodeWeather } from '../utils/weatherUtils';
  * @returns {Object} - אובייקט תוצאה עם זמני ברוטו ונטו
  */
 export const calculateTripTime = (landingDate, landingTime, takeoffDate, takeoffTime) => {
+    // יצירת אובייקטי תאריך לחישוב הפרשי זמנים
     const landing = new Date(`${landingDate}T${landingTime}`);
     const takeoff = new Date(`${takeoffDate}T${takeoffTime}`);
 
+    // בדיקת תקינות: שעת המראה חייבת להיות אחרי שעת הנחיתה
     if (takeoff <= landing) {
         throw new Error('שעת ההמראה חייבת להיות אחרי שעת הנחיתה');
     }
 
+    // חישוב ההפרש הכולל בדקות (זמן "ברוטו")
     const diffInMs = takeoff - landing;
     const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
 
-    // קיזוזים קבועים (בדקות)
-    // קיזוזים קבועים (בדקות)
+    // הגדרת קיזוזי זמן הכרחיים (בדקות) כחלק מפרוטוקול בטיחות
     const offsets = {
-        landing: 45,    // זמן יציאה מהמטוס, כבודה וביקורת דרכונים
-        travel: 0,      // נסיעות לעיר ובחזרה (בוטל בחישוב)
-        security: 180,  // זמן ביטחון ועלייה למטוס (3 שעות לפני המראה)
-        total: 225      // סה"כ קיזוזים (45 + 0 + 180)
+        landing: 45,    // זמן לביקורת דרכונים, כבודה ויציאה מהטרמינל
+        travel: 0,      // נסיעות (כרגע מחושב כ-0 כי ה-POI מחושבים לפי הגעה עצמית)
+        security: 180,  // הגעה לשדה 3 שעות לפני המראה (בידוק בטחוני ו-Gate)
+        total: 225      // סה"כ זמן "מת" בשדות התעופה
     };
 
+    // חישוב הזמן הפנוי לטיול בפועל (זמן "נטו")
     const netMinutes = diffInMinutes - offsets.total;
 
     /**
-     * פונקציה פנימית לעיצוב פורמט הזמן (שעות ודקות)
+     * פונקציה פנימית לעיצוב פורמט הזמן (למשל: "5 שעות ו-20 דקות")
      */
     const formatDuration = (totalMins) => {
         if (totalMins <= 0) return "0 דקות";
@@ -50,12 +53,14 @@ export const calculateTripTime = (landingDate, landingTime, takeoffDate, takeoff
         offsets,
         netTime: formatDuration(netMinutes),
         netMinutes,
-        isValid: netMinutes >= 120 // מינימום שעתיים נטו כדי לצאת מהשדה
+        // ולידציה: האם יש לפחות שעתיים נטו כדי להצדיק יציאה מהשדה
+        isValid: netMinutes >= 120
     };
 };
 
 /**
- * פונקציה לחיבור נתונים מדומים של המלצות (במקום קריאה ל-API חיצוני באורח)
+ * פונקציה להחזרת נתונים מדומים של המלצות (Mock Data)
+ * משמש כשלב ביניים לפני הטמעת API מלא של המלצות
  */
 export const getMockRecommendations = () => {
     return {
@@ -79,21 +84,24 @@ export const getMockRecommendations = () => {
 };
 
 /**
- * פונקציה לשאילתת מזג אוויר
+ * פונקציה למשיכת נתוני מזג אוויר בזמן אמת ע"י שימוש ב-Geocoding ו-Open-Meteo
  */
 export const fetchWeatherData = async (city) => {
     if (!city || city.trim().length < 2) return null;
     try {
+        // שלב 1: מציאת קואורדינטות (קו אורך ורוחב) של העיר
         const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city.trim())}&count=1&language=he&format=json`;
         const geoRes = await fetch(geoUrl);
         const geoData = await geoRes.json();
 
         if (geoData.results && geoData.results[0]) {
             const { latitude, longitude } = geoData.results[0];
+            // שלב 2: שאילתת תחזית מזג אוויר לפי הקואורדינטות
             const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`);
             const wData = await weatherRes.json();
 
             if (wData.current) {
+                // פיענוח קוד מזג האוויר לטקסט ואיקון קריא בעברית
                 const decoded = decodeWeather(wData.current.weather_code);
                 return {
                     temp: Math.round(wData.current.temperature_2m),
@@ -103,12 +111,13 @@ export const fetchWeatherData = async (city) => {
             }
         }
     } catch (err) {
-        console.error("Weather service error:", err);
+        console.error("שגיאה בשירות מזג האוויר:", err);
     }
     return null;
 };
+
 /**
- * פונקציה להבאת שער חליפין (מטבע מקור מול מטבע יעד)
+ * פונקציה להבאת שער חליפין עדכני (למשל: שקל מול אירו) ע"י Frankfurter API
  */
 export const fetchExchangeRate = async (targetCurrency, baseCurrency = 'ILS') => {
     if (!targetCurrency || targetCurrency === baseCurrency) return 1;
@@ -119,8 +128,8 @@ export const fetchExchangeRate = async (targetCurrency, baseCurrency = 'ILS') =>
             return data.rates[targetCurrency];
         }
     } catch (err) {
-        console.error("Exchange rate error:", err);
+        console.error("שגיאה במשיכת שער חליפין:", err);
     }
-    // Fallback בסיסי
+    // החזרת 1 כברירת מחדל במקרה של שגיאה (כדי לא לשבור חישובים)
     return 1;
 };
