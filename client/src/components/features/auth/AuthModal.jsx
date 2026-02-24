@@ -45,26 +45,30 @@ const AuthModal = ({ isOpen: propIsOpen, onClose: propOnClose }) => {
 
     if (!isOpen) return null;
 
+    // פונקציה לניהול שליחת הטפסים (התחברות, הרשמה או איפוס סיסמה)
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // מניעת רענון הדף
         setError('');
         setMessage('');
         setIsLoading(true);
 
         try {
             if (isLogin) {
+                // ביצוע התחברות לשרת
                 const result = await login(formData.email, formData.password);
                 if (result.success) {
-                    onClose();
+                    onClose(); // סגירת המודאל בהצלחה
                 } else {
                     setError(result.message);
                 }
             } else if (isRegister) {
+                // בדיקת תאימות סיסמאות בהרשמה
                 if (formData.password !== formData.confirmPassword) {
                     setError('הסיסמאות אינן תואמות');
                     setIsLoading(false);
                     return;
                 }
+                // ביצוע הרשמה לשרת
                 const result = await register({
                     email: formData.email,
                     password: formData.password,
@@ -72,17 +76,19 @@ const AuthModal = ({ isOpen: propIsOpen, onClose: propOnClose }) => {
                 });
                 if (result.success) {
                     setMessage('נרשמת בהצלחה! כעת ניתן להתחבר');
-                    setView('login');
+                    setView('login'); // מעבר אוטומטי למסך התחברות
                 } else {
                     setError(result.message);
                 }
             } else if (isForgot) {
+                // בדיקת תאימות סיסמאות באיפוס סיסמה
                 if (formData.password !== formData.confirmPassword) {
                     setError('הסיסמאות אינן תואמות');
                     setIsLoading(false);
                     return;
                 }
 
+                // עדכון הסיסמה החדשה בשרת
                 const result = await resetPassword(formData.email, formData.password);
                 if (result.success) {
                     setMessage('הסיסמה עודכנה בהצלחה! ניתן להתחבר');
@@ -98,6 +104,7 @@ const AuthModal = ({ isOpen: propIsOpen, onClose: propOnClose }) => {
         }
     };
 
+    // עדכון ה-State של נתוני הטופס בכל שינוי בשדות הקלט
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));

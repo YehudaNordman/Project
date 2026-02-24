@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../../constants';
 
+/**
+ * רכיב PlannerForm - טופס הזנת פרטי הטיול.
+ * כולל מנגנון הצעות אוטומטיות (Autocomplete) לשדות תעופה ומיפוי מטבעות.
+ */
 const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) => {
-    const [suggestions, setSuggestions] = useState([]);
-    const [showSuggestions, setShowSuggestions] = useState(false);
-    const [allAirports, setAllAirports] = useState([]);
+    const [suggestions, setSuggestions] = useState([]); // הצעות לשדות תעופה
+    const [showSuggestions, setShowSuggestions] = useState(false); // הצגת התפריט הנפתח
+    const [allAirports, setAllAirports] = useState([]); // מאגר כל שדות התעופה מהשרת
 
+    // טעינת רשימת שדות התעופה מה-Backend בעת טעינת הרכיב
     useEffect(() => {
         const loadAirports = async () => {
             try {
                 const response = await fetch(`${API_BASE_URL}/airports/getAirports`);
                 const data = await response.json();
                 setAllAirports(data.airports || []);
-            } catch (err) { console.error("Error loading airports:", err); }
+            } catch (err) { console.error("שגיאה בטעינת שדות תעופה:", err); }
         };
         loadAirports();
     }, []);
 
+    // סינון הצעות לפי מה שהמשתמש מקליד בשדה היעד
     useEffect(() => {
         if (formData.destination && formData.destination.length >= 2) {
             const trimmed = formData.destination.trim().toLowerCase();
@@ -24,7 +30,7 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
                 airport.city_hebrew.toLowerCase().includes(trimmed) ||
                 airport.airport_name.toLowerCase().includes(trimmed) ||
                 (airport.state_hebrew && airport.state_hebrew.toLowerCase().includes(trimmed))
-            ).slice(0, 5);
+            ).slice(0, 5); // הצגת עד 5 הצעות בלבד
             setSuggestions(filtered);
             setShowSuggestions(filtered.length > 0);
         } else {
@@ -33,6 +39,7 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
         }
     }, [formData.destination, allAirports]);
 
+    // מילוי ידני של מטבעות למדינות נפוצות (ליתר בטחון אם חסר ב-DB)
     const countryToCurrency = {
         'בריטניה': { code: 'GBP', name: 'פאונד' },
         'צרפת': { code: 'EUR', name: 'אירו' },
@@ -64,6 +71,10 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
         'ישראל': { code: 'ILS', name: 'שקל חדש' },
     };
 
+    /**
+     * פונקציה לבחירת שדה תעופה מההצעות.
+     * מעדכנת את היעד, הקואורדינטות והמטבע המקומי.
+     */
     const handleSelectAirport = (airport) => {
         const currency = airport.currency_code
             ? { code: airport.currency_code, name: airport.currency_name_hebrew }
@@ -84,6 +95,7 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
         <div className="planner-card glass">
             <h1>פרטי ההמתנה שלך</h1>
             <form className="planner-form" onSubmit={onSubmit}>
+                {/* שדה יעד עם השלמה אוטומטית */}
                 <div className="form-group destination-group">
                     <label className="input-label-premium">יעד עצירת הביניים (עיר או שדה תעופה)</label>
                     <input
@@ -114,6 +126,7 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
                     )}
                 </div>
 
+                {/* שורות של תאריכים ושעות */}
                 <div className="form-row-grid">
                     <div className="form-group">
                         <label className="input-label-premium">תאריך נחיתה</label>
@@ -141,6 +154,7 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
                     </div>
                 </div>
 
+                {/* תצוגת שגיאה במידה והנתונים שהוזנו אינם תקינים */}
                 {error && (
                     <div className="planner-error-box animate-in">
                         <span className="error-icon">⚠️</span>

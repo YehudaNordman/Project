@@ -7,11 +7,16 @@ import { API_BASE_URL } from '../../constants';
 import ItineraryStepCard from '../features/itinerary/ItineraryStepCard';
 import loadingGif from '../../assets/Loading 40 _ Paperplane.gif';
 
+// עיצוב קונטיינר המפה
 const containerStyle = {
     width: '100%',
     height: '100%'
 };
 
+/**
+ * רכיב Typewriter - יוצר אפקט של הדפסה הדרגתית של טקסט/HTML.
+ * משמש להצגת תגובת ה-AI בצורה מרשימה יותר.
+ */
 const Typewriter = ({ html, speed = 10, onComplete }) => {
     const [displayedHtml, setDisplayedHtml] = useState("");
 
@@ -21,6 +26,7 @@ const Typewriter = ({ html, speed = 10, onComplete }) => {
         setDisplayedHtml("");
         const timer = setInterval(() => {
             if (i < html.length) {
+                // טיפול בתגיות HTML כדי שלא יוצגו כטקסט בזמן ההדפסה
                 if (html[i] === '<') {
                     const closingIndex = html.indexOf('>', i);
                     if (closingIndex !== -1) {
@@ -46,17 +52,21 @@ const Typewriter = ({ html, speed = 10, onComplete }) => {
     return <div className="ai-content" dangerouslySetInnerHTML={{ __html: displayedHtml }} />;
 };
 
+/**
+ * פונקציית עזר לניסיון פיענוח JSON מטקסט גולמי.
+ * שימושי כאשר ה-AI מחזיר JSON בתוך בלוק קוד מרקדאון.
+ */
 const tryParseJSON = (str) => {
     if (!str || typeof str !== 'string') return null;
     let jsonStr = str.trim();
 
-    // Remove markdown code blocks
+    // הסרת סמני מרקדאון (```json ... ```) אם קיימים
     jsonStr = jsonStr.replace(/^```json\s*|```$/g, '').trim();
 
     try {
         return JSON.parse(jsonStr);
     } catch (e) {
-        // Find the first { or [ and the last } or ]
+        // ניסיון לחלץ את האובייקט בעזרת סוגריים מסולסלים במידה ויש טקסט מסביב
         const startBracket = jsonStr.search(/[\{\[]/);
         const endBracket = Math.max(jsonStr.lastIndexOf('}'), jsonStr.lastIndexOf(']'));
 
@@ -72,19 +82,22 @@ const tryParseJSON = (str) => {
     return null;
 };
 
+/**
+ * רכיב MyRouteView - התצוגה המרכזית של המסלול האישי של המשתמש.
+ * כולל ניהול אטרקציות, הצגה על מפה, ויצירת לו"ז ע"י AI.
+ */
 const MyRouteView = ({ onBack, times, onViewSaved }) => {
     const { myRoute, removeFromRoute, clearRoute } = useRoute();
     const { token, user, openAuthModal } = useAuth();
     const [selectedItem, setSelectedItem] = useState(null);
-    const [aiInfo, setAi] = useState();
-    const [isTyping, setIsTyping] = useState(false);
+    const [aiInfo, setAi] = useState(); // אחסון תכנית ה-AI המשורטטת
+    const [isTyping, setIsTyping] = useState(false); // מצב כתיבה של ה-AI
     const [aiError, setAiError] = useState(false);
-    const [showSafetyBadge, setShowSafetyBadge] = useState(false);
-    const [saveStatus, setSaveStatus] = useState('idle');
+    const [saveStatus, setSaveStatus] = useState('idle'); // idle, saving, saved
     const [showToast, setShowToast] = useState(false);
 
-    // Extracting destination and calculating netTravelTime
-    const destination = times?.destination || "Unknown Destination";
+    // חילוץ נתוני יעד וחישובי זמנים
+    const destination = times?.destination || "יעד לא ידוע";
 
     const tripMetrics = (times?.landingDate && times?.takeoffDate)
         ? calculateTripTime(times.landingDate, times.landingTime, times.takeoffDate, times.takeoffTime)
@@ -92,16 +105,16 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
 
     const netTravelTime = tripMetrics ? (tripMetrics.netMinutes / 60).toFixed(1) : "N/A";
 
-    // Removed automatic loading of saved routes to ensure new searches always start fresh.
-    // This addresses the user's request to not show old, outdated routes for the same destination.
-
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: "AIzaSyAXfZDMRBOrC08lOEZEPvnggjQyL3_B_SE"
     });
 
+    /**
+     * יצירת מסלול מבוסס AI - שולח את נתוני הזמן והמקומות שבחר המשתמש למודל השפה.
+     */
     const generateAiItinerary = async () => {
-        // Validation check
+        // בדיקות תקינות לפני שליחה ל-AI
         if (!times?.landingDate || !times?.takeoffDate) {
             setAi("⚠️ שים לב: עליך למלא את פרטי הטיסה (נחיתה והמראה) בטופס הראשי כדי שה-AI יוכל לתכנן לך מסלול לפי הזמן הזמין לך.");
             setAiError(true);
@@ -118,6 +131,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
         setAiError(false);
         setAi("");
 
+        // בניית הנחיה (Prompt) מפורטת עבור ה-AI
         const systemPrompt = `You are a travel expert for BonusTrip. Plan an optimal itinerary for ${destination} for ${netTravelTime} hours.`;
         const itinerarySummary = myRoute.map(item => `${item.name} (${item.address_line2 || ''})`).join(', ');
 
@@ -147,15 +161,18 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
 
             setAi(data.answer);
             setIsTyping(false);
-            setSaveStatus('idle'); // Reset save status for new generation
+            setSaveStatus('idle'); // איפוס סטטוס שמירה עבור מסלול חדש
         } catch (e) {
-            console.error("AI Error:", e);
-            setAi("אופס! נראה שיש עומס על שרתי ה-AI של גוגל (Quota Exceeded). ⏳ אנא המתן כדקה ונסה ללחוץ שוב, ניסינו להעביר אותך למודל חלופי.");
+            console.error("שגיאת AI:", e);
+            setAi("אופס! נראה שיש עומס על שרתי ה-AI. ⏳ אנא המתן כדקה ונסה ללחוץ שוב.");
             setAiError(true);
             setIsTyping(false);
         }
     };
 
+    /**
+     * שמירת המסלול ל-Database ול-LocalStorage
+     */
     const handleSaveRoute = async () => {
         const aiPlan = aiInfo;
         const flightDetails = {
@@ -168,6 +185,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
 
         if (!aiPlan) return;
 
+        // בדיקה אם המשתמש מחובר לפני שמירה לשרת
         if (!user) {
             openAuthModal("עליך להתחבר כדי לשמור ולצפות במסלולים שלך באזור האישי");
             return;
@@ -176,7 +194,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
         setSaveStatus('saving');
 
         try {
-            // Save to Local Storage for guest/quick access
+            // שמירה ב-Storage המקומי לגישה מהירה
             const existingSaves = JSON.parse(localStorage.getItem('saved_itineraries') || '[]');
             const newSave = {
                 ...flightDetails,
@@ -186,7 +204,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
             existingSaves.push(newSave);
             localStorage.setItem('saved_itineraries', JSON.stringify(existingSaves));
 
-            // Save to Server Database if user is logged in
+            // שמירה לשרת אם קיים Token
             if (token) {
                 await fetch(`${API_BASE_URL}/user/save-itinerary`, {
                     method: 'POST',
@@ -202,11 +220,12 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
         } catch (err) {
-            console.error("Error saving route:", err);
+            console.error("שגיאה בשמירת המסלול:", err);
             setSaveStatus('idle');
         }
     };
 
+    // חישוב מרכז המפה
     const getMapCenter = () => {
         const validItems = myRoute.filter(item => item.lat && item.lon);
         if (validItems.length === 0) return { lat: 51.505, lng: -0.09 };
@@ -220,11 +239,10 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
     return (
         <div className="explorer-page">
             <div className="animate-in">
+                {/* כותרת פרימיום עם פרטי היעד */}
                 <div className="explorer-header-premium glass">
                     <div className="explorer-header-top">
-                        <div className="header-actions">
-
-                        </div>
+                        <div className="header-actions"></div>
                     </div>
 
                     <div className="explorer-header-main">
@@ -234,19 +252,11 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                         </h1>
                         <p className="explorer-subtitle-premium">
                             {myRoute.length > 0
-                                ? `בחרת ${myRoute.length} מקומות מדהים! בוא נהפוך אותם לטיול.`
+                                ? `בחרת ${myRoute.length} מקומות מדהימים! בוא נהפוך אותם לטיול.`
                                 : 'המסלול שלך עדיין ריק. הוסף מקומות כדי להתחיל!'}
                         </p>
                         {myRoute.length > 0 && (
-                            <button className="clear-route-link" onClick={clearRoute} style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: '#ef4444',
-                                textDecoration: 'underline',
-                                cursor: 'pointer',
-                                marginTop: '10px',
-                                fontSize: '0.9rem'
-                            }}>
+                            <button className="clear-route-link" onClick={clearRoute}>
                                 נקה את כל המסלול
                             </button>
                         )}
@@ -256,6 +266,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                 <div className="explorer-content">
                     {myRoute.length > 0 ? (
                         <>
+                            {/* רשת המקומות שנבחרו (Luxury Cards) */}
                             <div className="items-grid-premium">
                                 {myRoute.map((item, index) => (
                                     <div key={index} className="item-card-luxury glass animate-in" style={{ animationDelay: `${index * 0.1}s` }}>
@@ -266,10 +277,9 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                                                 <div className="placeholder-media">📍</div>
                                             )}
                                             <div className="media-overlay">
-                                                <div className="rating-tag">
-                                                    ⭐ {item.rating || '4.5'}
-                                                </div>
+                                                <div className="rating-tag">⭐ {item.rating || '4.5'}</div>
                                             </div>
+                                            {/* כפתור הסרה מהיר מפינת הכרטיס */}
                                             <button
                                                 className="remove-icon-btn"
                                                 onClick={(e) => {
@@ -277,33 +287,6 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                                                     removeFromRoute(item.place_id || item.name);
                                                 }}
                                                 title="הסר מהמסלול"
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: '10px',
-                                                    left: '10px',
-                                                    zIndex: 10,
-                                                    background: 'rgba(255,255,255,0.95)',
-                                                    border: 'none',
-                                                    borderRadius: '50%',
-                                                    width: '32px',
-                                                    height: '32px',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                                                    color: '#ef4444',
-                                                    fontWeight: 'bold',
-                                                    transition: 'all 0.2s ease'
-                                                }}
-                                                onMouseEnter={(e) => {
-                                                    e.currentTarget.style.transform = 'scale(1.1)';
-                                                    e.currentTarget.style.background = '#fff';
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.currentTarget.style.transform = 'scale(1)';
-                                                    e.currentTarget.style.background = 'rgba(255,255,255,0.95)';
-                                                }}
                                             >
                                                 ✕
                                             </button>
@@ -326,6 +309,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                                 ))}
                             </div>
 
+                            {/* תצוגת המפה */}
                             <div className="map-section-container">
                                 <h3 className="section-title-premium">תצוגת המסלול על המפה</h3>
                                 <div className="map-resizable-wrapper">
@@ -344,6 +328,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                             </div>
                         </>
                     ) : (
+                        // הודעת חוסר נתונים
                         <div className="no-data-luxury glass">
                             <div className="no-data-icon">🗺️</div>
                             <h3>עדיין לא בחרת מקומות</h3>
@@ -353,7 +338,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                     )}
                 </div>
 
-                {/* AI Section stays but wrapped in animate-in-up class if needed, or kept as is */}
+                {/* סקציית ה-AI ליצירת מסלול מתוזמן */}
                 <div style={{ padding: '0 20px 100px 20px', maxWidth: '1200px', margin: '0 auto' }}>
                     {myRoute.length > 0 && (
                         <button onClick={generateAiItinerary} className="ai-magic-button" disabled={isTyping} aria-busy={isTyping} aria-label={isTyping ? 'טוען מסלול' : 'בנה לי מסלול'} style={{ width: '100%', maxWidth: '600px', margin: '20px auto', display: 'block' }}>
@@ -373,6 +358,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                             </div>
                             <div className={aiError ? "ai-error-state" : ""} dir="rtl">
                                 {(() => {
+                                    // ניסיון להציג את התשובה ככרטיסיות שלבים (במידה וה-AI החזיר JSON תקין)
                                     const parsed = tryParseJSON(aiInfo);
                                     if (parsed) {
                                         const itinerary = parsed.itinerary || (Array.isArray(parsed) ? parsed : null);
@@ -386,14 +372,15 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                                                 </div>
                                             );
                                         }
-                                        // Fallback if it's not the expected structure
                                         return <Typewriter html={aiInfo} onComplete={() => setIsTyping(false)} />;
                                     } else {
-                                        // Fallback to HTML rendering if not JSON
+                                        // הצגה כטקסט פשוט במידה וה-AI לא החזיר JSON
                                         return <Typewriter html={aiInfo} onComplete={() => setIsTyping(false)} />;
                                     }
                                 })()}
                             </div>
+
+                            {/* אפשרויות שמירה וצפייה לאחר יצירת המסלול */}
                             {!aiError && (
                                 <div className="save-route-container animate-in">
                                     <button className={`save-route-btn ${saveStatus}`} onClick={handleSaveRoute} disabled={saveStatus === 'saving' || saveStatus === 'saved'}>
@@ -403,10 +390,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                                     </button>
 
                                     {saveStatus === 'saved' && user && (
-                                        <button
-                                            className="view-saved-btn"
-                                            onClick={onViewSaved}
-                                        >
+                                        <button className="view-saved-btn" onClick={onViewSaved}>
                                             👀 צפה בכל המסלולים השמורים
                                         </button>
                                     )}
@@ -417,6 +401,7 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                 </div>
             </div>
 
+            {/* התראת שמירה קופצת (Toast) */}
             {showToast && (
                 <div className="toast-notification animate-in">
                     ✔️ המסלול נשמר בהצלחה!

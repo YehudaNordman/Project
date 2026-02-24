@@ -45,6 +45,10 @@ import LoadingScreen from '../components/features/planner/LoadingScreen';
 import { useSearch } from '../context/SearchContext';
 import { calculateTripTime, fetchWeatherData, getMockRecommendations } from '../services/plannerService';
 
+/**
+ * דף התוצאות (ResultsPage) - מרכז את הצגת נתוני התכנון שחזרו מהשרת.
+ * אם אין תוצאות ב-SearchContext, המשתמש מופנה אוטומטית חזרה לדף הבית.
+ */
 const ResultsPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -53,6 +57,7 @@ const ResultsPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState('');
 
+    // אפקט המבטיח שאם המשתמש הגיע לדף ללא תוצאות (למשל ברענון), הוא יחזור להתחלה
     useEffect(() => {
         const loadFromQuery = async () => {
             try {
@@ -147,16 +152,19 @@ const ResultsPage = () => {
 
     // Use the context formData (which we set from query) to pass props to PlannerResults
     return (
+        // רכיב התצוגה המרכזי שמציג את חישובי הזמנים, מזג האוויר וההמלצות
         <PlannerResults
             result={localResults || results}
             destination={formData.destination}
             prefetchedWeather={weatherData}
             currencyCode={formData.currency_code}
             currencyName={formData.currency_name_hebrew}
+            // פעולה בעת חזרה אחורה: ניקוי החיפוש וחזרה לדף הבית
             onBack={() => {
                 clearSearch();
                 navigate('/');
             }}
+            // מעבר לדף שמציג את המסלול המפורט שבנה ה-AI
             onRouteClick={() => navigate('/my-route')}
             setExplorerView={(type) => {
                 const params = new URLSearchParams();

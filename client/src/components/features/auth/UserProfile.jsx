@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { API_BASE_URL } from '../../../constants';
-import '../../../assets/styles/components/auth.css'; // Assuming we can use auth styles or create new ones
+import '../../../assets/styles/components/auth.css';
 
+/**
+ * רכיב UserProfile - מציג את אזור הפרופיל האישי של המשתמש.
+ * כולל נתונים סטטיסטיים (כמות מסלולים) ואפשרות לעריכת פרטים אישיים.
+ */
 const UserProfile = ({ onClose }) => {
     const { user, token, updateUser } = useAuth();
+    // מצבי עריכה לשדות השונים
     const [stats, setStats] = useState({ savedTripsCount: 0 });
     const [isEditingName, setIsEditingName] = useState(false);
     const [isEditingEmail, setIsEditingEmail] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
+
+    // ניהול טפסים לעדכון הנתונים
     const [newName, setNewName] = useState(user?.fullName || '');
     const [newEmail, setNewEmail] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
 
+    /**
+     * עדכון שם המשתמש מול השרת
+     */
     const handleUpdateName = async () => {
         if (!newName.trim()) return;
         try {
@@ -27,6 +37,7 @@ const UserProfile = ({ onClose }) => {
             });
             if (response.ok) {
                 const updatedUser = await response.json();
+                // עדכון ה-State הגלובלי (Context)
                 updateUser({ fullName: updatedUser.fullName });
                 setIsEditingName(false);
                 alert("השם עודכן בהצלחה!");
@@ -34,34 +45,17 @@ const UserProfile = ({ onClose }) => {
                 alert("עדכון השם נכשל.");
             }
         } catch (error) {
-            console.error("Error updating name:", error);
+            console.error("שגיאה בעדכון השם:", error);
         }
     };
 
-    // Fetch user stats (number of saved trips)
+    /**
+     * טעינת סטטיסטיקות המשתמש מהשרת בעת טעינת הרכיב
+     */
     useEffect(() => {
         const fetchStats = async () => {
             if (!user) return;
-
-            // Try fetching from server first if available
             try {
-                // This is a placeholder for a real endpoint. 
-                // If it doesn't exist, we fallback to localStorage for demo purposes
-                // or we simply count what is in localStorage if that's the primary storage for now.
-                // Given the previous code in SavedItinerariesView:
-                const localData = JSON.parse(localStorage.getItem('saved_itineraries') || '[]');
-                // In a real app, we filter by user ID. Here we might assume local storage is per browser user 
-                // or filter if we saved user ID in the trip.
-                // Let's assume for now we count whatever is there, or better, 
-                // if we have a server endpoint for "get saved routes", we use that.
-
-                // If we want to be accurate with "according to the data in login by the user's email":
-                // We should probably ask the server.
-                // Assuming we use the local storage count for now as immediate feedback, 
-                // but really we should hit an endpoint.
-
-                // Let's try to simulate a fetch or just use local count + server count logic.
-                // For this step, I'll count local items as a baseline.
                 const response = await fetch(`${API_BASE_URL}/user/my-itineraries`, {
                     method: 'GET',
                     headers: {
@@ -74,24 +68,25 @@ const UserProfile = ({ onClose }) => {
                     const data = await response.json();
                     setStats({ savedTripsCount: data.length });
                 }
-
             } catch (error) {
-                console.error("Error fetching stats", error);
+                console.error("שגיאה בטעינת סטטיסטיקות:", error);
             }
         };
 
         fetchStats();
-    }, [user]);
+    }, [user, token]);
 
     if (!user) return null;
 
     return (
         <div className="profile-overlay animate-in">
             <div className="profile-modal glass">
+                {/* כפתור סגירה של המודאל */}
                 <button className="close-profile-btn" onClick={onClose} title="סגור">
                     ✕
                 </button>
 
+                {/* כותרת הפרופיל עם אווטאר (האות הראשונה של השם) */}
                 <div className="profile-header">
                     <div className="profile-avatar">
                         {user.fullName ? user.fullName[0].toUpperCase() : user.email[0].toUpperCase()}
@@ -100,6 +95,7 @@ const UserProfile = ({ onClose }) => {
                     <p className="profile-email">{user.email}</p>
                 </div>
 
+                {/* כרטיסיות נתונים (סטטיסטיקה של פעילות המשתמש) */}
                 <div className="profile-stats">
                     <div className="stat-card glass">
                         <span className="stat-icon">💾</span>
@@ -110,9 +106,11 @@ const UserProfile = ({ onClose }) => {
                     </div>
                 </div>
 
+                {/* הגדרות חשבון - שינוי פרטים אישיים */}
                 <div className="profile-actions-section">
                     <h3>הגדרות חשבון</h3>
 
+                    {/* שדה שם מלא */}
                     <div className="action-row">
                         <div className="field-info">
                             <label>שם מלא</label>
@@ -134,6 +132,7 @@ const UserProfile = ({ onClose }) => {
                         </div>
                     )}
 
+                    {/* שדה אימייל */}
                     <div className="action-row">
                         <div className="field-info">
                             <label>כתובת אימייל</label>
@@ -155,6 +154,7 @@ const UserProfile = ({ onClose }) => {
                         </div>
                     )}
 
+                    {/* שדה סיסמה */}
                     <div className="action-row">
                         <div className="field-info">
                             <label>סיסמה</label>

@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRoute } from '../context/RouteContext';
 import { translateCategory } from '../utils/translationUtils';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
-import { useEffect } from 'react';
 import Ai from '../components/Ai';
 
-
+// עיצוב קונטיינר המפה - תופס 100% מהשטח המוקצה
 const containerStyle = {
     width: '100%',
     height: '100%'
 };
 
-
+/**
+ * רכיב MyTrip - מציג את רשימת המקומות שהמשתמש בחר ואת פריסתם על המפה.
+ * כולל אינטגרציה עם Google Maps API ושימוש ב-AI לבניית לו"ז.
+ */
 const MyTrip = ({ onBack, times }) => {
-
-
-
+    // שליפת נתוני המסלול והפונקציות לניהולו מהקשר המסלול
     const { myRoute, removeFromRoute, clearRoute } = useRoute();
+    // מצב לניהול פריט שנבחר על המפה (להצגת חלון מידע)
     const [selectedItem, setSelectedItem] = useState(null);
 
-
-
+    // טעינת ספריית המפות של גוגל
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: "AIzaSyAXfZDMRBOrC08lOEZEPvnggjQyL3_B_SE"
     });
 
-
-
-
-
+    /**
+     * פונקציה לחישוב מרכז המפה על בסיס ממוצע המיקומים במסלול.
+     * אם אין מקומות, המפה תתמרכז במיקום ברירת מחדל (לונדון).
+     */
     const getMapCenter = () => {
         const validItems = myRoute.filter(item => item.lat && item.lon);
         if (validItems.length === 0) return { lat: 51.505, lng: -0.09 };
@@ -43,8 +43,8 @@ const MyTrip = ({ onBack, times }) => {
 
     return (
         <div className="explorer-page animate-in">
+            {/* כותרת הדף עם אפשרות לניקוי כל המסלול */}
             <div className="explorer-header glass">
-
                 <div className="header-text-group">
                     <h2>המסלול שלי 🛣️</h2>
                     <p>המקומות ששמרת לטיול שלך</p>
@@ -59,9 +59,11 @@ const MyTrip = ({ onBack, times }) => {
             <div className="explorer-content" style={{ flexDirection: 'column', alignItems: 'center' }}>
                 {myRoute.length > 0 ? (
                     <>
+                        {/* תצוגת כרטיסיות עבור כל מקום שנבחר */}
                         <div className="items-grid">
                             {myRoute.map((item, index) => (
                                 <div key={index} className="item-card-premium glass">
+                                    {/* הצגת תמונה אם קיימת */}
                                     {item.photoUrl && (
                                         <div className="item-card-image">
                                             <img src={item.photoUrl} alt={item.name} loading="lazy" />
@@ -88,6 +90,7 @@ const MyTrip = ({ onBack, times }) => {
                                     </div>
 
                                     <div className="item-footer">
+                                        {/* כפתור הסרה שמעדכן את ה-Context הגלובלי */}
                                         <button
                                             className="remove-from-route-btn"
                                             onClick={() => removeFromRoute(item.place_id || item.name)}
@@ -111,6 +114,7 @@ const MyTrip = ({ onBack, times }) => {
                             ))}
                         </div>
 
+                        {/* סקציית המפה המציגה את כל הנקודות */}
                         <div className="map-section-container">
                             <h3 className="section-title-premium">פריסת המסלול על המפה</h3>
                             <div className="map-resizable-wrapper">
@@ -120,6 +124,7 @@ const MyTrip = ({ onBack, times }) => {
                                         center={mapCenter}
                                         zoom={12}
                                         onLoad={map => {
+                                            // התאמת זום המפה כך שכל המרקרים יופיעו בו זמנית
                                             const bounds = new window.google.maps.LatLngBounds();
                                             myRoute.forEach(item => {
                                                 if (item.lat && item.lon) {
@@ -129,6 +134,7 @@ const MyTrip = ({ onBack, times }) => {
                                             if (myRoute.length > 0) map.fitBounds(bounds);
                                         }}
                                     >
+                                        {/* ציור מרקר לכל אטרקציה */}
                                         {myRoute.filter(item => item.lat && item.lon).map((item, idx) => (
                                             <Marker
                                                 key={idx}
@@ -137,6 +143,7 @@ const MyTrip = ({ onBack, times }) => {
                                             />
                                         ))}
 
+                                        {/* חלון מידע קופץ בעת לחיצה על מרקר */}
                                         {selectedItem && (
                                             <InfoWindow
                                                 position={{ lat: parseFloat(selectedItem.lat), lng: parseFloat(selectedItem.lon) }}
@@ -155,6 +162,7 @@ const MyTrip = ({ onBack, times }) => {
                         </div>
                     </>
                 ) : (
+                    // הודעה המוצגת כשהמסלול ריק
                     <div className="no-results-msg glass">
                         <span className="no-results-icon">🗺️</span>
                         <p>המסלול שלך ריק. התחל להוסיף מקומות מההמלצות!</p>
@@ -163,8 +171,8 @@ const MyTrip = ({ onBack, times }) => {
                 )}
             </div>
 
+            {/* רכיב ה-AI שמנתח את המסלול ובונה את הלו"ז המפורט */}
             <Ai times={times} myRoute={myRoute} />
-
 
         </div>
     );

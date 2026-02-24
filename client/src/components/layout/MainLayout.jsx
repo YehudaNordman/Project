@@ -5,18 +5,19 @@ import AuthModal from '../features/auth/AuthModal';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+/**
+ * רכיב המבנה הראשי (MainLayout).
+ * עוטף את כל דפי האפליקציה ומספק את סרגל הניווט (Navbar),
+ * התפריט התחתון (Footer) ומודאל האימות (AuthModal) באופן גלובלי.
+ */
 const MainLayout = ({ children }) => {
     const { openAuthModal } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Determine if we should show the navbar in its full state
-    // For example, researchers, we might want to hide it on specific results views as before
-    // but typically a professional app keeps it or minimalizes it.
-    // Let's stick to the user's previous preference if needed, or keep it consistent.
-
     return (
         <div className="app-container" dir="rtl">
+            {/* סרגל ניווט עליון עם פונקציות מעבר לדפים השונים */}
             <Navbar
                 onLoginClick={() => openAuthModal()}
                 onRouteClick={() => navigate('/my-route')}
@@ -24,12 +25,15 @@ const MainLayout = ({ children }) => {
                 onProfileClick={() => navigate('/profile')}
             />
 
+            {/* חלון התחברות גלובלי שמוצג לפי הצורך */}
             <AuthModal />
 
+            {/* התוכן המשתנה של כל דף מוצג כאן */}
             <main className="content">
                 {children}
             </main>
 
+            {/* סרגל תחתון (Footer) קבוע */}
             <Footer />
         </div>
     );
