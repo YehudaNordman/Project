@@ -5,6 +5,7 @@ import { calculateTripTime } from '../../services/plannerService';
 import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import { API_BASE_URL } from '../../constants';
 import ItineraryStepCard from '../features/itinerary/ItineraryStepCard';
+import loadingGif from '../../assets/Loading 40 _ Paperplane.gif';
 
 const containerStyle = {
     width: '100%',
@@ -355,8 +356,12 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                 {/* AI Section stays but wrapped in animate-in-up class if needed, or kept as is */}
                 <div style={{ padding: '0 20px 100px 20px', maxWidth: '1200px', margin: '0 auto' }}>
                     {myRoute.length > 0 && (
-                        <button onClick={generateAiItinerary} className="ai-magic-button" disabled={isTyping} style={{ width: '100%', maxWidth: '600px', margin: '20px auto', display: 'block' }}>
-                            {isTyping ? '⌛ AI בתהליך תכנון...' : '✨ בנה לי מסלול מושלם עם AI'}
+                        <button onClick={generateAiItinerary} className="ai-magic-button" disabled={isTyping} aria-busy={isTyping} aria-label={isTyping ? 'טוען מסלול' : 'בנה לי מסלול'} style={{ width: '100%', maxWidth: '600px', margin: '20px auto', display: 'block' }}>
+                            {isTyping ? (
+                                <img src={loadingGif} alt="טוען מסלול" style={{ width: '200px', objectFit: 'contain' }} />
+                            ) : (
+                                '✨ בנה לי מסלול מושלם עם AI'
+                            )}
                         </button>
                     )}
 

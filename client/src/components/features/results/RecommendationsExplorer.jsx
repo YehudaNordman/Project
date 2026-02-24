@@ -1,11 +1,11 @@
-import React, { useState, useEffect, use, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { translateCategory } from '../../../utils/translationUtils';
 import { useAuth } from '../../../context/AuthContext';
 import { useRoute } from '../../../context/RouteContext';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import { API_BASE_URL } from '../../../constants';
 import LoadingScreen from '../planner/LoadingScreen';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const mapContainerStyle = {
     width: '100%',
@@ -18,6 +18,22 @@ const mapContainerStyle = {
  * רכיב RecommendationsExplorer - עימוד חדש עם Side-Panel קבוע בצד ימין
  */
 const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, takeoffTime, onBack, onRouteClick, setExplorerView }) => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    // Resolve values from props OR from query params when opened as a route
+    const query = new URLSearchParams(location.search);
+    const resolvedType = type || query.get('type') || 'attractions';
+    const resolvedDestination = destination || query.get('destination') || '';
+    const resolvedLat = lat || query.get('lat') || '';
+    const resolvedLon = lon || query.get('lon') || '';
+    const resolvedLandingTime = landingTime || query.get('landingTime') || '';
+    const resolvedTakeoffTime = takeoffTime || query.get('takeoffTime') || '';
+
+    // Fallback handlers when not provided as props
+    const effectiveOnBack = onBack || (() => navigate(-1));
+    const effectiveOnRouteClick = onRouteClick || (() => navigate('/my-route'));
+
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeNavId, setActiveNavId] = useState(null);
@@ -29,6 +45,21 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true); // show load-more while fewer than 60 results and more pages exist
 
+    // helper to navigate to explorer with query params (used when this component is controlling type change)
+    const goToExplorerWithType = (t) => {
+        if (setExplorerView) {
+            setExplorerView(t);
+            return;
+        }
+        const params = new URLSearchParams();
+        params.set('type', t);
+        if (resolvedDestination) params.set('destination', resolvedDestination);
+        if (resolvedLat) params.set('lat', resolvedLat);
+        if (resolvedLon) params.set('lon', resolvedLon);
+        if (resolvedLandingTime) params.set('landingTime', resolvedLandingTime);
+        if (resolvedTakeoffTime) params.set('takeoffTime', resolvedTakeoffTime);
+        navigate(`/explorer?${params.toString()}`);
+    };
 
     // Toggle visibility of scroll-to-top button
     useEffect(() => {
@@ -83,15 +114,15 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [type]);
+    }, [resolvedType]);
 
     useEffect(() => {
         const loadData = async () => {
             setLoading(true);
             try {
-                const endpoint = type === 'restaurants' ? 'fetchRestaurants' : 'fetchAttractions';
+                const endpoint = resolvedType === 'restaurants' ? 'fetchRestaurants' : 'fetchAttractions';
                 // Initial load should request only a single Google page (20 results)
-                const url = `${API_BASE_URL}/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}&maxPages=1`;
+                const url = `${API_BASE_URL}/airports/${endpoint}?lon=${resolvedLon}&lat=${resolvedLat}&landingTime=${encodeURIComponent(resolvedLandingTime)}&takeoffTime=${encodeURIComponent(resolvedTakeoffTime)}&maxPages=1`;
                 const response = await fetch(url);
                 const data = await response.json();
                 const dataArray = Array.isArray(data) ? data : (data.features || []);
@@ -107,13 +138,13 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
             setLoading(false);
         };
 
-        if (lat && lon && landingTime && takeoffTime) {
+        if (resolvedLat && resolvedLon && resolvedLandingTime && resolvedTakeoffTime) {
             loadData();
         }
-    }, [type, lat, lon, landingTime, takeoffTime]);
+    }, [resolvedType, resolvedLat, resolvedLon, resolvedLandingTime, resolvedTakeoffTime]);
 
     const getMapCenter = () => {
-        if (lat && lon) return { lat: parseFloat(lat), lng: parseFloat(lon) };
+        if (resolvedLat && resolvedLon) return { lat: parseFloat(resolvedLat), lng: parseFloat(resolvedLon) };
         return { lat: 51.505, lng: -0.09 };
     };
 
@@ -128,10 +159,10 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
         if (pageCount >= 3) return;
         setLoadingMore(true);
         try {
-            const endpoint = type === 'restaurants' ? 'fetchRestaurants' : 'fetchAttractions';
+            const endpoint = resolvedType === 'restaurants' ? 'fetchRestaurants' : 'fetchAttractions';
             // request one additional page from server
             const nextPageRequest = pageCount + 1;
-            const url = `${API_BASE_URL}/airports/${endpoint}?lon=${lon}&lat=${lat}&landingTime=${landingTime}&takeoffTime=${takeoffTime}&maxPages=${nextPageRequest}`;
+            const url = `${API_BASE_URL}/airports/${endpoint}?lon=${resolvedLon}&lat=${resolvedLat}&landingTime=${encodeURIComponent(resolvedLandingTime)}&takeoffTime=${encodeURIComponent(resolvedTakeoffTime)}&maxPages=${nextPageRequest}`;
             const response = await fetch(url);
             const data = await response.json();
             const newItems = Array.isArray(data) ? data : (data.features || []);
@@ -156,7 +187,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
     };
 
     if (loading) {
-        const loadingMessage = type === 'restaurants'
+        const loadingMessage = resolvedType === 'restaurants'
             ? "מחפש את המסעדות המומלצות באיזור..."
             : "מחפש את האטרקציות המומלצות באיזור...";
         return <LoadingScreen message={loadingMessage} />;
@@ -174,15 +205,15 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                 <div className="explorer-header-main">
                     {user && (
                         <div className="hero-route-container">
-                            <button className="hero-route-btn-premium" onClick={onRouteClick}>
+                            <button className="hero-route-btn-premium" onClick={effectiveOnRouteClick}>
                                 <span className="hero-route-icon">🗺️</span>
                                 <span className="hero-route-text">צפה במסלול האישי שלי</span>
                             </button>
                         </div>
                     )}
                     <h1 className="explorer-title-premium">
-                        {type === 'restaurants' ? 'חוויה קולינרית' : 'אטרקציות ופנאי'}
-                        <span className="dest-text"> ב{destination}</span>
+                        {resolvedType === 'restaurants' ? 'חוויה קולינרית' : 'אטרקציות ופנאי'}
+                        <span className="dest-text"> ב{resolvedDestination}</span>
                     </h1>
                     <p className="explorer-subtitle-premium">אספנו עבורך המלצות איכותיות שמשתלבות בלוח הזמנים שלך</p>
                 </div>
@@ -281,7 +312,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                                 width: '100%'
                             }}>
                                 <button
-                                    onClick={() => setExplorerView('attractions')}
+                                    onClick={() => goToExplorerWithType('attractions')}
                                     style={{
                                         padding: '12px 28px',
                                         fontSize: '1rem',
@@ -296,22 +327,12 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                                         outline: 'none',
                                         minWidth: '140px'
                                     }}
-                                    onMouseOver={(e) => {
-                                        e.currentTarget.style.backgroundColor = '#283593';
-                                        e.currentTarget.style.transform = 'translateY(-2px)';
-                                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 35, 126, 0.3)';
-                                    }}
-                                    onMouseOut={(e) => {
-                                        e.currentTarget.style.backgroundColor = '#1a237e';
-                                        e.currentTarget.style.transform = 'translateY(0)';
-                                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(26, 35, 126, 0.2)';
-                                    }}
                                 >
                                     אטרקציות
                                 </button>
 
                                 <button
-                                    onClick={() => setExplorerView('restaurants')}
+                                    onClick={() => goToExplorerWithType('restaurants')}
                                     style={{
                                         padding: '12px 28px',
                                         fontSize: '1rem',
@@ -325,16 +346,6 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                                         transition: 'all 0.3s ease',
                                         outline: 'none',
                                         minWidth: '140px'
-                                    }}
-                                    onMouseOver={(e) => {
-                                        e.currentTarget.style.backgroundColor = '#283593';
-                                        e.currentTarget.style.transform = 'translateY(-2px)';
-                                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 35, 126, 0.3)';
-                                    }}
-                                    onMouseOut={(e) => {
-                                        e.currentTarget.style.backgroundColor = '#1a237e';
-                                        e.currentTarget.style.transform = 'translateY(0)';
-                                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(26, 35, 126, 0.2)';
                                     }}
                                 >
                                     מסעדות
@@ -427,7 +438,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                         <div className="no-data-luxury glass">
                             <div className="no-data-icon">🔍</div>
                             <h3>לא נמצאו תוצאות מתאימות</h3>
-                            <button className="back-home-btn" onClick={onBack}>חזור לחיפוש</button>
+                            <button className="back-home-btn" onClick={effectiveOnBack}>חזור לחיפוש</button>
                         </div>
                     )}
                 </main>

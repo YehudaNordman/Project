@@ -46,6 +46,7 @@
 
 // export default Ai
 import React, { useState } from 'react';
+import loadingGif from '../assets/Loading 40 _ Paperplane.gif';
 
 const Ai = ({ times, myRoute }) => {
     const [aiInfo, setAi] = useState("");
@@ -98,7 +99,11 @@ const Ai = ({ times, myRoute }) => {
                 disabled={loading} 
                 style={{...styles.button, ...(loading ? styles.buttonDisabled : {})}}
             >
-                {loading ? "מחשב מסלול אופטימלי... ✈️" : "צור לי מסלול חכם עם AI"}
+                {loading ? (
+                    <img src={loadingGif} alt="Loading" style={styles.loadingImg} />
+                ) : (
+                    "צור לי מסלול חכם עם AI"
+                )}
             </button>
 
             {/* תצוגת התוצאה */}
@@ -127,7 +132,12 @@ const styles = {
         direction: 'rtl'
     },
     button: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         padding: '12px 24px',
+        minWidth: '220px',
+        minHeight: '56px',
         fontSize: '18px',
         fontWeight: 'bold',
         color: '#fff',
@@ -141,6 +151,11 @@ const styles = {
     buttonDisabled: {
         backgroundColor: '#95a5a6',
         cursor: 'not-allowed'
+    },
+    loadingImg: {
+        width: '36px',
+        height: '36px',
+        objectFit: 'contain'
     },
     responseCard: {
         width: '100%',

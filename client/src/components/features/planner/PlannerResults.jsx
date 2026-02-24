@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchWeatherData } from '../../../services/plannerService';
 import ResultsHeader from '../results/ResultsHeader';
 import CurrencyConverter from '../results/CurrencyConverter';
@@ -14,6 +15,7 @@ import RecommendationsExplorer from '../results/RecommendationsExplorer';
  * רכיב זה משמש כקונטיינר המרכזי שמרכז את כל חלקי התצוגה של התוצאות.
  */
 const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedWeather, currencyCode, currencyName, landingDate, takeoffDate, landingTime, takeoffTime, lat, lon }) => {
+    const navigate = useNavigate();
     // State למזג האוויר במידה ולא נטען בטופס (Fallback)
     const [weather, setWeather] = useState(prefetchedWeather || null);
 
@@ -28,26 +30,21 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
         }
     }, [destination, prefetchedWeather]);
 
-    // State לניהול דפי "גילוי" (מסעדות/אטרקציות)
-    const [explorerView, setExplorerView] = useState(null); // 'restaurants' | 'attractions' | null
+    // Handler שיעביר לראוט ייעודי עם הפרמטרים ב-URL
+    const openExplorer = (type) => {
+        const params = new URLSearchParams();
+        if (destination) params.set('destination', destination);
+        if (lat) params.set('lat', lat);
+        if (lon) params.set('lon', lon);
+        if (landingDate && landingTime) params.set('landingTime', `${landingDate}T${landingTime}:00`);
+        if (takeoffDate && takeoffTime) params.set('takeoffTime', `${takeoffDate}T${takeoffTime}:00`);
 
-    // אם אנחנו במצב "גילוי", נציג את ה-Explorer כ"דף חדש"
-    if (explorerView) {
-        return (
-            <RecommendationsExplorer
-                setExplorerView={setExplorerView}
-                type={explorerView}
-                destination={destination}
-                lat={lat}
-                lon={lon}
-                landingTime={`${landingDate}T${landingTime}:00`}
-                takeoffTime={`${takeoffDate}T${takeoffTime}:00`}
-                onBack={() => setExplorerView(null)}
-                onRouteClick={onRouteClick}
-            />
-        );
-    }
-
+        if (type === 'restaurants') {
+            navigate(`/restaurants?${params.toString()}`);
+        } else {
+            navigate(`/attractions?${params.toString()}`);
+        }
+    };
 
     return (
         <div className="planner-results-container">
@@ -89,7 +86,7 @@ const PlannerResults = ({ result, onBack, onRouteClick, destination, prefetchedW
             <RecommendationCards
                 isValid={result?.isValid}
                 destination={destination}
-                onDiscover={(type) => setExplorerView(type)}
+                onDiscover={(type) => openExplorer(type)}
             />
         </div>
     );

@@ -30,7 +30,7 @@ const HomePage = () => {
 
     const handleCalculate = async (e) => {
         e.preventDefault();
-        const { destination, landingDate, landingTime, takeoffDate, takeoffTime } = formData;
+        const { destination, landingDate, landingTime, takeoffDate, takeoffTime, lat, lon, currency_code, currency_name_hebrew } = formData;
 
         if (!destination || !landingDate || !landingTime || !takeoffDate || !takeoffTime) {
             setErrorMsg('נא למלא את כל השדות החובה');
@@ -38,24 +38,23 @@ const HomePage = () => {
         }
 
         setErrorMsg('');
-        setIsLoading(true);
         clearRoute(); // Clear the current itinerary route when starting a fresh search
 
         try {
-            // Start weather fetch
-            fetchWeatherData(destination).then(setWeatherData);
+            // Build query params from formData (include optional fields if present)
+            const params = new URLSearchParams();
+            params.set('destination', destination);
+            params.set('landingDate', landingDate);
+            params.set('landingTime', landingTime);
+            params.set('takeoffDate', takeoffDate);
+            params.set('takeoffTime', takeoffTime);
+            if (lat) params.set('lat', lat);
+            if (lon) params.set('lon', lon);
+            if (currency_code) params.set('currency_code', currency_code);
+            if (currency_name_hebrew) params.set('currency_name_hebrew', currency_name_hebrew);
 
-            const tripMetrics = calculateTripTime(landingDate, landingTime, takeoffDate, takeoffTime);
-            const recommendations = getMockRecommendations();
-
-            setTimeout(() => {
-                setIsLoading(false);
-                setResults({
-                    ...tripMetrics,
-                    ...recommendations
-                });
-                navigate('/results');
-            }, 1500);
+            // Navigate to results page with query string. ResultsPage will perform the data fetching.
+            navigate(`/results?${params.toString()}`);
         } catch (err) {
             setErrorMsg(err.message);
             setIsLoading(false);

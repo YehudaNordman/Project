@@ -7,6 +7,8 @@ import SavedTripsPage from '../pages/SavedTripsPage';
 import ProfilePage from '../pages/ProfilePage';
 import CommunityPage from '../pages/CommunityPage';
 import RecommendationsExplorer from '../components/features/results/RecommendationsExplorer';
+import RestaurantsPage from '../pages/RestaurantsPage';
+import AttractionsPage from '../pages/AttractionsPage';
 
 
 const AppRoutes = () => {
@@ -19,6 +21,8 @@ const AppRoutes = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/explorer" element={<RecommendationsExplorer />} />
+            <Route path="/restaurants" element={<RestaurantsPage />} />
+            <Route path="/attractions" element={<AttractionsPage />} />
             {/* Catch-all route to redirect back home if path not found */}
             <Route path="*" element={<HomePage />} />
         </Routes>
