@@ -6,8 +6,7 @@ exports.register = async (req, res) => {
   try {
     let user = new User(req.body);
     if (req.body.password && req.body.email) {
-      let salt = bcrypt.genSaltSync(12);
-      user.password = bcrypt.hashSync(req.body.password, salt);
+      user.password = await bcrypt.hash(req.body.password, 10);
     }
 
     if (req.body.password.length < 8 || !/^(?=.*[a-z])(?=.*[A-Z])/.test(req.body.password)) {
@@ -69,6 +68,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
     let isMatch = bcrypt.compareSync(req.body.password, user.password);
+    
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }

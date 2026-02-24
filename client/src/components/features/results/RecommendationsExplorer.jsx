@@ -342,7 +342,7 @@ const RecommendationsExplorer = ({ type, destination, lat, lon, landingTime, tak
                             </div>
                             <div className="items-grid-premium">
                                 {items.map((item, index) => (
-                                    <div key={index} className="item-card-luxury glass animate-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                                    <div key={index} className="item-card-luxury glass animate-in" style={{ animationDelay: `${index % 20 * 0.1}s` }}>
                                         <div className="card-media">
                                             {item.photoUrl ? (
                                                 <img src={item.photoUrl} alt={item.name} loading="lazy" />
