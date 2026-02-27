@@ -1,50 +1,3 @@
-// import React from 'react'
-// import { useState } from 'react';
-
-// const Ai = ({times, myRoute}) => {
-
-//     const [aiInfo, setAi] = useState();
-
-//     const promptText = myRoute.map(item => item.name).join(", ")
-
-// const aiFetch = async () => {
-//     setAi("AI מכין לך את המסלול...");
-//     try {
-//         const response = await fetch('http://localhost:3005/ai/ask', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ prompt: promptText + JSON.stringify(times) }), // שליחת שמות המקומות ל-AI
-//         });
-
-//         // 1. חייב להשתמש ב-await כאן כדי לקבל את הנתונים עצמם
-//         const data = await response.json(); 
-        
-//         console.log("AI Response:", data);
-
-//         // 2. מעדכנים את ה-State עם הנתונים שחזרו (למשל data.answer או data)
-//         // חשוב לוודא שמה שאתה מכניס ל-setAi הוא מחרוזת או מערך ולא אובייקט Response
-//         setAi(data.answer || data); 
-
-//     } catch(e) {
-//         console.log("Error in AI Fetch:", e);    
-//         setAi("אירעה שגיאה בקבלת המידע מה-AI. אנא נסה שוב מאוחר יותר.");    
-//     }
-// }
-
-//     return (
-//         <div>
-//             <div className="ai-response-container">
-//                 {/* אם ai הוא מחרוזת המכילה HTML, זה יציג אותו מעוצב */}
-//                 <div dangerouslySetInnerHTML={{ __html: aiInfo }} />
-//             </div>
-//             <button onClick={aiFetch}>קבל Ai</button>
-//         </div>
-//     )
-// }
-
-// export default Ai
 import React, { useState } from 'react';
 import loadingGif from '../assets/Loading 40 _ Paperplane.gif';
 
@@ -99,11 +52,6 @@ const Ai = ({ times, myRoute }) => {
                 disabled={loading} 
                 style={{...styles.button, ...(loading ? styles.buttonDisabled : {})}}
             >
-                {loading ? (
-                    <img src={loadingGif} alt="Loading" style={styles.loadingImg} />
-                ) : (
-                    "צור לי מסלול חכם עם AI"
-                )}
             </button>
 
             {/* תצוגת התוצאה */}

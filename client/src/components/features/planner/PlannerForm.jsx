@@ -80,6 +80,20 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
         setShowSuggestions(false);
     };
 
+    // Quick helpers: set landing date to today and landing time to current time
+    const setTodayLandingDate = () => {
+        const today = new Date();
+        const dateStr = today.toISOString().slice(0, 10); // YYYY-MM-DD
+        setFormData(prev => ({ ...prev, landingDate: dateStr }));
+    };
+
+    const setNowLandingTime = () => {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        setFormData(prev => ({ ...prev, landingTime: `${hh}:${mm}` }));
+    };
+
     return (
         <div className="planner-card glass">
             <h1>פרטי ההמתנה שלך</h1>
@@ -119,12 +133,20 @@ const PlannerForm = ({ formData, handleChange, setFormData, onSubmit, error }) =
                         <label className="input-label-premium">תאריך נחיתה</label>
                         <div className="premium-input-wrapper">
                             <input type="date" name="landingDate" value={formData.landingDate} onChange={handleChange} className="planner-input premium" />
+                            <div className="quick-set-row">
+                                <button type="button" onClick={setTodayLandingDate} className="quick-set-btn">היום</button>
+                                <span className="quick-set-note">לחץ כדי למלא אוטומטית את תאריך היום</span>
+                            </div>
                         </div>
                     </div>
                     <div className="form-group">
                         <label className="input-label-premium">שעת נחיתה</label>
                         <div className="premium-input-wrapper">
                             <input type="time" name="landingTime" value={formData.landingTime} onChange={handleChange} className="planner-input premium" />
+                            <div className="quick-set-row">
+                                <button type="button" onClick={setNowLandingTime} className="quick-set-btn">עכשיו</button>
+                                <span className="quick-set-note">ממלא את השעה הנוכחית</span>
+                            </div>
                         </div>
                     </div>
                     <div className="form-group">

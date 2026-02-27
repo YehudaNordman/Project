@@ -356,13 +356,22 @@ const MyRouteView = ({ onBack, times, onViewSaved }) => {
                 {/* AI Section stays but wrapped in animate-in-up class if needed, or kept as is */}
                 <div style={{ padding: '0 20px 100px 20px', maxWidth: '1200px', margin: '0 auto' }}>
                     {myRoute.length > 0 && (
-                        <button onClick={generateAiItinerary} className="ai-magic-button" disabled={isTyping} aria-busy={isTyping} aria-label={isTyping ? 'טוען מסלול' : 'בנה לי מסלול'} style={{ width: '100%', maxWidth: '600px', margin: '20px auto', display: 'block' }}>
-                            {isTyping ? (
-                                <img src={loadingGif} alt="טוען מסלול" style={{ width: '200px', objectFit: 'contain' }} />
-                            ) : (
-                                '✨ בנה לי מסלול מושלם עם AI'
+                        <>
+                            <button onClick={generateAiItinerary} className="ai-magic-button" disabled={isTyping} aria-busy={isTyping} aria-label={isTyping ? 'טוען מסלול' : 'בנה לי מסלול'} style={{ width: '100%', maxWidth: '600px', margin: '20px auto', display: 'block' }}>
+                                {isTyping ? (
+                                    "מכין את המסלול המושלם עבורך..."
+                                ) : (
+                                    '✨ בנה לי מסלול מושלם עם AI'
+                                )}
+                            </button>
+
+                            {/* Loading GIF shown under the button while AI is generating */}
+                            {isTyping && (
+                                <div className="ai-loading-gif" style={{ textAlign: 'center', marginTop: '12px' }}>
+                                    <img src={loadingGif} alt="טוען מסלול" style={{ width: '140px', height: 'auto', objectFit: 'contain' }} />
+                                </div>
                             )}
-                        </button>
+                        </>
                     )}
 
                     {aiInfo && (

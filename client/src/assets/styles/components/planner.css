@@ -633,3 +633,127 @@
 .error-icon {
     font-size: 1.2rem;
 }
+
+/* Quick-set helper buttons under date/time inputs */
+.quick-set-row {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quick-set-btn {
+    background: #1a237e; /* match .calculate-btn color */
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 18px; /* match calculate button radius */
+    font-weight: 950;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(26, 35, 126, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    font-size: 0.95rem;
+}
+
+.quick-set-btn:hover {
+    background: #75abad; /* match .calculate-btn hover */
+    transform: translateY(-2px);
+    opacity: 0.98;
+    box-shadow: 0 10px 30px rgba(26, 35, 126, 0.35);
+}
+
+.quick-set-note {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 700;
+}
+
+/* Ensure compact layout on small screens */
+@media (max-width: 600px) {
+    .quick-set-row { flex-direction: row; gap: 8px; }
+    .quick-set-note { display: none; }
+}
+
+/* Inline time edit form styling used by ResultsHeader */
+.time-edit-form input[type="date"],
+.time-edit-form input[type="time"] {
+    padding: 0.45rem 0.7rem;
+    border-radius: 12px;
+    border: 2px solid #1a237e; /* primary deep-blue used in the site */
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a237e;
+    font-weight: 800;
+    font-size: 0.95rem;
+    outline: none;
+    box-shadow: 0 8px 20px rgba(26, 35, 126, 0.06);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.time-edit-form input[type="date"]:focus,
+.time-edit-form input[type="time"]:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(26, 35, 126, 0.12);
+    border-color: #86BDBF; /* subtle highlight */
+}
+
+.time-edit-form button {
+    background: #1a237e; /* primary button blue */
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 0.85rem;
+    border-radius: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(26, 35, 126, 0.25);
+    transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+    font-size: 0.95rem;
+}
+
+.time-edit-form button:hover {
+    transform: translateY(-3px);
+    background: #75abad; /* site hover tone */
+    box-shadow: 0 12px 30px rgba(26, 35, 126, 0.28);
+}
+
+/* Make the cancel button slightly lighter to distinguish it, but keep rounded white text */
+.time-edit-form button[type="button"] {
+    /* Match primary save button style so the cancel button is visible and consistent */
+    background: #1a237e; /* primary button blue */
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 0.85rem;
+    border-radius: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(26, 35, 126, 0.25);
+    transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+    font-size: 0.95rem;
+}
+
+.time-edit-form button[type="button"]:hover {
+    transform: translateY(-3px);
+    background: #75abad; /* site hover tone */
+    box-shadow: 0 12px 30px rgba(26, 35, 126, 0.28);
+}
+
+/* When not editing, the displayed time value should visually match theme */
+.time-value {
+    background: rgba(26, 35, 126, 0.06);
+    color: #1a237e;
+    border: 2px solid transparent;
+    padding: 4px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.time-value:hover {
+    border-color: #1a237e;
+    background: rgba(26, 35, 126, 0.08);
+}
+
+@media (max-width: 600px) {
+    .time-edit-form { flex-direction: column; align-items: stretch; }
+    .time-edit-form input[type="date"], .time-edit-form input[type="time"] { width: 100%; }
+    .time-edit-form button { width: auto; }
+}
